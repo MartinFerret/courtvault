@@ -34,6 +34,7 @@ serve(
             parallelName: t.parallel_name,
             serialRun: t.serial_run,
             grade: t.grade,
+            currentCents: t.current_cents,
           });
           if (!quote) {
             missing++;

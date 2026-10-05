@@ -85,7 +85,8 @@ returns table (
   player_name text,
   set_name text,
   season text,
-  reason text
+  reason text,
+  current_cents integer
 )
 language sql
 stable
@@ -107,12 +108,13 @@ as $$
     )
   )
   select distinct on (par.id, w.grade)
-    par.id, w.grade, par.name, par.serial_run, c.number, pl.name, s.name, s.season, w.reason
+    par.id, w.grade, par.name, par.serial_run, c.number, pl.name, s.name, s.season, w.reason, cp.price_cents
   from wanted w
   join public.parallels par on par.id = w.parallel_id
   join public.cards c on c.id = par.card_id
   join public.players pl on pl.id = c.player_id
   join public.card_sets s on s.id = c.set_id
+  left join public.current_prices cp on cp.parallel_id = par.id and cp.grade = w.grade
   order by par.id, w.grade, w.reason;
 $$;
 revoke execute on function public.parallels_to_price from public, anon, authenticated;

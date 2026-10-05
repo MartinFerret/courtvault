@@ -434,3 +434,9 @@ verify_jwt = false
 verify_jwt = false
 [functions.delete-account]
 verify_jwt = false
+
+# Email one-time code (the app verifies the 6-digit {{ .Token }} instead of a link).
+# Configure the same template in the cloud project's Auth > Email Templates (Magic Link).
+[auth.email.template.magic_link]
+subject = "Your sign-in code"
+content_path = "./supabase/templates/magic_link.html"

@@ -17,6 +17,8 @@ export interface PriceQuery {
   parallelName: string;
   serialRun: number | null;
   grade: Grade;
+  /** Last known price, if any. Real providers ignore it; the mock drifts from it. */
+  currentCents?: number | null;
 }
 
 export interface PriceQuote {
@@ -195,7 +197,8 @@ export class MockPriceProvider implements PriceProvider {
       : 3;
     const gradeMultiplier = query.grade === 'PSA10' ? 5 : query.grade === 'PSA9' ? 2.2 : 1;
     const drift = 1 + ((hashInt(`${key}|${this.day}`) % 601) - 300) / 10000;
-    const price = base * parallelMultiplier * gradeMultiplier * drift;
+    // Drift from the last known price when there is one (consistent with the seed), else synthesize.
+    const price = (query.currentCents ?? base * parallelMultiplier * gradeMultiplier) * drift;
     const rounded = price >= 2000 ? Math.round(price / 100) * 100 : Math.round(price);
     return Promise.resolve({
       priceCents: rounded,

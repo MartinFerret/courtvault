@@ -731,6 +731,7 @@ export type Database = {
         Args: { p_rookie_limit?: number };
         Returns: {
           card_number: string;
+          current_cents: number;
           grade: Database['public']['Enums']['grade'];
           parallel_id: string;
           parallel_name: string;

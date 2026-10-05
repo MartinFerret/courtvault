@@ -201,8 +201,16 @@ as $$
   from relevant r
   join public.players pl on pl.id = r.player_id
   join unlocked u on u.player_id = pl.id
-  join public.player_game_lines l on l.player_id = pl.id
-  join public.games g on g.id = l.game_id and g.game_day = (select day from params)
+  -- One line per player and day (a player plays at most one game per night).
+  join lateral (
+    select l.*
+    from public.player_game_lines l
+    join public.games gg on gg.id = l.game_id
+    where l.player_id = pl.id and gg.game_day = (select day from params)
+    order by l.minutes desc nulls last
+    limit 1
+  ) l on true
+  join public.games g on g.id = l.game_id
   left join owned o on o.player_id = pl.id
   order by (o.value_after - o.value_before) desc nulls last, l.points desc nulls last;
 $$;

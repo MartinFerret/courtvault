@@ -73,7 +73,14 @@
               "buildTarget": "mobile:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "prebundle": {
+              "exclude": [
+                "@courtvault/shared"
+              ]
+            }
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

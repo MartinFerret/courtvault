@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal,
@@ -40,6 +40,13 @@ export class PaywallComponent {
     'Full price history',
     'Gains and losses, CSV export',
   ];
+
+  constructor() {
+    // Load offerings (RevenueCat, or the mock list without keys) the first time the paywall opens.
+    effect(() => {
+      if (this.paywall.isOpen() && this.billing.offerings().length === 0) void this.billing.configure();
+    });
+  }
 
   reasonText(): string {
     const key = this.paywall.reason();
