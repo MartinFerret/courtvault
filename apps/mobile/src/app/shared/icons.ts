@@ -1,0 +1,51 @@
+import { addIcons } from 'ionicons';
+import {
+  alertCircleOutline,
+  albumsOutline,
+  arrowBackOutline,
+  cameraOutline,
+  cardOutline,
+  checkmarkCircle,
+  closeOutline,
+  heart,
+  heartOutline,
+  lockClosedOutline,
+  logOutOutline,
+  notificationsOutline,
+  personCircleOutline,
+  scanOutline,
+  searchOutline,
+  sparklesOutline,
+  starOutline,
+  sunnyOutline,
+  trashOutline,
+  trendingDownOutline,
+  trendingUpOutline,
+} from 'ionicons/icons';
+
+/** Registers the icons used across the app once. */
+export function registerIcons(): void {
+  addIcons({
+    alertCircleOutline,
+    albumsOutline,
+    arrowBackOutline,
+    cameraOutline,
+    cardOutline,
+    checkmarkCircle,
+    closeOutline,
+    heart,
+    heartOutline,
+    lockClosedOutline,
+    logOutOutline,
+    notificationsOutline,
+    personCircleOutline,
+    scanOutline,
+    searchOutline,
+    sparklesOutline,
+    starOutline,
+    sunnyOutline,
+    trashOutline,
+    trendingDownOutline,
+    trendingUpOutline,
+  });
+}

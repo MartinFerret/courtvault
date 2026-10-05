@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import type { Database, Grade } from '@courtvault/shared';
+import { environment } from '../../../environments/environment';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export type CollectionItem = Database['public']['Views']['collection_items_detailed']['Row'];
@@ -84,7 +85,7 @@ export class CollectionService {
   async exportCsv(): Promise<Blob> {
     const session = this.supabase.session();
     if (!session) throw new Error('Not signed in');
-    const res = await fetch(`${this.supabase.client.functions.url}/export-csv`, {
+    const res = await fetch(`${environment.supabaseUrl}/functions/v1/export-csv`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${session.access_token}` },
     });

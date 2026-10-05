@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sets</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  @if (error(); as message) { <ion-note color="danger" class="ion-padding">{{ message }}</ion-note> }
+
+  <h2 class="ion-padding-horizontal">Followed checklists</h2>
+  @if (followed().length === 0) {
+    <p class="cv-muted ion-padding-horizontal">Follow a set to track your completion.</p>
+  }
+  <ion-list>
+    @for (s of followed(); track s.set_id) {
+      <ion-item [routerLink]="['/sets', s.set_slug]" [detail]="true">
+        <ion-label>
+          <h2>{{ s.season }} {{ s.set_name }}</h2>
+          <p>{{ s.owned_cards }} / {{ s.total_cards }} cards</p>
+          <ion-progress-bar [value]="s.total_cards ? s.owned_cards / s.total_cards : 0"></ion-progress-bar>
+        </ion-label>
+        <ion-button slot="end" fill="clear" (click)="toggle(s, $event)" aria-label="Unfollow"><ion-icon name="heart" color="danger"></ion-icon></ion-button>
+      </ion-item>
+    }
+  </ion-list>
+
+  <h2 class="ion-padding-horizontal">All sets</h2>
+  <ion-list>
+    @for (s of others(); track s.set_id) {
+      <ion-item [routerLink]="['/sets', s.set_slug]" [detail]="true">
+        <ion-label>
+          <h2>{{ s.season }} {{ s.set_name }}</h2>
+          <p>{{ s.owned_cards }} / {{ s.total_cards }} cards</p>
+        </ion-label>
+        <ion-button slot="end" fill="clear" (click)="toggle(s, $event)" aria-label="Follow"><ion-icon name="heart-outline"></ion-icon></ion-button>
+      </ion-item>
+    }
+  </ion-list>
+</ion-content>

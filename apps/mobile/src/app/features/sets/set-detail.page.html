@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/sets"></ion-back-button></ion-buttons>
+    <ion-title>{{ set()?.season }} {{ set()?.set_name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  @if (set(); as s) {
+    <p class="cv-muted ion-padding-horizontal">{{ s.owned_cards }} / {{ s.total_cards }} cards owned</p>
+  }
+  <ion-list>
+    @for (c of cards(); track c.id) {
+      <ion-item [routerLink]="['/cards', c.slug]" [detail]="true">
+        <ion-icon slot="start" [name]="ownedCardIds().has(c.id) ? 'checkmark-circle' : 'card-outline'" [color]="ownedCardIds().has(c.id) ? 'success' : 'medium'"></ion-icon>
+        <ion-label>
+          <h2>#{{ c.number }} {{ c.players.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h2>
+          <p>{{ c.players.team ?? '' }}</p>
+        </ion-label>
+      </ion-item>
+    }
+  </ion-list>
+</ion-content>

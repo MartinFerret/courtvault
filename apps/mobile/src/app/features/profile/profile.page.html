@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+      <ion-label>
+        <h2>{{ auth.user()?.email }}</h2>
+        <p>{{ plan.isPremium() ? 'Premium' : 'Free plan' }}</p>
+      </ion-label>
+    </ion-item>
+    @if (!plan.isPremium()) {
+      <ion-item button (click)="openPaywall()" [detail]="true">
+        <ion-icon slot="start" name="sparkles-outline" color="warning"></ion-icon>
+        <ion-label>Go Premium</ion-label>
+      </ion-item>
+    }
+    <ion-item>
+      <ion-icon slot="start" name="notifications-outline"></ion-icon>
+      <ion-toggle [checked]="push.enabled()" (ionChange)="toggleNotifications($any($event).detail.checked)">Morning notifications</ion-toggle>
+    </ion-item>
+    <ion-item button (click)="exportCsv()" [detail]="true">
+      <ion-icon slot="start" name="albums-outline"></ion-icon>
+      <ion-label>Export collection (CSV) @if (!plan.isPremium()) { <ion-note>Premium</ion-note> }</ion-label>
+    </ion-item>
+    <ion-item routerLink="/onboarding/players" [detail]="true">
+      <ion-icon slot="start" name="heart-outline"></ion-icon>
+      <ion-label>Followed players</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item routerLink="/legal/terms" [detail]="true"><ion-label>Terms of service</ion-label></ion-item>
+    <ion-item routerLink="/legal/privacy" [detail]="true"><ion-label>Privacy policy</ion-label></ion-item>
+    <ion-item routerLink="/legal/about" [detail]="true"><ion-label>About</ion-label></ion-item>
+  </ion-list>
+
+  <div class="ion-padding">
+    @if (message(); as text) { <ion-note>{{ text }}</ion-note> }
+    <ion-button expand="block" fill="outline" (click)="signOut()"><ion-icon slot="start" name="log-out-outline"></ion-icon>Sign out</ion-button>
+    <ion-button expand="block" fill="clear" color="danger" (click)="deleteAccount()">Delete account</ion-button>
+    <p class="cv-muted cv-small ion-text-center">{{ disclaimer }}</p>
+  </div>
+</ion-content>

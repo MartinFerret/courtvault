@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pick your players</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="ion-padding">
+    <p class="cv-muted">
+      Follow the players you collect. "Last night" shows their stats every morning.
+      @if (limit(); as max) { Free plan: up to {{ max }} players. }
+    </p>
+    <ion-searchbar placeholder="Search players" (ionInput)="query.set($any($event).detail.value ?? '')"></ion-searchbar>
+    @if (error(); as message) {
+      <ion-note color="danger">{{ message }}</ion-note>
+    }
+  </div>
+  <ion-list>
+    @for (p of filtered(); track p.id) {
+      <ion-item button (click)="toggle(p.id)" [detail]="false">
+        <ion-label>
+          <h2>{{ p.name }}</h2>
+          <p>{{ p.team ?? 'Team to be announced' }}</p>
+        </ion-label>
+        <ion-icon slot="end" [name]="follows.playerIds().has(p.id) ? 'heart' : 'heart-outline'" [color]="follows.playerIds().has(p.id) ? 'danger' : 'medium'"></ion-icon>
+      </ion-item>
+    }
+  </ion-list>
+  <div class="ion-padding">
+    <ion-button expand="block" (click)="next()" [disabled]="follows.playerIds().size === 0">Continue</ion-button>
+    <ion-button expand="block" fill="clear" size="small" (click)="next()">Skip for now</ion-button>
+  </div>
+</ion-content>

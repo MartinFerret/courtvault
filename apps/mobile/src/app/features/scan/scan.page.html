@@ -1,0 +1,113 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Scan</ion-title>
+    @if (sessionCount() > 0) {
+      <ion-buttons slot="end">
+        <ion-button (click)="finish()">Done ({{ sessionCount() }})</ion-button>
+      </ion-buttons>
+    }
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  @if (sessionCount() > 0) {
+    <div class="cv-session">
+      <strong>{{ sessionCount() }} added</strong> · {{ sessionCents() | cents }} total
+      <ul>
+        @for (it of sessionItems(); track $index) {
+          <li>{{ it.label }} <span class="cv-muted">{{ it.cents | cents }}</span></li>
+        }
+      </ul>
+    </div>
+  }
+
+  @if (error(); as message) {
+    <ion-note color="danger" style="display: block; margin-bottom: 12px">{{ message }}</ion-note>
+  }
+
+  @switch (step()) {
+    @case ('idle') {
+      <div class="cv-scan-cta">
+        <ion-icon name="camera-outline" class="cv-hero-icon"></ion-icon>
+        <p class="cv-muted">
+          @if (scan.isNative) { Photograph the back of the card. } @else { No camera in the browser: the scan is simulated with sample card backs. }
+        </p>
+        <ion-button expand="block" size="large" (click)="start()">
+          {{ sessionCount() > 0 ? 'Scan next card' : 'Scan a card' }}
+        </ion-button>
+      </div>
+      <h2>Or search manually</h2>
+      <ion-searchbar placeholder="Player, set or card number" debounce="300" (ionInput)="manualSearch($any($event).detail.value ?? '')"></ion-searchbar>
+      @if (manualBusy()) { <ion-spinner></ion-spinner> }
+      <ion-list>
+        @for (r of manualResults(); track r.id) {
+          <ion-item button (click)="pickManual(r)">
+            <ion-label>
+              <h2>{{ r.title }}</h2>
+              <p>{{ r.subtitle }}</p>
+            </ion-label>
+          </ion-item>
+        }
+      </ion-list>
+    }
+    @case ('scanning') {
+      <div class="ion-text-center ion-padding">
+        <ion-spinner></ion-spinner>
+        <p class="cv-muted">Reading the card…</p>
+      </div>
+    }
+    @case ('pick-card') {
+      <h2>Which card is it?</h2>
+      <ion-note class="cv-ocr">{{ ocrText() }}</ion-note>
+      <ion-list>
+        @for (c of candidates(); track c.card.id) {
+          <ion-item button (click)="pickCard(c)">
+            <ion-label>
+              <h2>#{{ c.card.number }} {{ c.card.playerName }} @if (c.card.isRookie) { <ion-badge color="secondary">RC</ion-badge> }</h2>
+              <p>{{ c.card.season }} {{ c.card.setName }} · {{ c.reasons.join(', ') }}</p>
+            </ion-label>
+            <ion-chip slot="end">{{ c.score }}</ion-chip>
+          </ion-item>
+        }
+      </ion-list>
+      <ion-button expand="block" fill="outline" (click)="resetForNext()">None of these</ion-button>
+    }
+    @case ('pick-parallel') {
+      @if (selected(); as c) {
+        <h2>#{{ c.card.number }} {{ c.card.playerName }}</h2>
+        <p class="cv-muted">{{ c.card.season }} {{ c.card.setName }}</p>
+        @if (photo(); as p) {
+          <img [src]="p.dataUrl" alt="Your photo of the card back" class="cv-thumb" />
+        }
+
+        <ion-segment [value]="grade" (ionChange)="onGrade($any($event).detail.value)">
+          @for (g of grades; track g) {
+            <ion-segment-button [value]="g"><ion-label>{{ g | grade }}</ion-label></ion-segment-button>
+          }
+        </ion-segment>
+
+        <ion-item>
+          <ion-input label="Serial number (numbered cards)" labelPlacement="stacked" type="number" inputmode="numeric" [(ngModel)]="serialNumber" [placeholder]="serialRead() ? 'Read: ' + serialRead() : 'e.g. 12'"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Purchase price (USD, optional)" labelPlacement="stacked" type="number" inputmode="decimal" [(ngModel)]="purchaseUsd" placeholder="0.00"></ion-input>
+        </ion-item>
+
+        <h3>Pick the parallel</h3>
+        <div class="cv-parallel-grid">
+          @for (p of selectedParallels(); track p.id) {
+            <ion-button fill="outline" (click)="addParallel(p.id, labelFor(c, p))">
+              {{ p.name | parallel: p.serialRun }}
+            </ion-button>
+          }
+        </div>
+        <ion-button expand="block" fill="clear" (click)="resetForNext()">Cancel</ion-button>
+      }
+    }
+    @case ('no-match') {
+      <h2>No card recognized</h2>
+      <ion-note class="cv-ocr">{{ ocrText() || 'Nothing readable.' }}</ion-note>
+      <ion-button expand="block" (click)="start()">Try again</ion-button>
+      <ion-button expand="block" fill="outline" (click)="resetForNext()">Search manually</ion-button>
+    }
+  }
+</ion-content>

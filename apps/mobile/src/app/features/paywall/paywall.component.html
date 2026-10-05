@@ -1,0 +1,51 @@
+<ion-modal [isOpen]="paywall.isOpen()" (didDismiss)="paywall.close()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Premium</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="paywall.close()" aria-label="Close">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <p class="cv-paywall-reason">{{ reasonText() }}</p>
+
+      <ion-list lines="none">
+        @for (benefit of benefits; track benefit) {
+          <ion-item>
+            <ion-icon slot="start" name="checkmark-circle" color="success"></ion-icon>
+            <ion-label>{{ benefit }}</ion-label>
+          </ion-item>
+        }
+      </ion-list>
+
+      @for (offering of billing.offerings(); track offering.identifier) {
+        <ion-button expand="block" [fill]="offering.period === 'yearly' ? 'solid' : 'outline'" [disabled]="billing.busy()" (click)="buy(offering)">
+          {{ offering.title }} · {{ offering.priceString }}
+          @if (offering.trialDays > 0) {
+            <span>&nbsp;· {{ offering.trialDays }}-day free trial</span>
+          }
+        </ion-button>
+      }
+
+      <ion-button expand="block" fill="clear" size="small" (click)="restore()">Restore purchases</ion-button>
+
+      @if (message(); as text) {
+        <ion-note class="ion-text-center" style="display: block">{{ text }}</ion-note>
+      }
+
+      <p class="cv-paywall-legal">
+        Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period.
+        Manage or cancel from your App Store or Google Play account.
+        <ion-button fill="clear" size="small" (click)="openLegal('terms')">Terms</ion-button>
+        <ion-button fill="clear" size="small" (click)="openLegal('privacy')">Privacy</ion-button>
+      </p>
+      @if (!billing.configured()) {
+        <ion-note>Purchases are available in the iOS and Android apps.</ion-note>
+      }
+    </ion-content>
+  </ng-template>
+</ion-modal>

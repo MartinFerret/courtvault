@@ -101,3 +101,120 @@
 ion-content {
   --background: var(--ion-background-color);
 }
+
+/* Layout helpers used by the functional screens. Visual polish comes with the mockups. */
+.cv-muted {
+  color: var(--ion-color-medium);
+}
+.cv-small {
+  font-size: 0.85rem;
+}
+.cv-gain {
+  color: var(--cv-color-gain);
+}
+.cv-loss {
+  color: var(--cv-color-loss);
+}
+.cv-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--ion-color-secondary);
+  color: var(--ion-color-secondary-contrast);
+  vertical-align: middle;
+}
+.cv-onboarding {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+  margin: 10vh auto 0;
+}
+.cv-hero-icon {
+  font-size: 64px;
+  color: var(--ion-color-primary);
+  display: block;
+  margin: 0 auto;
+}
+.cv-footnote {
+  font-size: 0.75rem;
+  margin-top: 24px;
+}
+.cv-summary {
+  padding: 16px;
+  margin: 12px 16px;
+  background: var(--ion-card-background);
+  border-radius: var(--cv-radius-lg);
+  box-shadow: var(--cv-shadow-card);
+}
+.cv-summary-total {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--cv-font-display);
+  font-variant-numeric: tabular-nums;
+}
+.cv-session {
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  background: var(--ion-card-background);
+  border-radius: var(--cv-radius-md);
+  ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    font-size: 0.85rem;
+  }
+}
+.cv-scan-cta {
+  text-align: center;
+  padding: 24px 0;
+}
+.cv-ocr {
+  display: block;
+  white-space: pre-wrap;
+  font-family: var(--cv-font-mono);
+  font-size: 0.75rem;
+  padding: 8px;
+  margin: 8px 0;
+  background: var(--ion-item-background);
+  border-radius: var(--cv-radius-sm);
+}
+.cv-thumb {
+  max-width: 160px;
+  border-radius: var(--cv-radius-sm);
+  display: block;
+  margin: 8px 0;
+}
+.cv-parallel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+.cv-price-hero {
+  margin: 16px 0;
+}
+.cv-price-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cv-sparkline {
+  width: 100%;
+  height: 60px;
+  color: var(--ion-color-primary);
+}
+.cv-inline-icon {
+  font-size: 0.9em;
+  vertical-align: middle;
+}
+.cv-paywall-reason {
+  font-weight: 600;
+}
+.cv-paywall-legal {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+  margin-top: 16px;
+}

@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Last night</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
+
+  <div class="cv-summary">
+    <div class="cv-muted cv-small">{{ dayLabel() }}</div>
+    <div class="cv-summary-total" [class.cv-gain]="totalChange() > 0" [class.cv-loss]="totalChange() < 0">{{ totalChange() | delta }}</div>
+    <div class="cv-muted cv-small">on your cards of the players who played</div>
+  </div>
+
+  @if (!morning.loading() && morning.rows().length === 0) {
+    <div class="ion-padding ion-text-center">
+      <p class="cv-muted">None of your players played last night, or you do not follow anyone yet.</p>
+      <ion-button routerLink="/onboarding/players" fill="outline">Follow players</ion-button>
+    </div>
+  }
+
+  <ion-list>
+    @for (r of morning.rows(); track r.player_id) {
+      <ion-item [routerLink]="['/players', r.player_slug]" [detail]="!r.locked">
+        <ion-label>
+          <h2>
+            {{ r.player_name }}
+            @if (r.is_followed) { <ion-icon name="heart" color="danger" class="cv-inline-icon"></ion-icon> }
+          </h2>
+          <p>{{ r.away_team }} @ {{ r.home_team }} · {{ r.away_score }}–{{ r.home_score }}</p>
+          @if (r.locked) {
+            <p><ion-icon name="lock-closed-outline"></ion-icon> Stats hidden on the free plan</p>
+          } @else {
+            <p><strong>{{ r.points }} pts</strong> · {{ r.rebounds }} reb · {{ r.assists }} ast · {{ r.steals }} stl · {{ r.blocks }} blk · {{ r.minutes }} min</p>
+          }
+        </ion-label>
+        @if ((r.cards_count ?? 0) > 0) {
+          <ion-note slot="end" [class.cv-gain]="(change(r) ?? 0) > 0" [class.cv-loss]="(change(r) ?? 0) < 0">
+            {{ change(r) | delta }}<br />
+            <span class="cv-small cv-muted">{{ r.cards_count }} card{{ (r.cards_count ?? 0) > 1 ? 's' : '' }} {{ percent(r) }}</span>
+          </ion-note>
+        }
+      </ion-item>
+    }
+  </ion-list>
+
+  @if (lockedCount() > 0) {
+    <div class="ion-padding">
+      <ion-button expand="block" (click)="unlock()">Unlock {{ lockedCount() }} more player{{ lockedCount() > 1 ? 's' : '' }} with Premium</ion-button>
+    </div>
+  }
+</ion-content>

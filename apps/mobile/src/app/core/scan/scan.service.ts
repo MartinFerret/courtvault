@@ -78,7 +78,7 @@ export class ScanService {
   async recognize(photo: CapturedPhoto | null): Promise<string> {
     let text = '';
     if (this.isNative && photo?.nativePath) {
-      const result = await TextRecognition.recognizeText({ image: photo.nativePath });
+      const result = await TextRecognition.processImage({ path: photo.nativePath });
       text = result.text;
     } else {
       text = SIMULATED_OCR_SAMPLES[this.sampleIndex % SIMULATED_OCR_SAMPLES.length] ?? '';

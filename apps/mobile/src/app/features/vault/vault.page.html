@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Vault</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/tabs/scan"><ion-icon slot="icon-only" name="scan-outline"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
+
+  @if (collection.summary(); as s) {
+    <div class="cv-summary">
+      <div class="cv-summary-total">{{ s.total_cents | cents }}</div>
+      <div class="cv-summary-change" [class.cv-gain]="s.change_24h_cents > 0" [class.cv-loss]="s.change_24h_cents < 0">
+        {{ s.change_24h_cents | delta }} today
+        <span class="cv-muted">· market {{ s.market_change_cents | delta }} · added {{ s.added_cents | cents }}</span>
+      </div>
+      <div class="cv-muted cv-small">
+        {{ s.item_count }} cards
+        @if (cardLimit(); as max) { / {{ max }} free }
+        · {{ priceLabel }}
+      </div>
+      @if (s.is_premium) {
+        <div class="cv-small">Invested {{ s.invested_cents | cents }} · gain {{ s.gain_cents | delta }}</div>
+      } @else {
+        <ion-button size="small" fill="clear" (click)="openPaywall()">See gains and losses with Premium</ion-button>
+      }
+    </div>
+  }
+
+  <ion-searchbar placeholder="Filter your cards" debounce="200" (ionInput)="query.set($any($event).detail.value ?? '')"></ion-searchbar>
+  <ion-segment [value]="filter()" (ionChange)="onFilter($any($event).detail.value)">
+    <ion-segment-button value="all"><ion-label>All</ion-label></ion-segment-button>
+    <ion-segment-button value="rookies"><ion-label>Rookies</ion-label></ion-segment-button>
+    <ion-segment-button value="numbered"><ion-label>Numbered</ion-label></ion-segment-button>
+    <ion-segment-button value="graded"><ion-label>Graded</ion-label></ion-segment-button>
+  </ion-segment>
+
+  @if (!collection.loading() && collection.items().length === 0) {
+    <div class="ion-padding ion-text-center">
+      <p class="cv-muted">Your Vault is empty. Scan your first card.</p>
+      <ion-button routerLink="/tabs/scan">Scan a card</ion-button>
+    </div>
+  }
+
+  <ion-list>
+    @for (item of visible(); track item.id) {
+      <ion-item-sliding>
+        <ion-item [routerLink]="['/card', item.parallel_id]" [queryParams]="{ grade: item.grade, item: item.id }" [detail]="true">
+          <ion-label>
+            <h2>#{{ item.card_number }} {{ item.player_name }} @if (item.is_rookie) { <span class="cv-badge">RC</span> }</h2>
+            <p>{{ item.season }} {{ item.set_name }} · {{ item.parallel_name ?? '' | parallel: item.serial_run }} @if (item.serial_number) { {{ item.serial_number }}/{{ item.serial_run }} } · {{ gradeOf(item.grade ?? 'RAW') | grade }}</p>
+          </ion-label>
+          <ion-note slot="end">{{ item.current_cents | cents }}</ion-note>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="remove(item.id!)"><ion-icon slot="icon-only" name="trash-outline"></ion-icon></ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
+  </ion-list>
+</ion-content>

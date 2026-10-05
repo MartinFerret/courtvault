@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/vault"></ion-back-button></ion-buttons>
+    <ion-title>Card</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  @if (error(); as message) { <ion-note color="danger">{{ message }}</ion-note> }
+
+  @if (card(); as c) {
+    <h1>#{{ c.number }} {{ c.player.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h1>
+    <p class="cv-muted">{{ c.set.season }} {{ c.set.name }} @if (c.player.team) { · {{ c.player.team }} }</p>
+
+    <h3>Parallel</h3>
+    <div class="cv-parallel-grid">
+      @for (p of c.parallels; track p.id) {
+        <ion-button size="small" [fill]="p.id === selectedParallelId() ? 'solid' : 'outline'" (click)="selectedParallelId.set(p.id)">
+          {{ p.name | parallel: p.serial_run }}
+        </ion-button>
+      }
+    </div>
+
+    <ion-segment [value]="selectedGrade()" (ionChange)="onGrade($any($event).detail.value)">
+      @for (g of grades; track g) {
+        <ion-segment-button [value]="g"><ion-label>{{ g | grade }}</ion-label></ion-segment-button>
+      }
+    </ion-segment>
+
+    <div class="cv-price-hero">
+      @if (price(); as p) {
+        <div class="cv-price-value">{{ p.price_cents | cents }}</div>
+        <div class="cv-muted cv-small">{{ priceLabel }} · {{ p.sample_size }} listings · updated {{ p.captured_at | slice: 0 : 10 }}</div>
+      } @else {
+        <div class="cv-muted">No price yet for this parallel and grade.</div>
+      }
+      @if (parallel(); as par) {
+        <div class="cv-small cv-muted">
+          @for (g of grades; track g) {
+            <span>{{ g | grade }}: {{ par.prices[g]?.price_cents | cents }} </span>
+          }
+        </div>
+      }
+    </div>
+
+    @if (history().length > 1) {
+      <h3>History <span class="cv-muted cv-small">({{ history().length }} points, {{ historyDelta() | delta }})</span></h3>
+      <svg viewBox="0 0 100 30" class="cv-sparkline" preserveAspectRatio="none" role="img" aria-label="Price history">
+        <polyline [attr.points]="sparkline()" fill="none" stroke="currentColor" stroke-width="1"></polyline>
+      </svg>
+      <div class="cv-muted cv-small">Low {{ historyMin() | cents }} · High {{ historyMax() | cents }}</div>
+      @if (!plan.isPremium()) {
+        <ion-button size="small" fill="clear" (click)="openPaywall('history')">Free plan shows 30 days. Unlock full history</ion-button>
+      }
+    }
+
+    @if (ownedItem(); as it) {
+      <ion-list lines="none">
+        <ion-item>
+          <ion-label>
+            <h2>In your Vault</h2>
+            <p>Added {{ it.created_at | slice: 0 : 10 }} @if (it.purchase_cents !== null) { · bought for {{ it.purchase_cents | cents }} }</p>
+          </ion-label>
+          @if (gain() !== null) {
+            @if (plan.isPremium()) {
+              <ion-note slot="end" [class.cv-gain]="gain()! > 0" [class.cv-loss]="gain()! < 0">{{ gain() | delta }}</ion-note>
+            } @else {
+              <ion-button slot="end" size="small" fill="clear" (click)="openPaywall('gains')">Gain/loss</ion-button>
+            }
+          }
+        </ion-item>
+      </ion-list>
+    } @else {
+      <ion-button expand="block" (click)="addToVault()">Add to Vault</ion-button>
+    }
+
+    <h3>Price alert</h3>
+    @if (activeAlert(); as a) {
+      <ion-item lines="none">
+        <ion-icon slot="start" name="notifications-outline"></ion-icon>
+        <ion-label>Alert me below {{ a.below_cents | cents }}</ion-label>
+        <ion-button slot="end" fill="clear" (click)="removeAlert(a.id)">Remove</ion-button>
+      </ion-item>
+    } @else {
+      <ion-item>
+        <ion-input label="Notify me when the price drops below (USD)" labelPlacement="stacked" type="number" inputmode="decimal" [(ngModel)]="alertUsd"></ion-input>
+        <ion-button slot="end" (click)="setAlert()" [disabled]="!alertUsd">Set</ion-button>
+      </ion-item>
+    }
+
+    @if (price()?.buy_url; as url) {
+      <ion-button expand="block" fill="outline" [href]="url" target="_blank" rel="sponsored noopener">Shop on eBay</ion-button>
+      <ion-note class="cv-small">Affiliate link. Listings are asking prices.</ion-note>
+    }
+  }
+</ion-content>

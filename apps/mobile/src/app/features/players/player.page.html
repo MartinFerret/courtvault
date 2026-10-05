@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/last-night"></ion-back-button></ion-buttons>
+    <ion-title>{{ player()?.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  @if (player(); as p) {
+    <div class="ion-padding">
+      <p class="cv-muted">{{ p.team ?? 'Team to be announced' }}</p>
+      <ion-button fill="outline" (click)="toggleFollow()">
+        <ion-icon slot="start" [name]="follows.playerIds().has(p.id) ? 'heart' : 'heart-outline'"></ion-icon>
+        {{ follows.playerIds().has(p.id) ? 'Following' : 'Follow' }}
+      </ion-button>
+    </div>
+    <ion-list>
+      @for (c of p.cards; track c.id) {
+        <ion-item [routerLink]="['/cards', c.slug]" [detail]="true">
+          <ion-label>
+            <h2>#{{ c.number }} {{ c.card_sets?.season }} {{ c.card_sets?.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h2>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>
