@@ -1,0 +1,18 @@
+[build]
+  command = "pnpm --filter @courtvault/web build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  PNPM_FLAGS = "--frozen-lockfile"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Deploy previews and branch deploys consume the free plan's monthly credits.
+# Keep them off; data changes never trigger a deploy (ISR + on-demand revalidation instead).
+[context.deploy-preview]
+  ignore = "exit 0"
+
+[context.branch-deploy]
+  ignore = "exit 0"

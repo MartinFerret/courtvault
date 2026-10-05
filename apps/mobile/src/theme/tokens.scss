@@ -1,0 +1,103 @@
+/*
+ * Design tokens. The only file the mockups should need to change for colors, fonts,
+ * radii and shadows. Every component reads these Ionic CSS variables; none hard-codes a value.
+ *
+ * Current values are a neutral dark placeholder. The target direction is a sports video game
+ * aesthetic: dark, neon accents, foil card frames by rarity (see --cv-foil-* below).
+ */
+:root {
+  /* Ionic palette */
+  --ion-color-primary: #4f7cff;
+  --ion-color-primary-rgb: 79, 124, 255;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #466de0;
+  --ion-color-primary-tint: #6189ff;
+
+  --ion-color-secondary: #2dd4bf;
+  --ion-color-secondary-rgb: 45, 212, 191;
+  --ion-color-secondary-contrast: #0b0f19;
+  --ion-color-secondary-contrast-rgb: 11, 15, 25;
+  --ion-color-secondary-shade: #28bba8;
+  --ion-color-secondary-tint: #42d8c5;
+
+  --ion-color-success: #22c55e;
+  --ion-color-success-rgb: 34, 197, 94;
+  --ion-color-success-contrast: #0b0f19;
+  --ion-color-success-contrast-rgb: 11, 15, 25;
+  --ion-color-success-shade: #1ead53;
+  --ion-color-success-tint: #38cb6e;
+
+  --ion-color-warning: #f59e0b;
+  --ion-color-warning-rgb: 245, 158, 11;
+  --ion-color-warning-contrast: #0b0f19;
+  --ion-color-warning-contrast-rgb: 11, 15, 25;
+  --ion-color-warning-shade: #d88b0a;
+  --ion-color-warning-tint: #f6a823;
+
+  --ion-color-danger: #ef4444;
+  --ion-color-danger-rgb: 239, 68, 68;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #d23c3c;
+  --ion-color-danger-tint: #f15757;
+
+  --ion-color-medium: #8b93a7;
+  --ion-color-medium-rgb: 139, 147, 167;
+  --ion-color-medium-contrast: #0b0f19;
+  --ion-color-medium-contrast-rgb: 11, 15, 25;
+  --ion-color-medium-shade: #7a8193;
+  --ion-color-medium-tint: #979eb0;
+
+  --ion-color-light: #1a2032;
+  --ion-color-light-rgb: 26, 32, 50;
+  --ion-color-light-contrast: #f5f7fb;
+  --ion-color-light-contrast-rgb: 245, 247, 251;
+  --ion-color-light-shade: #171c2c;
+  --ion-color-light-tint: #313647;
+
+  --ion-color-dark: #f5f7fb;
+  --ion-color-dark-rgb: 245, 247, 251;
+  --ion-color-dark-contrast: #0b0f19;
+  --ion-color-dark-contrast-rgb: 11, 15, 25;
+  --ion-color-dark-shade: #d8d9dd;
+  --ion-color-dark-tint: #f6f8fb;
+
+  /* Surfaces */
+  --ion-background-color: #0b0f19;
+  --ion-background-color-rgb: 11, 15, 25;
+  --ion-text-color: #f5f7fb;
+  --ion-text-color-rgb: 245, 247, 251;
+  --ion-toolbar-background: #0f1422;
+  --ion-tab-bar-background: #0f1422;
+  --ion-item-background: #121828;
+  --ion-card-background: #121828;
+  --ion-border-color: #232a3d;
+
+  /* Typography */
+  --ion-font-family: -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  --cv-font-display: var(--ion-font-family);
+  --cv-font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Shape */
+  --cv-radius-sm: 8px;
+  --cv-radius-md: 12px;
+  --cv-radius-lg: 20px;
+  --cv-shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --cv-glow-accent: 0 0 16px rgba(79, 124, 255, 0.45);
+
+  /* Semantic */
+  --cv-color-gain: var(--ion-color-success);
+  --cv-color-loss: var(--ion-color-danger);
+  --cv-color-premium: #f5c542;
+
+  /* Foil frames by rarity (placeholder gradients, replaced by the mockups) */
+  --cv-foil-base: linear-gradient(135deg, #2a3147, #1a2032);
+  --cv-foil-refractor: linear-gradient(135deg, #6ee7f9, #a78bfa, #f472b6);
+  --cv-foil-numbered: linear-gradient(135deg, #fde68a, #f59e0b, #b45309);
+  --cv-foil-one-of-one: linear-gradient(135deg, #f87171, #ef4444, #7f1d1d);
+}
+
+ion-content {
+  --background: var(--ion-background-color);
+}

@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+  - scripts
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - esbuild
+  - sharp
+  - unrs-resolver
