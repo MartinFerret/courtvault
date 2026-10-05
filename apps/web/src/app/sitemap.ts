@@ -1,0 +1,23 @@
+import type { MetadataRoute } from 'next';
+import { listCardSlugs, listPlayers, listSets } from '@/lib/data';
+import { absoluteUrl } from '@/lib/site';
+
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [sets, players, cards] = await Promise.all([listSets(), listPlayers(), listCardSlugs()]);
+  const now = new Date();
+  return [
+    { url: absoluteUrl('/'), lastModified: now, changeFrequency: 'daily', priority: 1 },
+    { url: absoluteUrl('/rankings/rookies'), lastModified: now, changeFrequency: 'daily', priority: 0.9 },
+    { url: absoluteUrl('/sets'), lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: absoluteUrl('/players'), lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: absoluteUrl('/waitlist'), lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: absoluteUrl('/legal/terms'), changeFrequency: 'yearly', priority: 0.1 },
+    { url: absoluteUrl('/legal/privacy'), changeFrequency: 'yearly', priority: 0.1 },
+    { url: absoluteUrl('/legal/account-deletion'), changeFrequency: 'yearly', priority: 0.1 },
+    ...sets.map((s) => ({ url: absoluteUrl(`/sets/${s.slug}`), lastModified: now, changeFrequency: 'weekly' as const, priority: 0.8 })),
+    ...players.map((p) => ({ url: absoluteUrl(`/players/${p.slug}`), lastModified: now, changeFrequency: 'daily' as const, priority: 0.7 })),
+    ...cards.map((c) => ({ url: absoluteUrl(`/cards/${c.slug}`), lastModified: now, changeFrequency: 'daily' as const, priority: 0.8 })),
+  ];
+}

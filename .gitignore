@@ -34,3 +34,6 @@ apps/mobile/android/
 .vscode/
 .DS_Store
 *.log
+
+# Generated from .env at build time
+apps/mobile/src/environments/environment.generated.ts

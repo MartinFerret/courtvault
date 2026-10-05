@@ -13,7 +13,14 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "cap:sync": "cap sync",
     "cap:android": "cap open android",
-    "cap:ios": "cap open ios"
+    "cap:ios": "cap open ios",
+    "env": "node tools/write-env.mjs",
+    "prestart": "node tools/write-env.mjs",
+    "predev": "node tools/write-env.mjs",
+    "prebuild": "node tools/write-env.mjs",
+    "pretypecheck": "node tools/write-env.mjs",
+    "prelint": "node tools/write-env.mjs",
+    "pretest": "node tools/write-env.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.2.0",
