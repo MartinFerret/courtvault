@@ -14,7 +14,11 @@ export function json(body: unknown, status = 200, headers: HeadersInit = {}): Re
   });
 }
 
-export function error(message: string, status = 400, extra: Record<string, unknown> = {}): Response {
+export function error(
+  message: string,
+  status = 400,
+  extra: Record<string, unknown> = {},
+): Response {
   return json({ error: message, ...extra }, status);
 }
 

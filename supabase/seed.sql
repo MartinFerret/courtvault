@@ -299,6 +299,9 @@ begin
   select demo_uid, id from public.players where slug in ('cooper-flagg', 'victor-wembanyama', 'luka-doncic')
   on conflict do nothing;
 
+  -- A fake push token so job-morning has a recipient locally (PUSH_PROVIDER=log prints it).
+  update public.profiles set push_token = 'demo-device-token' where id = demo_uid;
+
   insert into public.checklist_follows (user_id, set_id)
   select demo_uid, id from public.card_sets where slug = '2025-26-topps-chrome'
   on conflict do nothing;
