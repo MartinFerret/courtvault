@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
 
-export const metadata: Metadata = { title: 'Terms of service', alternates: { canonical: '/legal/terms' } };
+export const metadata: Metadata = {
+  title: 'Terms of service',
+  description: 'Terms of service for the card catalog and collection tracker: prices are estimates, subscriptions go through the app stores.',
+  alternates: { canonical: '/legal/terms' },
+};
 
 export default function TermsPage() {
   return (

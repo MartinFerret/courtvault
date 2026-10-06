@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
     default: `${SITE_NAME} – ${SITE_TAGLINE}`,
-    template: `%s – ${SITE_NAME}`,
+    // Search results show the site name on their own line: no brand suffix in titles.
+    template: '%s',
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,

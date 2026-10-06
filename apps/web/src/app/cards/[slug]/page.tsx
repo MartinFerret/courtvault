@@ -21,10 +21,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const card = await getCard(slug);
   if (!card) return { title: 'Card not found' };
-  const title = `${card.set.season} ${card.set.name} #${card.number} ${card.player.name}${card.is_rookie ? ' rookie card' : ''} value`;
+  const title = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}${card.is_rookie ? ' RC' : ''} value`;
+  const parallels = card.parallels.map((p) => formatParallel(p.name, p.serial_run)).join(', ');
+  const description = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: median asking price by grade for ${parallels}.`;
   return {
     title,
-    description: `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: median asking price for every parallel (${card.parallels.map((p) => formatParallel(p.name, p.serial_run)).join(', ')}) by grade.`,
+    description: description.length > 158 ? `${description.slice(0, 155).replace(/,[^,]*$/, '')}…` : description,
     alternates: { canonical: `/cards/${card.slug}` },
     openGraph: { title, type: 'website' },
   };

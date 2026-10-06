@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 
-export const metadata: Metadata = { title: 'Account deletion', alternates: { canonical: '/legal/account-deletion' } };
+export const metadata: Metadata = {
+  title: 'Account deletion',
+  description: 'How to delete your account and all associated data from the app.',
+  alternates: { canonical: '/legal/account-deletion' },
+};
 
 export default function AccountDeletionPage() {
   return (

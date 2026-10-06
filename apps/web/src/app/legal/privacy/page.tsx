@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 
-export const metadata: Metadata = { title: 'Privacy policy', alternates: { canonical: '/legal/privacy' } };
+export const metadata: Metadata = {
+  title: 'Privacy policy',
+  description: 'What data the app stores (email, collection, follows, alerts, private card photos) and how to export or delete it.',
+  alternates: { canonical: '/legal/privacy' },
+};
 
 export default function PrivacyPage() {
   return (
