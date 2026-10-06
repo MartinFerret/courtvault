@@ -764,14 +764,17 @@ ion-alert {
     .cv-hero__figure {
       position: absolute;
       left: 50%;
-      bottom: 0;
-      height: 100%;
+      bottom: -3%;
+      height: 108%;
       width: auto;
       max-width: none;
-      transform: translateX(-42%);
-      border-radius: var(--cv-radius-tile);
-      box-shadow: var(--cv-shadow-float);
+      transform: translateX(-44%);
       z-index: 0;
+      /* Blend into the canvas: multiply drops the light paper of the artwork onto the page,
+         the mask dissolves every edge so nothing reads as a pasted rectangle. */
+      mix-blend-mode: multiply;
+      mask-image: radial-gradient(ellipse 46% 56% at 50% 48%, #000 50%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+      -webkit-mask-image: radial-gradient(ellipse 46% 56% at 50% 48%, #000 50%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
     }
     .cv-hero__word {
       top: auto;
