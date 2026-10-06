@@ -755,25 +755,12 @@ ion-alert {
       -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
     }
   }
-  /* Figure variant: the whole cut-out figure over the lime word, like the reference. */
+  /* Figure variant: the whole artwork as a tall card, the lime word in front, straddling
+     its bottom-left corner so it stays readable over any image. */
   .cv-hero__art--figure {
-    min-height: 50vh;
+    min-height: 46vh;
     overflow: visible;
-    margin-bottom: 8px;
-    .cv-hero__word {
-      top: 50%;
-      font-size: clamp(120px, 42vw, 180px);
-      line-height: 0.8;
-      display: flex;
-      flex-direction: column;
-      padding: 0 2%;
-      .cv-hero__word-l {
-        align-self: flex-start;
-      }
-      .cv-hero__word-r {
-        align-self: flex-end;
-      }
-    }
+    margin-bottom: 36px;
     .cv-hero__figure {
       position: absolute;
       left: 50%;
@@ -781,9 +768,31 @@ ion-alert {
       height: 100%;
       width: auto;
       max-width: none;
-      transform: translateX(-50%);
+      transform: translateX(-42%);
       border-radius: var(--cv-radius-tile);
       box-shadow: var(--cv-shadow-float);
+      z-index: 0;
+    }
+    .cv-hero__word {
+      top: auto;
+      bottom: -0.28em;
+      left: var(--cv-gutter);
+      right: auto;
+      transform: none;
+      z-index: 1;
+      font-size: clamp(76px, 24vw, 104px);
+      line-height: 0.84;
+      text-align: left;
+      display: block;
+      padding: 0;
+      filter: drop-shadow(0 6px 14px rgba(18, 20, 23, 0.28));
+      .cv-hero__word-l,
+      .cv-hero__word-r {
+        display: block;
+      }
+      .cv-hero__word-r {
+        padding-left: 0.08em;
+      }
     }
   }
   h1 {
