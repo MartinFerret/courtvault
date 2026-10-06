@@ -773,8 +773,8 @@ ion-alert {
       /* Blend into the canvas: multiply drops the light paper of the artwork onto the page,
          the mask dissolves every edge so nothing reads as a pasted rectangle. */
       mix-blend-mode: multiply;
-      mask-image: radial-gradient(ellipse 46% 56% at 50% 48%, #000 50%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
-      -webkit-mask-image: radial-gradient(ellipse 46% 56% at 50% 48%, #000 50%, rgba(0, 0, 0, 0.5) 74%, transparent 96%);
+      mask-image: radial-gradient(ellipse 56% 60% at 50% 48%, #000 58%, rgba(0, 0, 0, 0.6) 80%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 56% 60% at 50% 48%, #000 58%, rgba(0, 0, 0, 0.6) 80%, transparent 100%);
     }
     .cv-hero__word {
       top: auto;
