@@ -718,16 +718,16 @@ ion-alert {
   .cv-hero__art {
     position: relative;
     flex: 1 1 auto;
-    min-height: 320px;
+    min-height: 340px;
     margin: 0 calc(-1 * var(--cv-gutter));
     overflow: hidden;
     .cv-hero__word {
       position: absolute;
       left: 0;
       right: 0;
-      top: 50%;
+      top: 44%;
       transform: translateY(-50%);
-      font: 700 clamp(104px, 34vw, 150px) / 0.84 var(--cv-font-display);
+      font: 700 clamp(104px, 36vw, 160px) / 0.84 var(--cv-font-display);
       color: var(--cv-lime);
       letter-spacing: -0.05em;
       text-align: center;
@@ -741,6 +741,18 @@ ion-alert {
       width: auto;
       transform: translateX(-46%);
       filter: drop-shadow(0 18px 24px rgba(18, 20, 23, 0.18));
+    }
+    /* Photo cut-out (bust): wider than tall, anchored to the bottom edge, bleeding on the sides. */
+    .cv-hero__player--photo {
+      height: 112%;
+      width: auto;
+      max-width: none;
+      bottom: -14%;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 24px 32px rgba(18, 20, 23, 0.22));
+      /* The bust dissolves into the canvas at the bottom edge. */
+      mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
     }
   }
   h1 {
