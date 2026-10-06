@@ -86,7 +86,8 @@ price source for a paid sold-price provider touches only `providers/prices.ts`.
 | Price alerts | 2 | Unlimited |
 | Followed checklists | 1 | Unlimited |
 | Price history | 30 days | Full |
-| Gains/losses, CSV export | No | Yes |
+| Gains/losses | No | Yes |
+| Collection export | Basic (cards only) | Full with values, 24h/30d change, gains, summary |
 | Card photos (storage budget) | 300 | 1,000 |
 
 - Premium: $5.99/month or $39.99/year with a 7-day trial on the annual plan, via RevenueCat.
@@ -95,6 +96,7 @@ price source for a paid sold-price provider touches only `providers/prices.ts`.
   RLS on `price_points`). Clients read them for display only.
 - On violation the database raises `LIMIT_REACHED:<key>`. `parseLimitReached()` in
   `packages/shared` parses it; the app's `GlobalErrorHandler` and services open the paywall.
+  Edge functions use the same contract for server-enforced features (`LIMIT_REACHED:full_export`).
 - Users can never write their own Premium status: only `revenuecat-webhook` (service role)
   updates `profiles.is_premium` / `premium_until`. `public.is_premium()` is the single check.
 
@@ -136,8 +138,18 @@ apps/mobile (user session) ──► tables, RPC, storage, ───────
   price (`latest_prices` view). Compaction: daily for 90 days, weekly to 1 year, monthly after.
 - Scheduled jobs run in UTC at both Eastern offsets; functions gate on the local hour and are
   idempotent per Eastern day via `job_runs` (`_shared/jobs.ts`).
-- Website: ISR (1h) + on-demand revalidation (`/api/revalidate`, tags `prices`/`catalog`),
-  never a redeploy for data. Deploy previews disabled. Only stable Next.js features.
+- Website: ISR (1h) + on-demand revalidation (`/api/revalidate`, tags `prices`, `catalog`,
+  `last-night`, pinged by job-prices), never a redeploy for data. Deploy previews disabled.
+  Only stable Next.js features.
+- Public "Last night" page (`/last-night`, `/last-night/[date]`): `public_last_night(day,
+  min_sample, min_price_cents)` builds the whole page as JSON from games, stat lines and
+  price history (no user data). Movers = cards of players who played, price before tip-off
+  (6 PM Eastern) vs after the next morning's update; thresholds default to 5 listings and $5
+  (`LAST_NIGHT_MIN_SAMPLE`, `LAST_NIGHT_MIN_PRICE_CENTS`). Off day: latest night with a note.
+  Wording reports what moved, never why. Generic foil frames instead of imagery. One Open Graph
+  image per night, generated with the page by ISR and cached. Archive days in the sitemap.
+- Collection export: `export-csv` with `mode=basic|full`; `collection_export()` computes the
+  figures for the signed-in user. The basic export is also offered in the account deletion flow.
 - App: standalone components + signals, lazy routes, one Angular service per domain in
   `src/app/core/` (supabase, auth, plan, catalog, collection, scan, morning, follows, alerts,
   billing, push, deeplinks). Components never call Supabase directly. Routes mirror the
@@ -180,7 +192,9 @@ and the templates only; do not touch services, RPC contracts or routing.
 ## Status (2026-10-06)
 
 Done and verified locally: database with pgTAP tests, edge functions with Deno tests and mock
-providers, website (built, SEO tags, sitemap, waitlist), app walked through in the browser and
-on an Android emulator (OTP sign-in, follows, simulated and native scan, Vault, Card, Last
-night, Sets, Profile, paywall on card and follow limits). Not yet: iOS (needs Xcode), real
+providers, website (built, SEO tags, sitemap, waitlist, public Last night page with archive),
+app walked through in the browser and on an Android emulator (OTP sign-in, follows, simulated
+and native scan, Vault, Card, Last night, Sets, Profile, paywall on card and follow limits,
+basic/full export). Official 2025-26 Topps checklists converted and imported
+(`pnpm convert:checklist`, anomalies reports in `data/checklists/`). Not yet: iOS (needs Xcode), real
 provider keys, cloud deployment, native deep-link files, store assets.

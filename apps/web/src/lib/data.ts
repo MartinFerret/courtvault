@@ -141,22 +141,24 @@ async function basePricesForCards(cardIds: string[]): Promise<Map<string, number
   const result = new Map<string, number>();
   if (cardIds.length === 0) return result;
   const client = supabase();
-  const { data: parallels, error } = await client
-    .from('parallels')
-    .select('id, card_id')
-    .in('card_id', cardIds)
-    .eq('name', 'Base');
-  if (error) throw error;
-  const cardByParallel = new Map((parallels ?? []).map((p) => [p.id, p.card_id]));
-  const { data: prices, error: pricesError } = await client
-    .from('latest_prices')
-    .select('parallel_id, price_cents')
-    .eq('grade', 'RAW')
-    .in('parallel_id', [...cardByParallel.keys()]);
-  if (pricesError) throw pricesError;
-  for (const p of prices ?? []) {
-    const cardId = p.parallel_id ? cardByParallel.get(p.parallel_id) : undefined;
-    if (cardId && p.price_cents !== null) result.set(cardId, p.price_cents);
+  // PostgREST filters travel in the URL: keep `in` lists short (a set has 300 cards).
+  const cardByParallel = new Map<string, string>();
+  for (const ids of chunk(cardIds, 80)) {
+    const { data: parallels, error } = await client.from('parallels').select('id, card_id').in('card_id', ids).eq('name', 'Base');
+    if (error) throw error;
+    for (const p of parallels ?? []) cardByParallel.set(p.id, p.card_id);
+  }
+  for (const ids of chunk([...cardByParallel.keys()], 80)) {
+    const { data: prices, error: pricesError } = await client
+      .from('latest_prices')
+      .select('parallel_id, price_cents')
+      .eq('grade', 'RAW')
+      .in('parallel_id', ids);
+    if (pricesError) throw pricesError;
+    for (const p of prices ?? []) {
+      const cardId = p.parallel_id ? cardByParallel.get(p.parallel_id) : undefined;
+      if (cardId && p.price_cents !== null) result.set(cardId, p.price_cents);
+    }
   }
   return result;
 }
@@ -172,4 +174,10 @@ async function recentLines(playerId: string) {
     .map((l) => ({ ...l, game: l.games as unknown as { game_day: string; home_team: string; away_team: string; home_score: number | null; away_score: number | null } | null }))
     .sort((a, b) => (b.game?.game_day ?? '').localeCompare(a.game?.game_day ?? ''))
     .slice(0, 5);
+}
+
+function chunk<T>(items: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
 }

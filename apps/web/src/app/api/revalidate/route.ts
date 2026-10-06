@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const body = (await req.json().catch(() => ({}))) as { tags?: string[] };
-  const tags = (body.tags ?? ['prices', 'catalog']).filter((t) => ['prices', 'catalog'].includes(t));
+  const tags = (body.tags ?? ['prices', 'catalog', 'last-night']).filter((t) => ['prices', 'catalog', 'last-night'].includes(t));
   for (const tag of tags) revalidateTag(tag, 'max');
   return NextResponse.json({ revalidated: tags, at: new Date().toISOString() });
 }

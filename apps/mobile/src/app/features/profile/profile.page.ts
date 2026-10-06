@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonNote, IonToggle } from '@ionic/angular';
+import { ActionSheetController, AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonNote, IonToggle } from '@ionic/angular';
 import { AFFILIATION_DISCLAIMER, parseLimitReached } from '@courtvault/shared';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService } from '../../core/collection/collection.service';
@@ -23,6 +23,7 @@ export class ProfilePage {
   private readonly supabase = inject(SupabaseService);
   private readonly router = inject(Router);
   private readonly alerts = inject(AlertController);
+  private readonly sheets = inject(ActionSheetController);
   readonly disclaimer = AFFILIATION_DISCLAIMER;
   readonly message = signal<string | null>(null);
 
@@ -39,21 +40,36 @@ export class ProfilePage {
     else await this.push.disable();
   }
 
-  async exportCsv(): Promise<void> {
+  /** Profile > Export my collection: basic (free) or full with values (Premium). */
+  async chooseExport(): Promise<void> {
+    const sheet = await this.sheets.create({
+      header: 'Export my collection',
+      buttons: [
+        { text: 'Basic (cards only)', handler: () => void this.exportCsv('basic') },
+        { text: this.plan.isPremium() ? 'Full with values' : 'Full with values · Premium', handler: () => void this.exportCsv('full') },
+        { text: 'Cancel', role: 'cancel' },
+      ],
+    });
+    await sheet.present();
+  }
+
+  async exportCsv(mode: 'basic' | 'full' = 'basic'): Promise<boolean> {
     this.message.set(null);
     try {
-      const blob = await this.collection.exportCsv();
+      const blob = await this.collection.exportCsv(mode);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'collection.csv';
+      a.download = `collection-${mode}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-      this.message.set('Export downloaded.');
+      this.message.set(mode === 'full' ? 'Full export downloaded.' : 'Export downloaded.');
+      return true;
     } catch (err) {
       const limit = parseLimitReached(err);
       if (limit) void this.paywall.open(limit.key);
       else this.message.set(err instanceof Error ? err.message : 'Export failed.');
+      return false;
     }
   }
 
@@ -65,9 +81,16 @@ export class ProfilePage {
   async deleteAccount(): Promise<void> {
     const alert = await this.alerts.create({
       header: 'Delete your account?',
-      message: 'Your collection, follows, alerts and photos will be deleted. This cannot be undone.',
+      message: 'Your collection, follows, alerts and photos will be deleted. This cannot be undone. You can download your data first.',
       buttons: [
         { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Download my data first',
+          handler: () => {
+            void this.exportCsv('basic');
+            return false; // keep the dialog open
+          },
+        },
         {
           text: 'Delete',
           role: 'destructive',

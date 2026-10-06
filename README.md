@@ -120,8 +120,10 @@ grade, exposed as the `latest_prices` view), `games`, `player_game_lines`. Ops: 
 Money is in integer cents. Game days are US Eastern dates. `grade` is `RAW | PSA9 | PSA10`.
 
 RPC for clients: `collection_summary()`, `price_history(parallel_id, grade)`,
-`morning_report(day)`, `search_catalog(q)`, `rookie_rankings(limit)`, `set_progress()`, plus the
-`collection_items_detailed` view. Service role only: `record_price`, `parallels_to_price`,
+`morning_report(day)`, `search_catalog(q)`, `rookie_rankings(limit)`, `set_progress()`,
+`collection_export()`, plus the `collection_items_detailed` view. Public (anon):
+`public_last_night(day, min_sample, min_price_cents)` and `public_last_night_days()` for the
+website's daily "Last night" page and its archive. Service role only: `record_price`, `parallels_to_price`,
 `morning_report_for`, `morning_recipients`, `start_job_run` / `finish_job_run`,
 `compact_price_points`, `usage_report`, `invoke_job`.
 

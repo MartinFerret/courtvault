@@ -72,7 +72,7 @@ serve(
         missing,
         failures: failures.length,
       });
-      await revalidateWebsite(['prices']);
+      await revalidateWebsite(['prices', 'last-night']);
       return {
         provider: provider.name,
         targets: targets?.length ?? 0,

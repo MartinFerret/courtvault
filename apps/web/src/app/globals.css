@@ -361,3 +361,100 @@ form.stack input {
 .prose h2 {
   font-size: 1.15rem;
 }
+
+/* Last night page */
+.scores {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+.scores .card {
+  padding: 12px 16px;
+}
+.movers-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.movers,
+.performances {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mover__line {
+  margin: 6px 0 0 4px;
+}
+.performance__head {
+  margin-bottom: 4px;
+}
+.foil-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+/* Generic foil frames: the rarity drives the finish, no imagery. */
+.foil {
+  --foil-bg: var(--cv-surface);
+  --foil-edge: var(--cv-surface-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 200px;
+  max-width: 100%;
+  padding: 14px 14px 12px;
+  border-radius: 16px;
+  background: var(--foil-bg);
+  box-shadow: inset 0 0 0 3px var(--foil-edge);
+  color: var(--cv-text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  transition: transform 150ms ease;
+}
+.foil:hover,
+.foil:focus-visible {
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+.foil--refractor {
+  --foil-bg: linear-gradient(135deg, #d9f3ff, #e8e3ff 50%, #ffe3f0);
+  --foil-edge: #9be7ff;
+}
+.foil--numbered {
+  --foil-bg: linear-gradient(135deg, #fff4cc, #f5dd84 50%, #e8c44f);
+  --foil-edge: #d6a92f;
+}
+.foil--one {
+  --foil-bg: linear-gradient(135deg, #ffd9d4, #f58b7f 50%, #d9433a);
+  --foil-edge: #9f2a22;
+}
+.foil__number {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.foil__player {
+  font-weight: 600;
+}
+.foil__set,
+.foil__parallel {
+  color: var(--cv-text-muted);
+  font-size: 0.8rem;
+}
+.foil--one .foil__set,
+.foil--one .foil__parallel,
+.foil--numbered .foil__set,
+.foil--numbered .foil__parallel {
+  color: rgba(18, 20, 23, 0.7);
+}
+.foil__footer {
+  margin-top: 8px;
+  font-size: 0.9rem;
+}

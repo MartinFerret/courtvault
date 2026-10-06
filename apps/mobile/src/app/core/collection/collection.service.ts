@@ -82,12 +82,14 @@ export class CollectionService {
     return data.signedUrl;
   }
 
-  async exportCsv(): Promise<Blob> {
+  /** basic: identification columns, every user. full: values and gains, Premium (enforced server-side). */
+  async exportCsv(mode: 'basic' | 'full' = 'basic'): Promise<Blob> {
     const session = this.supabase.session();
     if (!session) throw new Error('Not signed in');
     const res = await fetch(`${environment.supabaseUrl}/functions/v1/export-csv`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${session.access_token}` },
+      headers: { Authorization: `Bearer ${session.access_token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode }),
     });
     if (!res.ok) {
       const body = (await res.json().catch(() => ({}))) as { error?: string };

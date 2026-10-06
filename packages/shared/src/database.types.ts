@@ -664,6 +664,26 @@ export type Database = {
       };
     };
     Functions: {
+      collection_export: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          added_at: string;
+          card_number: string;
+          change_24h_cents: number;
+          change_30d_cents: number;
+          current_cents: number;
+          gain_cents: number;
+          grade: Database['public']['Enums']['grade'];
+          is_rookie: boolean;
+          parallel_name: string;
+          player_name: string;
+          purchase_cents: number;
+          season: string;
+          serial_number: number;
+          serial_run: number;
+          set_name: string;
+        }[];
+      };
       collection_summary: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -756,6 +776,22 @@ export type Database = {
           captured_at: string;
           price_cents: number;
           sample_size: number;
+        }[];
+      };
+      public_last_night: {
+        Args: {
+          p_day?: string;
+          p_limit?: number;
+          p_min_price_cents?: number;
+          p_min_sample?: number;
+        };
+        Returns: Json;
+      };
+      public_last_night_days: {
+        Args: { p_limit?: number };
+        Returns: {
+          game_day: string;
+          games: number;
         }[];
       };
       record_price: {

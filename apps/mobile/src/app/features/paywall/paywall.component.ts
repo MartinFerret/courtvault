@@ -12,7 +12,7 @@ const REASONS: Record<string, string> = {
   price_alerts: 'You reached the free limit of price alerts.',
   checklist_follows: 'You reached the free limit of followed checklists.',
   photos: 'You reached the free limit of card photos.',
-  export: 'CSV export is a Premium feature.',
+  full_export: 'The full export with values is a Premium feature.',
   history: 'Full price history is a Premium feature.',
 };
 
@@ -35,7 +35,8 @@ export class PaywallComponent {
     'Unlimited players in "Last night"',
     'Unlimited price alerts and checklists',
     'Full price history',
-    'Gains and losses, CSV export',
+    'Gains and losses',
+    'Full export with values for insurance and taxes',
   ];
 
   constructor() {
