@@ -439,13 +439,17 @@ ion-segment.cv-chips {
   }
 }
 
-/* Lists: rows become tonal cards with generous radius, no dividers. */
+/* Lists: rows become tonal cards with generous radius, no dividers.
+   Ionic's own CSS loads after these tokens, so spacing uses margins, not flex gap. */
 ion-list {
   background: transparent;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+}
+ion-list > ion-item + ion-item,
+ion-list > ion-item-sliding + ion-item-sliding,
+ion-list > ion-item + ion-item-sliding,
+ion-list > ion-item-sliding + ion-item {
+  margin-top: 10px;
 }
 ion-item {
   --background: var(--cv-surface);
@@ -463,6 +467,7 @@ ion-item {
   --detail-icon-font-size: 18px;
   border-radius: var(--cv-radius-tile);
   font-family: var(--cv-font);
+  display: block;
   ion-label {
     margin: 14px 0;
     h2 {
