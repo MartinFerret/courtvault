@@ -624,6 +624,25 @@ ion-tab-bar.cv-tab-bar {
   }
 }
 
+/* Fixed action bar at the bottom of a page (onboarding steps): the canvas fades into it. */
+ion-footer.cv-footer {
+  box-shadow: none;
+  &::before {
+    display: none;
+  }
+  .cv-footer__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px var(--cv-gutter) calc(16px + var(--ion-safe-area-bottom, 0px));
+    background: linear-gradient(to bottom, rgba(237, 239, 241, 0), var(--cv-bg) 28%);
+    ion-button[size='large'] {
+      flex: 1 1 auto;
+    }
+  }
+}
+
 /* Modal (paywall) */
 ion-modal.cv-sheet {
   --border-radius: 32px 32px 0 0;

@@ -17,7 +17,7 @@
   @if (error(); as message) {
     <ion-note class="cv-error">{{ message }}</ion-note>
   }
-  <ion-list style="margin-top: 16px">
+  <ion-list style="margin-top: 16px; padding-bottom: 8px">
     @for (p of filtered(); track p.id) {
       <ion-item button (click)="toggle(p.id)" [detail]="false" [attr.aria-pressed]="follows.playerIds().has(p.id)">
         <ion-label>
@@ -28,8 +28,12 @@
       </ion-item>
     }
   </ion-list>
-  <div class="cv-stack" style="margin-top: 24px">
-    <ion-button expand="block" size="large" (click)="next()" [disabled]="follows.playerIds().size === 0">Continue</ion-button>
-    <ion-button expand="block" fill="clear" (click)="next()">Skip for now</ion-button>
-  </div>
 </ion-content>
+<ion-footer class="cv-footer">
+  <div class="cv-footer__actions">
+    <ion-button fill="clear" (click)="next()">Skip for now</ion-button>
+    <ion-button size="large" (click)="next()" [disabled]="follows.playerIds().size === 0">
+      Continue@if (follows.playerIds().size > 0) { · {{ follows.playerIds().size }} }
+    </ion-button>
+  </div>
+</ion-footer>

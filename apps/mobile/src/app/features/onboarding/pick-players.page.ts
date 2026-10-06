@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonButton, IonContent, IonHeader, IonItem, IonLabel, IonList, IonNote, IonSearchbar, IonTitle, IonToolbar, IonIcon } from '@ionic/angular';
+import { IonButton, IonContent, IonFooter, IonHeader, IonItem, IonLabel, IonList, IonNote, IonSearchbar, IonTitle, IonToolbar, IonIcon } from '@ionic/angular';
 import { parseLimitReached } from '@courtvault/shared';
 import { CatalogService } from '../../core/catalog/catalog.service';
 import { FollowsService } from '../../core/follows/follows.service';
@@ -9,7 +9,7 @@ import { PlanService } from '../../core/plan/plan.service';
 
 @Component({
   selector: 'cv-pick-players',
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonList, IonItem, IonLabel, IonButton, IonNote, IonIcon],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonSearchbar, IonList, IonItem, IonLabel, IonButton, IonNote, IonIcon],
   templateUrl: './pick-players.page.html',
 })
 export class PickPlayersPage {
