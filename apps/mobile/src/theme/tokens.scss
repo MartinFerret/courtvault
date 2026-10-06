@@ -706,7 +706,7 @@ ion-alert {
   padding: 8px 0;
 }
 
-/* Onboarding hero: display type over a lime watermark, left-aligned, CTA pinned low. */
+/* Onboarding hero: a dark cut-out player over a huge lime word, like the reference. */
 .cv-hero {
   position: relative;
   min-height: 100%;
@@ -714,36 +714,33 @@ ion-alert {
   flex-direction: column;
   justify-content: flex-end;
   gap: 16px;
-  padding: 24px 0 24px;
+  padding: 8px 0 24px;
   .cv-hero__art {
     position: relative;
     flex: 1 1 auto;
-    min-height: 240px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 320px;
+    margin: 0 calc(-1 * var(--cv-gutter));
+    overflow: hidden;
     .cv-hero__word {
-      font: 700 118px/0.86 var(--cv-font-display);
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font: 700 clamp(104px, 34vw, 150px) / 0.84 var(--cv-font-display);
       color: var(--cv-lime);
       letter-spacing: -0.05em;
       text-align: center;
       user-select: none;
     }
-    .cv-hero__card {
+    .cv-hero__player {
       position: absolute;
-      width: 128px;
-      height: 180px;
-      border-radius: 18px;
-      background: var(--cv-surface-high);
-      box-shadow: var(--cv-shadow-float);
-      transform: rotate(-9deg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      ion-icon {
-        font-size: 44px;
-        color: var(--cv-text);
-      }
+      left: 50%;
+      bottom: -4%;
+      height: 104%;
+      width: auto;
+      transform: translateX(-46%);
+      filter: drop-shadow(0 18px 24px rgba(18, 20, 23, 0.18));
     }
   }
   h1 {

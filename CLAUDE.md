@@ -18,8 +18,9 @@ A catalog website + mobile app for basketball trading card collectors in the Uni
 - **Visual direction**: the art direction in `docs/img.png` (applied 2026-10-06). Light cool
   off-white canvas, tonal surfaces without borders or shadows, one lime accent for the primary
   action and selected states, geometric sans (Outfit, self-hosted), 28px card radius, pill
-  buttons and chips, big stat tiles, a faded lime watermark word behind hero areas. No player
-  photos (legal). Theming goes through tokens only (`apps/mobile/src/theme/tokens.scss`,
+  buttons and chips, big stat tiles, a faded lime watermark word behind hero areas. Onboarding
+  hero: a dark cut-out basketball silhouette over the lime word (`public/art-dunk.svg`, public
+  domain from freesvg.org, recolored). Never a photo or likeness of a real player (legal). Theming goes through tokens only (`apps/mobile/src/theme/tokens.scss`,
   `apps/web/src/app/globals.css`); templates carry the layout, services never change for design.
 
 Product name TBD. Codename `courtvault` everywhere in code. Never use "NBA", a team name,

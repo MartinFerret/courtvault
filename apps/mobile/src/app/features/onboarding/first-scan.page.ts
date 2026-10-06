@@ -9,8 +9,8 @@ import { IonButton, IonContent, IonIcon } from '@ionic/angular';
     <ion-content>
       <div class="cv-hero">
         <div class="cv-hero__art" aria-hidden="true">
-          <div class="cv-hero__word">SCAN</div>
-          <div class="cv-hero__card"><ion-icon name="camera-outline"></ion-icon></div>
+          <div class="cv-hero__word">SCAN<br />IT</div>
+          <img class="cv-hero__player" src="art-dunk.svg" alt="" />
         </div>
         <h1>Scan your<br />first card.</h1>
         <p class="cv-hero__lead">Point the camera at the back of a card. We read the number, season and player. You pick the parallel.</p>
