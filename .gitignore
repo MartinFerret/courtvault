@@ -41,3 +41,10 @@ apps/mobile/src/environments/environment.generated.ts
 # Unlicensed artwork previews used for local design tests only
 apps/mobile/public/art-test-*
 apps/web/public/art-test-*
+
+# Official checklist PDFs are never committed (converted locally into CSV facts only)
+data/checklists/source/
+*.pdf
+
+# Unlicensed artwork previews (Adobe Stock comps) stay local
+docs/img_2.png

@@ -1,0 +1,20 @@
+{
+  "set_slug": "2025-26-topps-basketball",
+  "source": "Topps official collector's guide, https://ripped.topps.com/topps-basketball-2025-26-collectors-guide/ (read 2026-10-06, transcribed by hand)",
+  "notes": "Base parallels applied to every base card. Rainbow Foilboard is unnumbered. Format-exclusive parallels (Holo Foil, Diamante, Season Tip-Off, Crackleboard) are not modeled yet.",
+  "parallels": [
+    "Rainbow Foilboard",
+    "Gold/2025",
+    "Purple Rainbow/250",
+    "Blue Rainbow/150",
+    "Green Rainbow/99",
+    "Black/68",
+    "Gold Rainbow/50",
+    "Orange Rainbow/25",
+    "Wood/25",
+    "Black Rainbow/10",
+    "Red Rainbow/5",
+    "FoilFractor/1",
+    "First Card/1"
+  ]
+}

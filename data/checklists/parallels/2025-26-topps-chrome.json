@@ -1,0 +1,28 @@
+{
+  "set_slug": "2025-26-topps-chrome",
+  "source": "Topps official collector's guide, https://ripped.topps.com/how-to-collect-topps-chrome-basketball-guide/ (read 2026-10-06, transcribed by hand)",
+  "notes": "Base Refractor parallels applied to every base card. Prism and Negative are unnumbered. Image variations have their own Superfractor 1/1 per Topps, not modeled yet.",
+  "parallels": [
+    "Refractor",
+    "Prism Refractor",
+    "Negative Refractor",
+    "Magenta Refractor/399",
+    "Teal Refractor/299",
+    "Yellow Refractor/275",
+    "Aqua Refractor/199",
+    "Blue Refractor/150",
+    "Green Refractor/99",
+    "Purple Refractor/75",
+    "Gold Refractor/50",
+    "Orange Refractor/25",
+    "Black Refractor/10",
+    "Red Refractor/5",
+    "FrozenFractor/5",
+    "Superfractor/1",
+    "Blue Wave Refractor/150",
+    "Green Wave Refractor/99",
+    "Purple Wave Refractor/75",
+    "Gold Wave Refractor/50",
+    "Orange Wave Refractor/25"
+  ]
+}

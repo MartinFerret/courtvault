@@ -27,8 +27,10 @@ async function main(): Promise<void> {
   }
   const supabase = createClient<Database>(url, key, { auth: { persistSession: false } });
 
+  // pnpm runs workspace scripts from scripts/; INIT_CWD is where the user typed the command.
+  const baseDir = process.env['INIT_CWD'] ?? process.cwd();
   for (const file of files) {
-    const rows = parseChecklistCsv(readFileSync(resolve(file), 'utf8'));
+    const rows = parseChecklistCsv(readFileSync(resolve(baseDir, file), 'utf8'));
     console.log(`${file}: ${rows.length} cards`);
     const stats = await importRows(supabase, rows);
     console.log(`  sets ${stats.sets}, players ${stats.players}, cards ${stats.cards}, parallels ${stats.parallels}`);

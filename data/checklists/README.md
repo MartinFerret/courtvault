@@ -2,10 +2,29 @@
 
 CSV files imported with `pnpm import:checklist <file>` (idempotent: re-running creates no duplicates).
 
-**Files prefixed `DEMO-` are demo data written by hand for local development.** Card numbers,
-parallels and release dates are plausible but not official. They will be replaced by the
-official Topps checklists before launch. Players whose team is empty had not been drafted
-when this demo data was written.
+`2025-26-topps-basketball.csv` and `2025-26-topps-chrome.csv` are converted from the official
+Topps checklist PDFs with `pnpm convert:checklist` (see below). Each one has a companion
+`*.anomalies.md` report to review by hand. **Files prefixed `DEMO-` are demo data written by
+hand** (the 2026-27 set does not exist yet); players whose team is empty had not been drafted.
+
+## Converting an official Topps checklist
+
+```
+pnpm convert:checklist /path/to/2025-26_Topps_Chrome_Basketball_Checklist.pdf \
+  --season 2025-26 --set-slug 2025-26-topps-chrome --set-name "Topps Chrome"
+```
+
+- Needs `pdftotext` (`brew install poppler`). The PDF stays on your disk: it is never copied
+  into the repository or the database (`*.pdf` is gitignored). Only facts are extracted.
+- Scope: base cards, base variations (Golden Mirror, Clear, Team Color Border, Blackout,
+  Player Number, Image Variation) and rookie flags. Inserts, autographs and relics are skipped
+  and listed at the end of the report.
+- Numbered parallels are not in the PDF. They come from `parallels/<set_slug>.json`, transcribed
+  from Topps' official collector guides on ripped.topps.com (the source URL is in each file).
+- Inconsistencies (same number with different players or teams across sections, unknown teams,
+  odd casing, non-player rows, variations without a base card) go to the anomalies report
+  instead of being guessed. Review it, fix the CSV by hand if needed, then
+  `pnpm import:checklist data/checklists/<set_slug>.csv`.
 
 Format (header required, UTF-8):
 

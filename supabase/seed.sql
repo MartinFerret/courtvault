@@ -33,7 +33,8 @@ begin
 end $$;
 
 -- ---------------------------------------------------------------------------
--- Demo catalog (same content as data/checklists/DEMO-*.csv)
+-- Demo catalog: a few real 2025-26 cards (numbers from the official checklists) plus the
+-- 2026-27 demo set. `pnpm db:reset` then imports the full official CSVs on top of it.
 -- ---------------------------------------------------------------------------
 insert into public.players (slug, name, team) values
   ('victor-wembanyama', 'Victor Wembanyama', 'San Antonio Spurs'),
@@ -42,7 +43,6 @@ insert into public.players (slug, name, team) values
   ('ace-bailey', 'Ace Bailey', 'Utah Jazz'),
   ('vj-edgecombe', 'VJ Edgecombe', 'Philadelphia 76ers'),
   ('stephen-curry', 'Stephen Curry', 'Golden State Warriors'),
-  ('luka-doncic', 'Luka Dončić', 'Los Angeles Lakers'),
   ('nikola-jokic', 'Nikola Jokić', 'Denver Nuggets'),
   ('shai-gilgeous-alexander', 'Shai Gilgeous-Alexander', 'Oklahoma City Thunder'),
   ('anthony-edwards', 'Anthony Edwards', 'Minnesota Timberwolves'),
@@ -71,18 +71,18 @@ declare
 begin
   for rec in
     select * from (values
-      ('2025-26-topps-chrome', '1', 'victor-wembanyama', false, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
-      ('2025-26-topps-chrome', '2', 'dylan-harper', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
-      ('2025-26-topps-chrome', '3', 'cooper-flagg', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
-      ('2025-26-topps-chrome', '5', 'ace-bailey', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
-      ('2025-26-topps-chrome', '7', 'vj-edgecombe', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
-      ('2025-26-topps-chrome', '30', 'stephen-curry', false, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
-      ('2025-26-topps-chrome', '77', 'luka-doncic', false, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
-      ('2025-26-topps-basketball', '1', 'cooper-flagg', true, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
-      ('2025-26-topps-basketball', '15', 'nikola-jokic', false, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
-      ('2025-26-topps-basketball', '2', 'shai-gilgeous-alexander', false, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
-      ('2025-26-topps-basketball', '5', 'anthony-edwards', false, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
-      ('2025-26-topps-basketball', '0', 'jayson-tatum', false, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
+      ('2025-26-topps-chrome', '221', 'victor-wembanyama', false, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
+      ('2025-26-topps-chrome', '252', 'dylan-harper', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
+      ('2025-26-topps-chrome', '251', 'cooper-flagg', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
+      ('2025-26-topps-chrome', '255', 'ace-bailey', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
+      ('2025-26-topps-chrome', '253', 'vj-edgecombe', true, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
+      ('2025-26-topps-chrome', '201', 'stephen-curry', false, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
+      ('2025-26-topps-chrome', '25', 'nikola-jokic', false, 'Base|Refractor|Gold Refractor/50|Red Refractor/5|Superfractor/1'),
+      ('2025-26-topps-basketball', '201', 'cooper-flagg', true, 'Base|Rainbow Foilboard|Gold/2025|Gold Rainbow/50|FoilFractor/1'),
+      ('2025-26-topps-basketball', '101', 'nikola-jokic', false, 'Base|Rainbow Foilboard|Gold/2025|Gold Rainbow/50|FoilFractor/1'),
+      ('2025-26-topps-basketball', '115', 'shai-gilgeous-alexander', false, 'Base|Rainbow Foilboard|Gold/2025|Gold Rainbow/50|FoilFractor/1'),
+      ('2025-26-topps-basketball', '108', 'anthony-edwards', false, 'Base|Rainbow Foilboard|Gold/2025|Gold Rainbow/50|FoilFractor/1'),
+      ('2025-26-topps-basketball', '1', 'jayson-tatum', false, 'Base|Rainbow Foilboard|Gold/2025|Gold Rainbow/50|FoilFractor/1'),
       ('2026-27-topps-basketball', '1', 'aj-dybantsa', true, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
       ('2026-27-topps-basketball', '2', 'cameron-boozer', true, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
       ('2026-27-topps-basketball', '3', 'darryn-peterson', true, 'Base|Rainbow Foil|Gold/50|Platinum/1'),
@@ -162,7 +162,6 @@ begin
     base_cents := case p.player_slug
       when 'cooper-flagg' then 4200
       when 'victor-wembanyama' then 2500
-      when 'luka-doncic' then 1800
       when 'stephen-curry' then 1500
       when 'nikola-jokic' then 1200
       when 'shai-gilgeous-alexander' then 1100
@@ -180,8 +179,11 @@ begin
     base_cents := base_cents * case
       when p.serial_run = 1 then 800
       when p.serial_run = 5 then 120
+      when p.serial_run = 10 then 70
+      when p.serial_run = 25 then 45
       when p.serial_run = 50 then 25
-      when p.parallel_name in ('Refractor', 'Rainbow Foil') then 3
+      when p.serial_run = 2025 then 2
+      when p.parallel_name in ('Refractor', 'Rainbow Foil', 'Rainbow Foilboard') then 3
       else 1 end;
 
     last_bump := case p.player_slug
@@ -250,7 +252,6 @@ begin
     ('demo-' || to_char(last_night, 'YYYYMMDD') || '-sas-dal', 'cooper-flagg', 36.5, 32, 9, 5, 2, 1),
     ('demo-' || to_char(last_night, 'YYYYMMDD') || '-sas-dal', 'victor-wembanyama', 34.0, 27, 14, 3, 1, 5),
     ('demo-' || to_char(last_night, 'YYYYMMDD') || '-sas-dal', 'dylan-harper', 28.2, 14, 4, 6, 1, 0),
-    ('demo-' || to_char(last_night, 'YYYYMMDD') || '-lal-gsw', 'luka-doncic', 37.1, 29, 8, 11, 2, 0),
     ('demo-' || to_char(last_night, 'YYYYMMDD') || '-lal-gsw', 'stephen-curry', 33.4, 18, 3, 6, 1, 0),
     ('demo-' || to_char(last_night, 'YYYYMMDD') || '-min-bos', 'anthony-edwards', 38.0, 35, 6, 4, 2, 1),
     ('demo-' || to_char(last_night, 'YYYYMMDD') || '-min-bos', 'jayson-tatum', 36.2, 16, 7, 5, 0, 1),
@@ -277,14 +278,14 @@ declare
 begin
   for item in
     select * from (values
-      ('2025-26-topps-chrome', '3', 'Base', 'RAW', null::integer, 3500, interval '20 days'),
-      ('2025-26-topps-chrome', '3', 'Refractor', 'PSA10', null, 52000, interval '15 days'),
-      ('2025-26-topps-chrome', '1', 'Base', 'RAW', null, 2200, interval '12 days'),
-      ('2025-26-topps-chrome', '77', 'Gold Refractor', 'RAW', 12, 40000, interval '10 days'),
-      ('2025-26-topps-chrome', '2', 'Base', 'PSA9', null, 2900, interval '8 days'),
-      ('2025-26-topps-chrome', '30', 'Base', 'RAW', null, null, interval '5 days'),
-      ('2025-26-topps-basketball', '5', 'Base', 'RAW', null, 800, interval '3 days'),
-      ('2025-26-topps-basketball', '1', 'Rainbow Foil', 'RAW', null, 11000, interval '2 hours')
+      ('2025-26-topps-chrome', '251', 'Base', 'RAW', null::integer, 3500, interval '20 days'),
+      ('2025-26-topps-chrome', '251', 'Refractor', 'PSA10', null, 52000, interval '15 days'),
+      ('2025-26-topps-chrome', '221', 'Base', 'RAW', null, 2200, interval '12 days'),
+      ('2025-26-topps-chrome', '25', 'Gold Refractor', 'RAW', 12, 40000, interval '10 days'),
+      ('2025-26-topps-chrome', '252', 'Base', 'PSA9', null, 2900, interval '8 days'),
+      ('2025-26-topps-chrome', '201', 'Base', 'RAW', null, null, interval '5 days'),
+      ('2025-26-topps-basketball', '108', 'Base', 'RAW', null, 800, interval '3 days'),
+      ('2025-26-topps-basketball', '201', 'Rainbow Foilboard', 'RAW', null, 11000, interval '2 hours')
     ) as t(set_slug, number, parallel_name, grade, serial_number, purchase_cents, age)
   loop
     insert into public.collection_items (user_id, parallel_id, grade, serial_number, purchase_cents, created_at)
@@ -296,7 +297,7 @@ begin
   end loop;
 
   insert into public.followed_players (user_id, player_id)
-  select demo_uid, id from public.players where slug in ('cooper-flagg', 'victor-wembanyama', 'luka-doncic')
+  select demo_uid, id from public.players where slug in ('cooper-flagg', 'victor-wembanyama', 'nikola-jokic')
   on conflict do nothing;
 
   -- A fake push token so job-morning has a recipient locally (PUSH_PROVIDER=log prints it).
@@ -309,13 +310,13 @@ begin
   insert into public.price_alerts (user_id, parallel_id, grade, below_cents)
   select demo_uid, par.id, 'RAW', 3000
   from public.parallels par join public.cards c on c.id = par.card_id join public.card_sets s on s.id = c.set_id
-  where s.slug = '2025-26-topps-chrome' and c.number = '2' and par.name = 'Base';
+  where s.slug = '2025-26-topps-chrome' and c.number = '252' and par.name = 'Base';
 
   -- The other user owns one card, used by RLS tests.
   insert into public.collection_items (user_id, parallel_id, grade, purchase_cents, created_at)
   select other_uid, par.id, 'RAW', 1000, now() - interval '3 days'
   from public.parallels par join public.cards c on c.id = par.card_id join public.card_sets s on s.id = c.set_id
-  where s.slug = '2025-26-topps-chrome' and c.number = '5' and par.name = 'Base';
+  where s.slug = '2025-26-topps-chrome' and c.number = '255' and par.name = 'Base';
 end $$;
 
 insert into public.waitlist (email, source) values ('early-bird@example.com', 'seed') on conflict do nothing;

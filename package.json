@@ -21,7 +21,7 @@
     "format:check": "prettier --check .",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
-    "db:reset": "supabase db reset && node ./scripts/apply-dev-overrides.mjs",
+    "db:reset": "supabase db reset && pnpm import:checklist data/checklists/2025-26-topps-basketball.csv data/checklists/2025-26-topps-chrome.csv data/checklists/DEMO-2026-27-topps-basketball.csv && node ./scripts/apply-dev-overrides.mjs",
     "db:types": "supabase gen types typescript --local --schema public > packages/shared/src/database.types.ts && prettier --write packages/shared/src/database.types.ts",
     "db:usage": "node ./scripts/usage.mjs",
     "functions:serve": "supabase functions serve --env-file supabase/functions/.env --no-verify-jwt",
@@ -30,7 +30,8 @@
     "job:prices": "node ./scripts/run-job.mjs job-prices",
     "job:alerts": "node ./scripts/run-job.mjs job-alerts",
     "job:morning": "node ./scripts/run-job.mjs job-morning",
-    "job:compact": "node ./scripts/run-job.mjs job-compact"
+    "job:compact": "node ./scripts/run-job.mjs job-compact",
+    "convert:checklist": "pnpm --filter @courtvault/scripts convert:checklist"
   },
   "devDependencies": {
     "prettier": "^3.9.9",
