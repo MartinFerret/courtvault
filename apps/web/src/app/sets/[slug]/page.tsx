@@ -10,8 +10,14 @@ export const revalidate = 3600;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const sets = await listSets();
-  return sets.map((s) => ({ slug: s.slug }));
+  try {
+    const sets = await listSets();
+    return sets.map((s) => ({ slug: s.slug }));
+  } catch (err) {
+    // No database at build time: pages are generated on demand (dynamicParams = true).
+    console.warn(`generateStaticParams skipped: ${err instanceof Error ? err.message : err}`);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

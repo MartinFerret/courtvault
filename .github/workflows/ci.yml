@@ -28,20 +28,30 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm -r --if-present test
       - run: pnpm test:functions
-      - run: pnpm build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
-          NEXT_PUBLIC_SITE_URL: https://courtvault.example
+      # The website needs a database at build time (static params): built in the database job.
+      - run: pnpm -r --if-present --filter '!@courtvault/web' build
 
   database:
-    name: Database migrations and pgTAP tests
+    name: Database, pgTAP tests and website build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
       - uses: supabase/setup-cli@v1
         with:
           version: latest
-      - run: supabase db start
+      # Local stack with migrations + seed (API included, so the website can build against it).
+      - run: supabase start -x studio,imgproxy,inbucket,logflare,vector,realtime,edge-runtime
       - run: supabase db lint --level warning
       - run: supabase test db
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @courtvault/web build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+          # Local demo anon key, identical on every machine (not a secret).
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+          NEXT_PUBLIC_SITE_URL: https://courtvault.example
