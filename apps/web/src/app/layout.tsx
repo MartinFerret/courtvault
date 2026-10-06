@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
+import '@fontsource-variable/outfit';
 import './globals.css';
 import { SiteFooter, SiteHeader } from '@/components/site-chrome';
 import { APPLE_APP_ID, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from '@/lib/site';

@@ -1,20 +1,35 @@
-<ion-header>
+<ion-header class="cv-header">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/sets"></ion-back-button></ion-buttons>
-    <ion-title>{{ set()?.season }} {{ set()?.set_name }}</ion-title>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/sets" aria-label="Back"></ion-back-button></ion-buttons>
+    <ion-title>Checklist</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   @if (set(); as s) {
-    <p class="cv-muted ion-padding-horizontal">{{ s.owned_cards }} / {{ s.total_cards }} cards owned</p>
+    <div class="cv-page-head">
+      <div>
+        <p class="cv-page-head__eyebrow">{{ s.season }}</p>
+        <h1>{{ s.set_name }}</h1>
+      </div>
+    </div>
+    <div class="cv-stat-grid">
+      <div class="cv-tile cv-stat" style="min-height: 0">
+        <span class="cv-stat__label">Owned</span>
+        <span class="cv-stat__value">{{ s.owned_cards }}</span>
+      </div>
+      <div class="cv-tile cv-stat" style="min-height: 0">
+        <span class="cv-stat__label">In the set</span>
+        <span class="cv-stat__value">{{ s.total_cards }}</span>
+      </div>
+    </div>
   }
-  <ion-list>
+  <ion-list style="margin-top: 16px">
     @for (c of cards(); track c.id) {
       <ion-item [routerLink]="['/cards', c.slug]" [detail]="true">
-        <ion-icon slot="start" [name]="ownedCardIds().has(c.id) ? 'checkmark-circle' : 'card-outline'" [color]="ownedCardIds().has(c.id) ? 'success' : 'medium'"></ion-icon>
+        <ion-icon slot="start" aria-hidden="true" [name]="ownedCardIds().has(c.id) ? 'checkmark-circle' : 'card-outline'" [style.color]="ownedCardIds().has(c.id) ? 'var(--cv-color-gain)' : 'var(--cv-text-muted)'"></ion-icon>
         <ion-label>
           <h2>#{{ c.number }} {{ c.players.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h2>
-          <p>{{ c.players.team ?? '' }}</p>
+          <p>{{ c.players.team ?? 'Team to be announced' }}</p>
         </ion-label>
       </ion-item>
     }

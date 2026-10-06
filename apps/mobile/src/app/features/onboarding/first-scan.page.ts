@@ -6,12 +6,15 @@ import { IonButton, IonContent, IonIcon } from '@ionic/angular';
   selector: 'cv-first-scan',
   imports: [IonContent, IonButton, IonIcon],
   template: `
-    <ion-content class="ion-padding">
-      <div class="cv-onboarding">
-        <ion-icon name="scan-outline" class="cv-hero-icon"></ion-icon>
-        <h1>Scan your first card</h1>
-        <p class="cv-muted">Point the camera at the back of a card. We read the number, season and player, you pick the parallel. Done in seconds.</p>
-        <ion-button expand="block" (click)="go('/tabs/scan')">Scan a card</ion-button>
+    <ion-content>
+      <div class="cv-hero">
+        <div class="cv-hero__art" aria-hidden="true">
+          <div class="cv-hero__word">SCAN</div>
+          <div class="cv-hero__card"><ion-icon name="camera-outline"></ion-icon></div>
+        </div>
+        <h1>Scan your<br />first card.</h1>
+        <p class="cv-hero__lead">Point the camera at the back of a card. We read the number, season and player. You pick the parallel.</p>
+        <ion-button expand="block" size="large" (click)="go('/tabs/scan')">Scan a card</ion-button>
         <ion-button expand="block" fill="clear" (click)="go('/tabs/last-night')">Later</ion-button>
       </div>
     </ion-content>

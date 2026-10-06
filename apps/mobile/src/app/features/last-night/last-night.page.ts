@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonNote, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/angular';
+import { IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonNote, IonRefresher, IonRefresherContent } from '@ionic/angular';
 import { formatEasternDay } from '@courtvault/shared';
 import { MorningService } from '../../core/morning/morning.service';
 import { PaywallService } from '../../core/billing/paywall.service';
@@ -10,7 +10,7 @@ import { DeltaPipe } from '../../shared/pipes';
 /** "Last night": stat lines of followed/owned players and how the games moved the user's cards. */
 @Component({
   selector: 'cv-last-night',
-  imports: [RouterLink, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon, IonButton, IonRefresher, IonRefresherContent, DeltaPipe],
+  imports: [RouterLink, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon, IonButton, IonRefresher, IonRefresherContent, DeltaPipe],
   templateUrl: './last-night.page.html',
 })
 export class LastNightPage {

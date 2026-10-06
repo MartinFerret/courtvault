@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonNote, IonProgressBar, IonTitle, IonToolbar, IonButton } from '@ionic/angular';
+import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonNote, IonProgressBar, IonButton } from '@ionic/angular';
 import { parseLimitReached } from '@courtvault/shared';
 import { CatalogService } from '../../core/catalog/catalog.service';
 import { FollowsService } from '../../core/follows/follows.service';
@@ -10,7 +10,7 @@ type SetRow = Awaited<ReturnType<CatalogService['sets']>>[number];
 
 @Component({
   selector: 'cv-sets',
-  imports: [RouterLink, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon, IonProgressBar, IonButton],
+  imports: [RouterLink, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon, IonProgressBar, IonButton],
   templateUrl: './sets.page.html',
 })
 export class SetsPage {

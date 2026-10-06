@@ -2,8 +2,8 @@ import { Component, computed, inject, input, signal, effect } from '@angular/cor
 import { SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonNote,
-  IonSegment, IonSegmentButton, IonTitle, IonToolbar,
+  IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonNote,
+  IonTitle, IonToolbar,
 } from '@ionic/angular';
 import { GRADES, PRICE_LABEL, parseLimitReached, type Grade } from '@courtvault/shared';
 import { AlertsService } from '../../core/alerts/alerts.service';
@@ -21,8 +21,8 @@ import { CentsPipe, DeltaPipe, GradePipe, ParallelPipe } from '../../shared/pipe
 @Component({
   selector: 'cv-card',
   imports: [
-    FormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonContent, IonList, IonItem, IonLabel,
-    IonNote, IonIcon, IonSegment, IonSegmentButton, IonInput, SlicePipe, CentsPipe, DeltaPipe, ParallelPipe, GradePipe,
+    FormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonContent, IonItem, IonLabel,
+    IonNote, IonIcon, IonInput, SlicePipe, CentsPipe, DeltaPipe, ParallelPipe, GradePipe,
   ],
   templateUrl: './card.page.html',
 })

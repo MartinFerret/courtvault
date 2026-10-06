@@ -1,50 +1,50 @@
-<ion-modal [isOpen]="paywall.isOpen()" (didDismiss)="paywall.close()">
+<ion-modal class="cv-sheet" [isOpen]="paywall.isOpen()" (didDismiss)="paywall.close()" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
   <ng-template>
-    <ion-header>
+    <ion-header class="cv-header">
       <ion-toolbar>
         <ion-title>Premium</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="paywall.close()" aria-label="Close">
+          <ion-button class="cv-tile-btn" (click)="paywall.close()" aria-label="Close">
             <ion-icon slot="icon-only" name="close-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content>
       <p class="cv-paywall-reason">{{ reasonText() }}</p>
 
-      <ion-list lines="none">
+      <ul class="cv-benefits">
         @for (benefit of benefits; track benefit) {
-          <ion-item>
-            <ion-icon slot="start" name="checkmark-circle" color="success"></ion-icon>
-            <ion-label>{{ benefit }}</ion-label>
-          </ion-item>
+          <li><ion-icon name="checkmark-outline" aria-hidden="true"></ion-icon><span>{{ benefit }}</span></li>
         }
-      </ion-list>
+      </ul>
 
-      @for (offering of billing.offerings(); track offering.identifier) {
-        <ion-button expand="block" [fill]="offering.period === 'yearly' ? 'solid' : 'outline'" [disabled]="billing.busy()" (click)="buy(offering)">
-          {{ offering.title }} · {{ offering.priceString }}
+      <div class="cv-stack">
+        @for (offering of billing.offerings(); track offering.identifier) {
+          <ion-button expand="block" size="large" [fill]="offering.period === 'yearly' ? 'solid' : 'outline'" [disabled]="billing.busy()" (click)="buy(offering)">
+            {{ offering.period === 'yearly' ? 'Yearly' : 'Monthly' }} · {{ offering.priceString }}
+          </ion-button>
           @if (offering.trialDays > 0) {
-            <span>&nbsp;· {{ offering.trialDays }}-day free trial</span>
+            <p class="cv-caption ion-text-center" style="margin-top: -4px">{{ offering.trialDays }}-day free trial, then {{ offering.priceString }}. Cancel anytime.</p>
           }
-        </ion-button>
-      }
-
-      <ion-button expand="block" fill="clear" size="small" (click)="restore()">Restore purchases</ion-button>
+        }
+        <ion-button expand="block" fill="clear" size="small" (click)="restore()">Restore purchases</ion-button>
+      </div>
 
       @if (message(); as text) {
-        <ion-note class="ion-text-center" style="display: block">{{ text }}</ion-note>
+        <ion-note class="ion-text-center" style="display: block; margin-top: 12px" role="status">{{ text }}</ion-note>
       }
 
       <p class="cv-paywall-legal">
         Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period.
         Manage or cancel from your App Store or Google Play account.
+      </p>
+      <div style="display: flex; gap: 4px">
         <ion-button fill="clear" size="small" (click)="openLegal('terms')">Terms</ion-button>
         <ion-button fill="clear" size="small" (click)="openLegal('privacy')">Privacy</ion-button>
-      </p>
+      </div>
       @if (!billing.configured()) {
-        <ion-note>Purchases are available in the iOS and Android apps.</ion-note>
+        <p class="cv-caption">Purchases are available in the iOS and Android apps.</p>
       }
     </ion-content>
   </ng-template>

@@ -1,8 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-  IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel,
-  IonList, IonNote, IonRefresher, IonRefresherContent, IonSearchbar, IonSegment, IonSegmentButton, IonTitle, IonToolbar,
+  IonButton, IonContent, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel,
+  IonList, IonNote, IonRefresher, IonRefresherContent, IonSearchbar, IonSegment, IonSegmentButton,
 } from '@ionic/angular';
 import { PRICE_LABEL, type Grade } from '@courtvault/shared';
 import { CollectionService } from '../../core/collection/collection.service';
@@ -15,7 +15,7 @@ type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
 @Component({
   selector: 'cv-vault',
   imports: [
-    RouterLink, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonList, IonItem, IonItemSliding, IonItemOptions,
+    RouterLink, IonButton, IonContent, IonList, IonItem, IonItemSliding, IonItemOptions,
     IonItemOption, IonLabel, IonNote, IonIcon, IonSearchbar, IonSegment, IonSegmentButton, IonRefresher, IonRefresherContent,
     CentsPipe, DeltaPipe, ParallelPipe, GradePipe,
   ],

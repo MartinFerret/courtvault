@@ -1,9 +1,6 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal,
-  IonNote, IonTitle, IonToolbar,
-} from '@ionic/angular';
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonModal, IonNote, IonTitle, IonToolbar } from '@ionic/angular';
 import { PREMIUM_PRICING } from '@courtvault/shared';
 import { BillingService, type Offering } from '../../core/billing/billing.service';
 import { PaywallService } from '../../core/billing/paywall.service';
@@ -22,7 +19,7 @@ const REASONS: Record<string, string> = {
 /** Global paywall modal, opened by PaywallService (from LIMIT_REACHED errors or the profile). */
 @Component({
   selector: 'cv-paywall',
-  imports: [IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon],
+  imports: [IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonNote, IonIcon],
   templateUrl: './paywall.component.html',
 })
 export class PaywallComponent {

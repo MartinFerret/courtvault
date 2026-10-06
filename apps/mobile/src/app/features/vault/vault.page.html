@@ -1,61 +1,73 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Vault</ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/tabs/scan"><ion-icon slot="icon-only" name="scan-outline"></ion-icon></ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
 
-  @if (collection.summary(); as s) {
-    <div class="cv-summary">
-      <div class="cv-summary-total">{{ s.total_cents | cents }}</div>
-      <div class="cv-summary-change" [class.cv-gain]="s.change_24h_cents > 0" [class.cv-loss]="s.change_24h_cents < 0">
-        {{ s.change_24h_cents | delta }} today
-        <span class="cv-muted">· market {{ s.market_change_cents | delta }} · added {{ s.added_cents | cents }}</span>
-      </div>
-      <div class="cv-muted cv-small">
-        {{ s.item_count }} cards
-        @if (cardLimit(); as max) { / {{ max }} free }
-        · {{ priceLabel }}
-      </div>
-      @if (s.is_premium) {
-        <div class="cv-small">Invested {{ s.invested_cents | cents }} · gain {{ s.gain_cents | delta }}</div>
-      } @else {
-        <ion-button size="small" fill="clear" (click)="openPaywall()">See gains and losses with Premium</ion-button>
-      }
+  <div class="cv-page-head">
+    <div>
+      <p class="cv-page-head__eyebrow">Your collection</p>
+      <h1>Vault</h1>
     </div>
+    <div class="cv-page-head__actions">
+      <ion-button class="cv-tile-btn cv-tile-btn--lime" routerLink="/tabs/scan" aria-label="Scan a card"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+    </div>
+  </div>
+
+  @if (collection.summary(); as s) {
+    <div class="cv-card cv-card--lime">
+      <span class="cv-watermark" aria-hidden="true">Vault</span>
+      <div class="cv-stat cv-stat--hero" style="min-height: 0; gap: 12px">
+        <span class="cv-stat__label">Total value</span>
+        <span class="cv-stat__value">{{ s.total_cents | cents }}</span>
+        <span class="cv-stat__note" style="color: var(--cv-on-lime)">{{ priceLabel }}</span>
+      </div>
+    </div>
+    <div class="cv-stat-grid" style="margin-top: 12px">
+      <div class="cv-tile cv-stat">
+        <span class="cv-stat__label">Change<br />today</span>
+        <span class="cv-stat__value" [class.cv-gain]="s.change_24h_cents > 0" [class.cv-loss]="s.change_24h_cents < 0">{{ s.change_24h_cents | delta }}</span>
+        <span class="cv-stat__note"><ion-icon [name]="s.market_change_cents >= 0 ? 'trending-up-outline' : 'trending-down-outline'" aria-hidden="true"></ion-icon>Market {{ s.market_change_cents | delta }}</span>
+      </div>
+      <div class="cv-tile cv-stat">
+        <span class="cv-stat__label">Cards<br />in Vault</span>
+        <span class="cv-stat__value">{{ s.item_count }}@if (cardLimit(); as max) {<span class="cv-muted" style="font-size: 0.5em"> / {{ max }}</span>}</span>
+        <span class="cv-stat__note"><ion-icon name="albums-outline" aria-hidden="true"></ion-icon>@if (cardLimit()) { Free plan limit } @else { Unlimited }</span>
+      </div>
+    </div>
+    @if (s.is_premium) {
+      <p class="cv-caption" style="margin: 12px 4px 0">Invested {{ s.invested_cents | cents }}, gain {{ s.gain_cents | delta }}.</p>
+    } @else {
+      <ion-button fill="outline" size="small" style="margin-top: 12px" (click)="openPaywall()">See gains and losses with Premium</ion-button>
+    }
   }
 
-  <ion-searchbar placeholder="Filter your cards" debounce="200" (ionInput)="query.set($any($event).detail.value ?? '')"></ion-searchbar>
-  <ion-segment [value]="filter()" (ionChange)="onFilter($any($event).detail.value)">
-    <ion-segment-button value="all"><ion-label>All</ion-label></ion-segment-button>
-    <ion-segment-button value="rookies"><ion-label>Rookies</ion-label></ion-segment-button>
-    <ion-segment-button value="numbered"><ion-label>Numbered</ion-label></ion-segment-button>
-    <ion-segment-button value="graded"><ion-label>Graded</ion-label></ion-segment-button>
-  </ion-segment>
+  <section class="cv-section">
+    <ion-searchbar placeholder="Filter your cards" debounce="200" (ionInput)="query.set($any($event).detail.value ?? '')"></ion-searchbar>
+    <ion-segment class="cv-chips" style="margin-top: 12px" [value]="filter()" (ionChange)="onFilter($any($event).detail.value)">
+      <ion-segment-button value="all"><ion-label>All</ion-label></ion-segment-button>
+      <ion-segment-button value="rookies"><ion-label>Rookies</ion-label></ion-segment-button>
+      <ion-segment-button value="numbered"><ion-label>Numbered</ion-label></ion-segment-button>
+      <ion-segment-button value="graded"><ion-label>Graded</ion-label></ion-segment-button>
+    </ion-segment>
+  </section>
 
   @if (!collection.loading() && collection.items().length === 0) {
-    <div class="ion-padding ion-text-center">
-      <p class="cv-muted">Your Vault is empty. Scan your first card.</p>
+    <div class="cv-empty">
+      <p>Your Vault is empty. Scan your first card to see its value.</p>
       <ion-button routerLink="/tabs/scan">Scan a card</ion-button>
     </div>
   }
 
-  <ion-list>
+  <ion-list style="margin-top: 16px">
     @for (item of visible(); track item.id) {
       <ion-item-sliding>
         <ion-item [routerLink]="['/card', item.parallel_id]" [queryParams]="{ grade: item.grade, item: item.id }" [detail]="true">
           <ion-label>
             <h2>#{{ item.card_number }} {{ item.player_name }} @if (item.is_rookie) { <span class="cv-badge">RC</span> }</h2>
-            <p>{{ item.season }} {{ item.set_name }} · {{ item.parallel_name ?? '' | parallel: item.serial_run }} @if (item.serial_number) { {{ item.serial_number }}/{{ item.serial_run }} } · {{ gradeOf(item.grade ?? 'RAW') | grade }}</p>
+            <p>{{ item.season }} {{ item.set_name }} · {{ item.parallel_name ?? '' | parallel: item.serial_run }}@if (item.serial_number) { {{ item.serial_number }}/{{ item.serial_run }} } · {{ gradeOf(item.grade ?? 'RAW') | grade }}</p>
           </ion-label>
           <ion-note slot="end">{{ item.current_cents | cents }}</ion-note>
         </ion-item>
         <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="remove(item.id!)"><ion-icon slot="icon-only" name="trash-outline"></ion-icon></ion-item-option>
+          <ion-item-option color="danger" (click)="remove(item.id!)" aria-label="Remove from Vault"><ion-icon slot="icon-only" name="trash-outline"></ion-icon></ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
     }

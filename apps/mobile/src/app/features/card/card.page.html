@@ -1,95 +1,106 @@
-<ion-header>
+<ion-header class="cv-header">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/vault"></ion-back-button></ion-buttons>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/vault" aria-label="Back"></ion-back-button></ion-buttons>
     <ion-title>Card</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content class="ion-padding">
-  @if (error(); as message) { <ion-note color="danger">{{ message }}</ion-note> }
+<ion-content>
+  @if (error(); as message) { <ion-note class="cv-error" role="alert">{{ message }}</ion-note> }
 
   @if (card(); as c) {
-    <h1>#{{ c.number }} {{ c.player.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h1>
-    <p class="cv-muted">{{ c.set.season }} {{ c.set.name }} @if (c.player.team) { · {{ c.player.team }} }</p>
-
-    <h3>Parallel</h3>
-    <div class="cv-parallel-grid">
-      @for (p of c.parallels; track p.id) {
-        <ion-button size="small" [fill]="p.id === selectedParallelId() ? 'solid' : 'outline'" (click)="selectedParallelId.set(p.id)">
-          {{ p.name | parallel: p.serial_run }}
-        </ion-button>
-      }
+    <div class="cv-card" style="margin-top: 8px">
+      <span class="cv-watermark" aria-hidden="true">#{{ c.number }}</span>
+      <p class="cv-caption">{{ c.set.season }} {{ c.set.name }}@if (c.player.team) { · {{ c.player.team }} }</p>
+      <h1 style="margin-top: 8px; font-size: 32px">{{ c.player.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h1>
+      <div class="cv-price-hero">
+        @if (price(); as p) {
+          <span class="cv-price-value">{{ p.price_cents | cents }}</span>
+          <span class="cv-caption">{{ priceLabel }} · {{ p.sample_size }} listings · {{ p.captured_at | slice: 0 : 10 }}</span>
+        } @else {
+          <span class="cv-muted">No price yet for this parallel and grade.</span>
+        }
+      </div>
     </div>
 
-    <ion-segment [value]="selectedGrade()" (ionChange)="onGrade($any($event).detail.value)">
-      @for (g of grades; track g) {
-        <ion-segment-button [value]="g"><ion-label>{{ g | grade }}</ion-label></ion-segment-button>
-      }
-    </ion-segment>
+    <section class="cv-section">
+      <h2>Parallel</h2>
+      <div class="cv-chips" role="radiogroup" aria-label="Parallel">
+        @for (p of c.parallels; track p.id) {
+          <ion-button size="small" role="radio" [attr.aria-checked]="p.id === selectedParallelId()" [fill]="p.id === selectedParallelId() ? 'solid' : 'outline'" (click)="selectedParallelId.set(p.id)">
+            {{ p.name | parallel: p.serial_run }}
+          </ion-button>
+        }
+      </div>
+    </section>
 
-    <div class="cv-price-hero">
-      @if (price(); as p) {
-        <div class="cv-price-value">{{ p.price_cents | cents }}</div>
-        <div class="cv-muted cv-small">{{ priceLabel }} · {{ p.sample_size }} listings · updated {{ p.captured_at | slice: 0 : 10 }}</div>
-      } @else {
-        <div class="cv-muted">No price yet for this parallel and grade.</div>
-      }
-      @if (parallel(); as par) {
-        <div class="cv-small cv-muted">
-          @for (g of grades; track g) {
-            <span>{{ g | grade }}: {{ par.prices[g]?.price_cents | cents }} </span>
-          }
-        </div>
-      }
-    </div>
+    <section class="cv-section">
+      <h2>Grade</h2>
+      <div class="cv-grade-row" role="radiogroup" aria-label="Grade">
+        @for (g of grades; track g) {
+          <button type="button" class="cv-grade" role="radio" [attr.aria-checked]="g === selectedGrade()" [class.is-selected]="g === selectedGrade()" (click)="onGrade(g)">
+            <span class="cv-grade__label">{{ g | grade }}</span>
+            <span class="cv-grade__value">{{ parallel()?.prices?.[g]?.price_cents | cents }}</span>
+          </button>
+        }
+      </div>
+    </section>
 
     @if (history().length > 1) {
-      <h3>History <span class="cv-muted cv-small">({{ history().length }} points, {{ historyDelta() | delta }})</span></h3>
-      <svg viewBox="0 0 100 30" class="cv-sparkline" preserveAspectRatio="none" role="img" aria-label="Price history">
-        <polyline [attr.points]="sparkline()" fill="none" stroke="currentColor" stroke-width="1"></polyline>
-      </svg>
-      <div class="cv-muted cv-small">Low {{ historyMin() | cents }} · High {{ historyMax() | cents }}</div>
-      @if (!plan.isPremium()) {
-        <ion-button size="small" fill="clear" (click)="openPaywall('history')">Free plan shows 30 days. Unlock full history</ion-button>
-      }
+      <section class="cv-section">
+        <h2>History <span class="cv-caption">{{ history().length }} points, {{ historyDelta() | delta }}</span></h2>
+        <div class="cv-tile">
+          <svg viewBox="0 0 100 30" class="cv-sparkline" preserveAspectRatio="none" role="img" aria-label="Price history">
+            <polyline [attr.points]="sparkline()" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></polyline>
+          </svg>
+          <span class="cv-caption">Low {{ historyMin() | cents }} · High {{ historyMax() | cents }}</span>
+          @if (!plan.isPremium()) {
+            <ion-button size="small" fill="clear" style="margin-top: 8px" (click)="openPaywall('history')">Free plan shows 30 days. Unlock full history</ion-button>
+          }
+        </div>
+      </section>
     }
 
-    @if (ownedItem(); as it) {
-      <ion-list lines="none">
-        <ion-item>
+    <section class="cv-section">
+      @if (ownedItem(); as it) {
+        <ion-item lines="none">
           <ion-label>
             <h2>In your Vault</h2>
-            <p>Added {{ it.created_at | slice: 0 : 10 }} @if (it.purchase_cents !== null) { · bought for {{ it.purchase_cents | cents }} }</p>
+            <p>Added {{ it.created_at | slice: 0 : 10 }}@if (it.purchase_cents !== null) {, bought for {{ it.purchase_cents | cents }} }</p>
           </ion-label>
           @if (gain() !== null) {
             @if (plan.isPremium()) {
               <ion-note slot="end" [class.cv-gain]="gain()! > 0" [class.cv-loss]="gain()! < 0">{{ gain() | delta }}</ion-note>
             } @else {
-              <ion-button slot="end" size="small" fill="clear" (click)="openPaywall('gains')">Gain/loss</ion-button>
+              <ion-button slot="end" size="small" fill="clear" (click)="openPaywall('gains')">Gain</ion-button>
             }
           }
         </ion-item>
-      </ion-list>
-    } @else {
-      <ion-button expand="block" (click)="addToVault()">Add to Vault</ion-button>
-    }
+      } @else {
+        <ion-button expand="block" size="large" (click)="addToVault()">Add to Vault</ion-button>
+      }
+    </section>
 
-    <h3>Price alert</h3>
-    @if (activeAlert(); as a) {
-      <ion-item lines="none">
-        <ion-icon slot="start" name="notifications-outline"></ion-icon>
-        <ion-label>Alert me below {{ a.below_cents | cents }}</ion-label>
-        <ion-button slot="end" fill="clear" (click)="removeAlert(a.id)">Remove</ion-button>
-      </ion-item>
-    } @else {
-      <ion-item>
-        <ion-input label="Notify me when the price drops below (USD)" labelPlacement="stacked" type="number" inputmode="decimal" [(ngModel)]="alertUsd"></ion-input>
-        <ion-button slot="end" (click)="setAlert()" [disabled]="!alertUsd">Set</ion-button>
-      </ion-item>
-    }
+    <section class="cv-section">
+      <h2>Price alert</h2>
+      @if (activeAlert(); as a) {
+        <ion-item lines="none">
+          <ion-icon slot="start" name="notifications-outline" aria-hidden="true"></ion-icon>
+          <ion-label><h2>Below {{ a.below_cents | cents }}</h2><p>We notify you once, then you can re-arm it.</p></ion-label>
+          <ion-button slot="end" fill="clear" size="small" (click)="removeAlert(a.id)">Remove</ion-button>
+        </ion-item>
+      } @else {
+        <ion-item class="cv-field" lines="none">
+          <ion-input label="Notify me below (USD)" labelPlacement="stacked" type="number" inputmode="decimal" [(ngModel)]="alertUsd" placeholder="25.00"></ion-input>
+          <ion-button slot="end" size="small" (click)="setAlert()" [disabled]="!alertUsd">Set</ion-button>
+        </ion-item>
+      }
+    </section>
 
     @if (price()?.buy_url; as url) {
-      <ion-button expand="block" fill="outline" [href]="url" target="_blank" rel="sponsored noopener">Shop on eBay</ion-button>
-      <ion-note class="cv-small">Affiliate link. Listings are asking prices.</ion-note>
+      <section class="cv-section">
+        <ion-button expand="block" fill="outline" [href]="url" target="_blank" rel="sponsored noopener">Shop listings on eBay</ion-button>
+        <p class="cv-caption" style="margin-top: 8px">Affiliate link. Listings are asking prices.</p>
+      </section>
     }
   }
 </ion-content>

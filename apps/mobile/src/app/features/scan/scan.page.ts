@@ -2,8 +2,8 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  IonBadge, IonButton, IonButtons, IonChip, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList,
-  IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner, IonTitle, IonToolbar,
+  IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList,
+  IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner,
 } from '@ionic/angular';
 import { GRADES, formatParallel, parseLimitReached, type Grade } from '@courtvault/shared';
 import { CatalogService, type SearchResult } from '../../core/catalog/catalog.service';
@@ -22,8 +22,8 @@ type Step = 'idle' | 'scanning' | 'pick-card' | 'pick-parallel' | 'no-match';
 @Component({
   selector: 'cv-scan',
   imports: [
-    FormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonIcon, IonList, IonItem, IonLabel,
-    IonBadge, IonChip, IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner, IonInput, CentsPipe, ParallelPipe, GradePipe,
+    FormsModule, IonButton, IonContent, IonIcon, IonList, IonItem, IonLabel,
+    IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner, IonInput, CentsPipe, ParallelPipe, GradePipe,
   ],
   templateUrl: './scan.page.html',
 })

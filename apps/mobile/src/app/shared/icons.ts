@@ -1,11 +1,13 @@
 import { addIcons } from 'ionicons';
 import {
+  addOutline,
   alertCircleOutline,
   albumsOutline,
   arrowBackOutline,
   cameraOutline,
   cardOutline,
   checkmarkCircle,
+  checkmarkOutline,
   closeOutline,
   heart,
   heartOutline,
@@ -26,12 +28,14 @@ import {
 /** Registers the icons used across the app once. */
 export function registerIcons(): void {
   addIcons({
+    addOutline,
     alertCircleOutline,
     albumsOutline,
     arrowBackOutline,
     cameraOutline,
     cardOutline,
     checkmarkCircle,
+    checkmarkOutline,
     closeOutline,
     heart,
     heartOutline,

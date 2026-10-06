@@ -1,7 +1,10 @@
-/* Theme tokens: the only file the mockups should need to change for colors, fonts, radii. */
+/* Theme tokens: the only file to change for colors, fonts, radii and component chrome. */
 @use './theme/tokens';
 
-/* Ionic core and optional utilities */
+/* Self-hosted geometric sans (no runtime network dependency on devices). */
+@import '@fontsource-variable/outfit/index.css';
+
+/* Ionic core and utilities */
 @import '@ionic/angular/css/core.css';
 @import '@ionic/angular/css/normalize.css';
 @import '@ionic/angular/css/structure.css';

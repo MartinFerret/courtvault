@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonButton, IonContent, IonInput, IonItem, IonNote, IonText } from '@ionic/angular';
+import { IonButton, IonContent, IonIcon, IonInput, IonItem, IonText } from '@ionic/angular';
 import { AFFILIATION_DISCLAIMER } from '@courtvault/shared';
 import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'cv-sign-in',
-  imports: [FormsModule, IonContent, IonItem, IonInput, IonButton, IonNote, IonText],
+  imports: [FormsModule, IonContent, IonItem, IonInput, IonButton, IonText, IonIcon],
   templateUrl: './sign-in.page.html',
 })
 export class SignInPage {

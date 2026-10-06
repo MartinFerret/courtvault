@@ -1,36 +1,38 @@
-<ion-content class="ion-padding">
-  <div class="cv-onboarding">
-    <h1>Your cards, their value, every morning.</h1>
-    <p class="cv-muted">Scan a card, see what it is worth by parallel and grade, and find out how last night's games moved your collection.</p>
+<ion-content>
+  <div class="cv-hero">
+    <div class="cv-hero__art" aria-hidden="true">
+      <div class="cv-hero__word">YOUR<br />CARDS</div>
+      <div class="cv-hero__card"><ion-icon name="scan-outline"></ion-icon></div>
+    </div>
 
     @if (step() === 'email') {
-      <ion-item>
+      <h1>Know what<br />every card<br />is worth.</h1>
+      <p class="cv-hero__lead">Scan a card, see its value by parallel and grade, and get every morning how last night's games moved your collection.</p>
+      <ion-item class="cv-field" lines="none">
         <ion-input label="Email" labelPlacement="stacked" type="email" autocomplete="email" inputmode="email" [(ngModel)]="email" placeholder="you@example.com"></ion-input>
       </ion-item>
-      <ion-button expand="block" [disabled]="busy() || !email" (click)="sendCode()">Send me a code</ion-button>
+      <ion-button expand="block" size="large" [disabled]="busy() || !email" (click)="sendCode()">Send me a code</ion-button>
     } @else {
-      <p>We sent a 6-digit code to <strong>{{ email }}</strong>.</p>
-      <ion-item>
+      <h1>Check<br />your inbox.</h1>
+      <p class="cv-hero__lead">We sent a 6-digit code to <strong>{{ email }}</strong>.</p>
+      <ion-item class="cv-field" lines="none">
         <ion-input label="Code" labelPlacement="stacked" inputmode="numeric" autocomplete="one-time-code" maxlength="6" [(ngModel)]="code"></ion-input>
       </ion-item>
-      <ion-button expand="block" [disabled]="busy() || code.length < 6" (click)="verify()">Sign in</ion-button>
-      <ion-button expand="block" fill="clear" size="small" (click)="step.set('email')">Use another email</ion-button>
+      <ion-button expand="block" size="large" [disabled]="busy() || code.length < 6" (click)="verify()">Sign in</ion-button>
+      <ion-button expand="block" fill="clear" (click)="step.set('email')">Use another email</ion-button>
     }
 
     @if (auth.appleEnabled) {
-      <ion-button expand="block" fill="outline" (click)="social('apple')">Sign in with Apple</ion-button>
+      <ion-button expand="block" fill="outline" (click)="social('apple')">Continue with Apple</ion-button>
     }
     @if (auth.googleEnabled) {
-      <ion-button expand="block" fill="outline" (click)="social('google')">Sign in with Google</ion-button>
+      <ion-button expand="block" fill="outline" (click)="social('google')">Continue with Google</ion-button>
     }
 
     @if (error(); as message) {
-      <ion-text color="danger"><p>{{ message }}</p></ion-text>
+      <ion-text class="cv-error" role="alert">{{ message }}</ion-text>
     }
 
-    <ion-note class="cv-footnote">
-      Local dev: codes arrive in Mailpit at http://127.0.0.1:54324.<br />
-      {{ disclaimer }}
-    </ion-note>
+    <p class="cv-caption">{{ disclaimer }}</p>
   </div>
 </ion-content>

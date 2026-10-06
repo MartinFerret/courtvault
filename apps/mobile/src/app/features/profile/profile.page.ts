@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AlertController, IonButton, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonNote, IonTitle, IonToggle, IonToolbar } from '@ionic/angular';
+import { AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonNote, IonToggle } from '@ionic/angular';
 import { AFFILIATION_DISCLAIMER, parseLimitReached } from '@courtvault/shared';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService } from '../../core/collection/collection.service';
@@ -11,7 +11,7 @@ import { SupabaseService } from '../../core/supabase/supabase.service';
 
 @Component({
   selector: 'cv-profile',
-  imports: [RouterLink, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon, IonButton, IonToggle],
+  imports: [RouterLink, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon, IonButton, IonToggle],
   templateUrl: './profile.page.html',
 })
 export class ProfilePage {
