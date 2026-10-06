@@ -1,12 +1,34 @@
 /**
- * job-prices: median asking price for every (parallel, grade) in a collection or alert,
- * plus the top rookie cards. Target 5:30 AM New York. Writes through record_price(), which
+ * job-prices: median asking price for every (parallel, grade) that matters, in priority order:
+ * collections and alerts first, then the showcase (players who played last night, rookies,
+ * top players). Stops at the daily call budget (app_settings.showcase.daily_call_budget) and
+ * logs coverage per reason. Target 5:30 AM New York. Writes through record_price(), which
  * stores a history point only when the price changed.
  */
 import { defineJob } from '../_shared/jobs.ts';
 import { serve, sleep } from '../_shared/http.ts';
 import { createPriceProvider } from '../_shared/providers/index.ts';
 import { env } from '../_shared/env.ts';
+
+interface Target {
+  parallel_id: string;
+  grade: 'RAW' | 'PSA9' | 'PSA10';
+  parallel_name: string;
+  serial_run: number | null;
+  card_number: string;
+  player_name: string;
+  set_name: string;
+  season: string;
+  reason: string;
+  priority: number;
+  current_cents: number | null;
+}
+
+interface Coverage {
+  requested: number;
+  priced: number;
+  skipped: number;
+}
 
 serve(
   defineJob(
@@ -16,15 +38,32 @@ serve(
         p_rookie_limit: 50,
       });
       if (targetsError) throw targetsError;
+      const list = (targets ?? []) as Target[];
+
+      const { data: budgetValue } = await supabase.rpc('price_call_budget');
+      const budget = Number(env('PRICE_CALL_BUDGET') ?? budgetValue ?? 3500);
 
       const provider = createPriceProvider(day);
       const capturedAt = new Date().toISOString();
-      let quoted = 0;
+      const coverage = new Map<string, Coverage>();
+      const bump = (reason: string, key: keyof Coverage) => {
+        const c = coverage.get(reason) ?? { requested: 0, priced: 0, skipped: 0 };
+        c[key]++;
+        coverage.set(reason, c);
+      };
+
+      let calls = 0;
       let changed = 0;
       let missing = 0;
       const failures: string[] = [];
 
-      for (const t of targets ?? []) {
+      for (const t of list) {
+        bump(t.reason, 'requested');
+        if (calls >= budget) {
+          bump(t.reason, 'skipped');
+          continue;
+        }
+        calls++;
         try {
           const quote = await provider.quote({
             season: t.season,
@@ -38,6 +77,7 @@ serve(
           });
           if (!quote) {
             missing++;
+            bump(t.reason, 'skipped');
             continue;
           }
           const { data: wrote, error: recordError } = await supabase.rpc('record_price', {
@@ -50,9 +90,10 @@ serve(
             p_captured_at: capturedAt,
           });
           if (recordError) throw recordError;
-          quoted++;
+          bump(t.reason, 'priced');
           if (wrote) changed++;
         } catch (err) {
+          bump(t.reason, 'skipped');
           failures.push(
             `${t.parallel_id}/${t.grade}: ${err instanceof Error ? err.message : String(err)}`,
           );
@@ -65,21 +106,36 @@ serve(
         if (provider.name !== 'mock') await sleep(200);
       }
 
+      for (const [reason, c] of coverage) {
+        await supabase.rpc('record_price_coverage', {
+          p_day: day,
+          p_reason: reason,
+          p_requested: c.requested,
+          p_priced: c.priced,
+          p_skipped: c.skipped,
+        });
+      }
+      const summary = Object.fromEntries(coverage);
       log('prices done', {
         provider: provider.name,
-        quoted,
+        targets: list.length,
+        calls,
+        budget,
         changed,
         missing,
         failures: failures.length,
+        coverage: summary,
       });
       await revalidateWebsite(['prices', 'last-night']);
       return {
         provider: provider.name,
-        targets: targets?.length ?? 0,
-        quoted,
+        targets: list.length,
+        calls,
+        budget,
         changed,
         missing,
         failures,
+        coverage: summary,
       };
     },
   ),

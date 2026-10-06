@@ -149,6 +149,13 @@ before its target and is idempotent per Eastern day via `job_runs`.
 | job-morning | 8:00 | `0 12,13 * * *` |
 | compact-price-points (SQL only) | weekly | `0 11 * * 0` |
 
+Price coverage: user pairs (collections, alerts) first, then the showcase (players who played
+last night, rookies, top 60 players by recent performance), capped by
+`app_settings.showcase.daily_call_budget` (3,500 by default; the eBay Browse quota is 5,000
+calls/day). Expected load per night with the two 2025-26 sets: rookies ~390 pairs (98 cards ×
+Base in Raw and PSA 10 + 2 parallels), top players ~360, players of the night mostly overlap;
+about 800 to 1,600 calls. `price_coverage` keeps a per-reason log; edit the settings in Studio.
+
 Cron accounts for about 8 edge invocations per day (two firings per job, the second is a
 no-op), far below the 500k/month free quota. App traffic (scan-match, export, delete) adds to it.
 

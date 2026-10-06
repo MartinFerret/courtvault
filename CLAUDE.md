@@ -150,6 +150,13 @@ apps/mobile (user session) ──► tables, RPC, storage, ───────
   image per night, generated with the page by ISR and cached. Archive days in the sitemap.
 - Collection export: `export-csv` with `mode=basic|full`; `collection_export()` computes the
   figures for the signed-in user. The basic export is also offered in the account deletion flow.
+- Showcase price coverage (`app_settings` keys `showcase` and `showcase_parallels`): every night
+  job-prices prices, in this order, collections and alerts, then cards of players who played
+  last night, then every rookie, then the top 60 players by recent game score (14-day window,
+  +2 per follower). Per card: Base + 2 preferred parallels per set (listing counts re-rank them
+  once known); Raw, plus PSA 10 for rookie Base cards. `showcase_pairs()` / `parallels_to_price()`
+  build the ordered work list, `price_call_budget()` caps calls per night (3,500 by default,
+  eBay Browse quota 5,000), `price_coverage` logs requested / priced / skipped per reason.
 - App: standalone components + signals, lazy routes, one Angular service per domain in
   `src/app/core/` (supabase, auth, plan, catalog, collection, scan, morning, follows, alerts,
   billing, push, deeplinks). Components never call Supabase directly. Routes mirror the

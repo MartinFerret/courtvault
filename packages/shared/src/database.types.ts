@@ -3,6 +3,27 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          description: string | null;
+          key: string;
+          updated_at: string;
+          value: NonNullable<Json>;
+        };
+        Insert: {
+          description?: string | null;
+          key: string;
+          updated_at?: string;
+          value: NonNullable<Json>;
+        };
+        Update: {
+          description?: string | null;
+          key?: string;
+          updated_at?: string;
+          value?: NonNullable<Json>;
+        };
+        Relationships: [];
+      };
       card_sets: {
         Row: {
           created_at: string;
@@ -498,6 +519,30 @@ export type Database = {
           },
         ];
       };
+      price_coverage: {
+        Row: {
+          day: string;
+          priced: number;
+          reason: string;
+          requested: number;
+          skipped: number;
+        };
+        Insert: {
+          day: string;
+          priced?: number;
+          reason: string;
+          requested?: number;
+          skipped?: number;
+        };
+        Update: {
+          day?: string;
+          priced?: number;
+          reason?: string;
+          requested?: number;
+          skipped?: number;
+        };
+        Relationships: [];
+      };
       price_points: {
         Row: {
           captured_at: string;
@@ -756,6 +801,7 @@ export type Database = {
           parallel_id: string;
           parallel_name: string;
           player_name: string;
+          priority: number;
           reason: string;
           season: string;
           serial_run: number;
@@ -770,6 +816,7 @@ export type Database = {
         };
         Returns: number;
       };
+      price_call_budget: { Args: Record<PropertyKey, never>; Returns: number };
       price_history: {
         Args: { p_grade: Database['public']['Enums']['grade']; p_parallel_id: string };
         Returns: {
@@ -805,6 +852,16 @@ export type Database = {
           p_source: string;
         };
         Returns: boolean;
+      };
+      record_price_coverage: {
+        Args: {
+          p_day: string;
+          p_priced: number;
+          p_reason: string;
+          p_requested: number;
+          p_skipped: number;
+        };
+        Returns: undefined;
       };
       rookie_rankings: {
         Args: { p_limit?: number };
@@ -849,7 +906,25 @@ export type Database = {
           total_cards: number;
         }[];
       };
+      showcase_pairs: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          grade: Database['public']['Enums']['grade'];
+          parallel_id: string;
+          priority: number;
+          reason: string;
+        }[];
+      };
       start_job_run: { Args: { p_job: string; p_run_key: string }; Returns: boolean };
+      top_players_recent: {
+        Args: { p_limit?: number; p_window_days?: number };
+        Returns: {
+          followers: number;
+          games: number;
+          player_id: string;
+          score: number;
+        }[];
+      };
       usage_report: {
         Args: Record<PropertyKey, never>;
         Returns: {

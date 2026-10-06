@@ -22,6 +22,7 @@ export function FoilCard({
   grade,
   isRookie,
   footer,
+  compact = false,
 }: {
   href: string;
   number: string;
@@ -32,18 +33,24 @@ export function FoilCard({
   grade: 'RAW' | 'PSA9' | 'PSA10';
   isRookie: boolean;
   footer?: React.ReactNode;
+  compact?: boolean;
 }) {
   const tier = foilTier(parallelName, serialRun);
   return (
-    <Link href={href} className={`foil foil--${tier}`} aria-label={`${player} #${number} ${formatParallel(parallelName, serialRun)} ${GRADE_LABELS[grade]}`}>
-      <span className="foil__number">#{number}</span>
-      <span className="foil__player">
-        {player} {isRookie ? <span className="badge">RC</span> : null}
+    <Link
+      href={href}
+      className={`foil foil--${tier}${compact ? ' foil--compact' : ''}`}
+      aria-label={`${player} #${number} ${formatParallel(parallelName, serialRun)} ${GRADE_LABELS[grade]}`}
+    >
+      <span className="foil__top">
+        <span className="foil__number">#{number}</span>
+        {isRookie ? <span className="foil__rc">RC</span> : null}
       </span>
-      <span className="foil__set">{setLabel}</span>
-      <span className="foil__parallel">
+      <span className="foil__player">{player}</span>
+      <span className="foil__meta">
         {formatParallel(parallelName, serialRun)} · {GRADE_LABELS[grade]}
       </span>
+      <span className="foil__set">{setLabel}</span>
       {footer ? <span className="foil__footer">{footer}</span> : null}
     </Link>
   );
