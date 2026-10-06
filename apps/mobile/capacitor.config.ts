@@ -7,6 +7,11 @@ const config: CapacitorConfig = {
   server: {
     androidScheme: 'https',
   },
+  android: {
+    // Local development only: the app (https://localhost) calls Supabase over http on the host.
+    // Set to false for production builds.
+    allowMixedContent: true,
+  },
   plugins: {
     SplashScreen: {
       launchAutoHide: true,

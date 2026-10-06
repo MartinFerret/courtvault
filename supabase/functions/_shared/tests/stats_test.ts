@@ -106,4 +106,11 @@ Deno.test('mock provider is deterministic and pairs known teams', async () => {
   assertEquals(lines.length, 2);
   const again = await provider.boxScore(games[0]!.externalId);
   assertEquals(lines, again);
+  for (const line of lines) {
+    for (
+      const v of [line.points, line.rebounds, line.assists, line.steals, line.blocks, line.minutes]
+    ) {
+      assertEquals((v ?? 0) >= 0, true, 'mock stats are never negative');
+    }
+  }
 });

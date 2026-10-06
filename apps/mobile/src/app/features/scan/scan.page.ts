@@ -68,6 +68,12 @@ export class ScanPage {
       this.photo.set(photo);
       const text = await this.scan.recognize(photo);
       this.ocrText.set(text);
+      if (!text.trim()) {
+        // OCR read nothing (blurry photo, no text): no server call, offer manual search.
+        this.candidates.set([]);
+        this.step.set('no-match');
+        return;
+      }
       const result = await this.scan.match(text);
       this.serialRead.set(result.signals.serial?.number ?? null);
       this.serialNumber = result.signals.serial?.number ?? null;

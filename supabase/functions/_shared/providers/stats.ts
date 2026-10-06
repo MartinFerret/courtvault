@@ -214,7 +214,7 @@ export class MockStatsProvider implements StatsProvider {
         homeTeam: home,
         awayTeam: away,
         homeScore: 95 + (seed % 30),
-        awayScore: 95 + ((seed >> 5) % 30),
+        awayScore: 95 + ((seed >>> 5) % 30),
         status: 'final',
         startsAt: `${day}T23:30:00.000Z`,
       });
@@ -233,16 +233,17 @@ export class MockStatsProvider implements StatsProvider {
       .filter((p) => p.team === game.homeTeam || p.team === game.awayTeam)
       .map((p) => {
         const seed = hashInt(`${externalId}:${p.name}`);
+        // Unsigned shifts: a signed shift of a large hash would yield negative stats.
         return {
           externalPlayerId: null,
           playerName: p.name,
           team: p.team ?? '',
           minutes: 24 + (seed % 14),
           points: 8 + (seed % 28),
-          rebounds: 2 + ((seed >> 3) % 12),
-          assists: 1 + ((seed >> 6) % 10),
-          steals: (seed >> 9) % 4,
-          blocks: (seed >> 11) % 4,
+          rebounds: 2 + ((seed >>> 3) % 12),
+          assists: 1 + ((seed >>> 6) % 10),
+          steals: (seed >>> 9) % 4,
+          blocks: (seed >>> 11) % 4,
           raw: { source: 'mock' },
         };
       });
