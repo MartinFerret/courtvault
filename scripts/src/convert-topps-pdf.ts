@@ -84,6 +84,7 @@ async function main(): Promise<void> {
 
   const byType = new Map<string, number>();
   for (const a of result.anomalies) byType.set(a.type, (byType.get(a.type) ?? 0) + 1);
+  const unverified = [...new Set(result.anomalies.filter((a) => a.type === 'player_mismatch' && a.number).map((a) => a.number!))].sort((a, b) => Number(a) - Number(b));
   const report = [
     `# Anomalies report: ${season} ${setName}`,
     '',
@@ -96,6 +97,20 @@ async function main(): Promise<void> {
     `- Variation parallels found: ${[...new Set(result.cards.flatMap((c) => c.parallels.filter((p) => p !== 'Base')))].join(', ') || 'none'}`,
     `- Numbered parallels applied: ${numberedParallels.length ? numberedParallels.join(', ') : 'NONE (add ' + parallelsFile + ')'}`,
     ...matching.map((m) => `- ${m}`),
+    '',
+    '## Unverified cards',
+    '',
+    'The base section is the source of truth. These numbers have a different player in at least one',
+    'variation section; verify with a real card photo before trusting them:',
+    '',
+    ...(unverified.length ? unverified.map((n) => `- #${n}: ${result.cards.find((c) => c.number === n)?.player ?? '?'} (base) — UNVERIFIED`) : ['- none']),
+    '',
+    '## Rules applied',
+    '',
+    '- Teams: the base section wins when a variation section disagrees. The team printed on a card is',
+    '  catalog information only; stats and "Last night" match on player identity, never on the team.',
+    '- Team cards and other rows without a player (e.g. "WE THE NORTH RAPTORS SHINE") are skipped for the MVP.',
+    '- Known team misspellings (e.g. "Portland Trailblazers") are normalized automatically and listed as team_alias.',
     '',
     '## Anomalies by type',
     '',

@@ -8,8 +8,23 @@ Source: official Topps checklist (local file, not stored). Generated 2026-10-06.
 - Base sections: 2, variation sections: 11, rows read: 3356
 - Variation parallels found: Golden Mirror Image Variation, Clear Variation, Team Color Border Variation, Blackout Variation, Player Number Variation
 - Numbered parallels applied: Rainbow Foilboard, Gold/2025, Purple Rainbow/250, Blue Rainbow/150, Green Rainbow/99, Black/68, Gold Rainbow/50, Orange Rainbow/25, Wood/25, Black Rainbow/10, Red Rainbow/5, FoilFractor/1, First Card/1
-- Existing players matched: 10
-- New players: 261
+- Existing players matched: 271
+- New players: 0
+
+## Unverified cards
+
+The base section is the source of truth. These numbers have a different player in at least one
+variation section; verify with a real card photo before trusting them:
+
+- #51: Obi Toppin (base) — UNVERIFIED
+- #53: Pascal Siakam (base) — UNVERIFIED
+
+## Rules applied
+
+- Teams: the base section wins when a variation section disagrees. The team printed on a card is
+  catalog information only; stats and "Last night" match on player identity, never on the team.
+- Team cards and other rows without a player (e.g. "WE THE NORTH RAPTORS SHINE") are skipped for the MVP.
+- Known team misspellings (e.g. "Portland Trailblazers") are normalized automatically and listed as team_alias.
 
 ## Anomalies by type
 
@@ -32,7 +47,7 @@ Source: official Topps checklist (local file, not stored). Generated 2026-10-06.
 - [player_mismatch] (BASE CARDS I TEAM COLOR BORDER VARIATION, line 904) #53: base "Pascal Siakam" vs "Obi Toppin" in BASE CARDS I TEAM COLOR BORDER VARIATION
 - [suspicious_name] (BASE CARDS I BLACKOUT VARIATION, line 1321) Odd casing "DeMAR DeRozan" normalized to "DeMar DeRozan"
 - [name_variant] (BASE CARDS I BLACKOUT VARIATION, line 1332) #173: "P.J. Washington Jr." vs "P.J. Washington" in BASE CARDS I BLACKOUT VARIATION (kept the base spelling)
-- [non_player_row] (COMBO CARDS BLACKOUT VARIATION, line 1501) Not a player row: "WE THE NORTH RAPTORS SHINE" (Toronto Raptors)
+- [non_player_row] (COMBO CARDS BLACKOUT VARIATION, line 1501) Not a player row, skipped for the MVP (team cards are not modeled): "WE THE NORTH RAPTORS SHINE" (Toronto Raptors)
 
 ## Skipped sections (out of MVP scope)
 

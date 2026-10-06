@@ -8,18 +8,32 @@ Source: official Topps checklist (local file, not stored). Generated 2026-10-06.
 - Base sections: 1, variation sections: 1, rows read: 1300
 - Variation parallels found: Image Variation
 - Numbered parallels applied: Refractor, Prism Refractor, Negative Refractor, Magenta Refractor/399, Teal Refractor/299, Yellow Refractor/275, Aqua Refractor/199, Blue Refractor/150, Green Refractor/99, Purple Refractor/75, Gold Refractor/50, Orange Refractor/25, Black Refractor/10, Red Refractor/5, FrozenFractor/5, Superfractor/1, Blue Wave Refractor/150, Green Wave Refractor/99, Purple Wave Refractor/75, Gold Wave Refractor/50, Orange Wave Refractor/25
-- Existing players matched: 10
-- New players: 289
+- Existing players matched: 299
+- New players: 0
+
+## Unverified cards
+
+The base section is the source of truth. These numbers have a different player in at least one
+variation section; verify with a real card photo before trusting them:
+
+- none
+
+## Rules applied
+
+- Teams: the base section wins when a variation section disagrees. The team printed on a card is
+  catalog information only; stats and "Last night" match on player identity, never on the team.
+- Team cards and other rows without a player (e.g. "WE THE NORTH RAPTORS SHINE") are skipped for the MVP.
+- Known team misspellings (e.g. "Portland Trailblazers") are normalized automatically and listed as team_alias.
 
 ## Anomalies by type
 
 - suspicious_name: 1
-- unknown_team: 1
+- team_alias: 1
 
 ## Details
 
 - [suspicious_name] (BASE CARDS, line 44) Odd casing "Kristaps PORZINGIS" normalized to "Kristaps Porzingis"
-- [unknown_team] (BASE CARDS, line 220) Team "Portland Trailblazers" written as "Portland Trail Blazers" for "Kris Murray"
+- [team_alias] (BASE CARDS, line 220) Team "Portland Trailblazers" normalized to "Portland Trail Blazers" for "Kris Murray"
 
 ## Skipped sections (out of MVP scope)
 

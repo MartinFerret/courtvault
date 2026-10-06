@@ -26,6 +26,7 @@ export interface Anomaly {
     | 'unparsable_row'
     | 'non_player_row'
     | 'unknown_team'
+    | 'team_alias'
     | 'duplicate_in_section'
     | 'player_mismatch'
     | 'team_mismatch'
@@ -256,14 +257,14 @@ export function buildCards(parsed: ReturnType<typeof parseChecklistText>): Conve
   const checkRow = (r: ParsedRow): boolean => {
     const name = normalizePlayerName(r.player);
     if (!/[a-z]/.test(name) || name.split(' ').length < 2 || /\d/.test(name) || /^[A-Z ]+$/.test(r.player.trim()) && r.player.trim().split(' ').length >= 3) {
-      anomalies.push({ type: 'non_player_row', number: r.number, section: r.section, line: r.line, message: `Not a player row: "${r.player}" (${r.team ?? 'no team'})` });
+      anomalies.push({ type: 'non_player_row', number: r.number, section: r.section, line: r.line, message: `Not a player row, skipped for the MVP (team cards are not modeled): "${r.player}" (${r.team ?? 'no team'})` });
       return false;
     }
     if (!r.team) {
       anomalies.push({ type: 'unknown_team', number: r.number, section: r.section, line: r.line, message: `No team found for "${r.player}"` });
     } else if (TEAM_ALIASES[r.team.toLowerCase()]) {
       const canonical = TEAM_ALIASES[r.team.toLowerCase()]!;
-      anomalies.push({ type: 'unknown_team', number: r.number, section: r.section, line: r.line, message: `Team "${r.team}" written as "${canonical}" for "${r.player}"` });
+      anomalies.push({ type: 'team_alias', number: r.number, section: r.section, line: r.line, message: `Team "${r.team}" normalized to "${canonical}" for "${r.player}"` });
       r.team = canonical;
     } else if (!TEAM_SET.has(r.team.toLowerCase())) {
       anomalies.push({ type: 'unknown_team', number: r.number, section: r.section, line: r.line, message: `Unknown team "${r.team}" for "${r.player}"` });
