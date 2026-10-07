@@ -3147,3 +3147,14 @@ form.stack input {
 .td-parallel {
   min-height: 44px;
 }
+/* Official images keep their aspect ratio whatever the column width. */
+.card-visual--image,
+.set-visual--image,
+.gallery__img,
+.hero__card-img {
+  height: auto;
+  object-fit: contain;
+}
+.set-visual--image {
+  box-shadow: 0 16px 36px rgba(18, 20, 23, 0.22);
+}
