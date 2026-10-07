@@ -697,25 +697,62 @@ form.stack input {
   }
 }
 
-/* Hero: the pitch left, a Vault panel with real cards right. */
+/* Hero: one rounded panel filling the first viewport, the player photo on the right in
+   grayscale fading into the grey, the pitch on the left, two real cards over the photo. */
 .hero {
+  position: relative;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-  gap: 32px;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   align-items: center;
-  padding: 40px 0 24px;
+  min-height: min(calc(100vh - 96px), 760px);
+  margin: 12px 0 8px;
+  padding: 40px 40px 48px;
+  background: var(--cv-surface);
+  border-radius: var(--cv-radius-lg);
+  isolation: isolate;
+}
+.hero__photo {
+  position: absolute;
+  inset: 0 0 0 30%;
+  z-index: 0;
+}
+.hero__img {
+  object-fit: cover;
+  object-position: 55% 0%;
+  filter: grayscale(1) contrast(1.05);
+}
+.hero__photo::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  /* Plain rgba stops of --cv-surface (#e2e5e8): the photo dissolves into the panel, no hard edge. */
+  background:
+    linear-gradient(
+      to right,
+      rgba(226, 229, 232, 1) 0%,
+      rgba(226, 229, 232, 0.94) 26%,
+      rgba(226, 229, 232, 0.55) 48%,
+      rgba(226, 229, 232, 0) 72%
+    ),
+    linear-gradient(to top, rgba(226, 229, 232, 1) 0%, rgba(226, 229, 232, 0) 40%);
+}
+.hero__copy {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
 }
 .hero h1 {
-  font-size: clamp(2.4rem, 5vw, 4rem);
-  line-height: 1.02;
+  font-size: clamp(2.6rem, 5.4vw, 4.4rem);
+  line-height: 1;
   letter-spacing: -0.03em;
-  margin: 0 0 16px;
-  max-width: 14ch;
+  margin: 0 0 18px;
+  max-width: 12ch;
 }
 .hero__lead {
   font-size: 1.2rem;
   color: var(--cv-text-muted);
-  max-width: 44ch;
+  max-width: 42ch;
   margin: 0 0 24px;
 }
 .hero__actions {
@@ -724,53 +761,44 @@ form.stack input {
   flex-wrap: wrap;
   margin-bottom: 16px;
 }
-.vault-panel {
-  position: relative;
-  overflow: hidden;
-  background: var(--cv-surface);
-  border-radius: var(--cv-radius-lg);
-  padding: 24px;
-  min-height: 360px;
-}
-.vault-panel__title {
+.hero__meta {
   color: var(--cv-text-muted);
   font-size: 0.9rem;
-  margin: 0 0 14px;
-  position: relative;
+  max-width: 44ch;
+  margin: 0;
 }
-.vault-panel__list {
+.hero__tiles {
+  position: relative;
+  z-index: 2;
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: relative;
+  align-self: end;
+  justify-self: end;
+  width: min(100%, 360px);
 }
-.vault-panel__note {
-  position: relative;
-  color: var(--cv-text-muted);
-  font-size: 0.85rem;
-  margin: 14px 0 0;
-}
-.watermark {
+.hero__word {
   position: absolute;
-  right: -4%;
-  bottom: -10%;
+  left: 32px;
+  bottom: -0.22em;
+  z-index: 1;
   font-weight: 700;
-  font-size: clamp(110px, 16vw, 190px);
-  line-height: 0.9;
+  font-size: clamp(96px, 13vw, 170px);
+  line-height: 0.86;
   letter-spacing: -0.05em;
   color: var(--cv-accent);
-  opacity: 0.5;
-  transform: rotate(-8deg);
   pointer-events: none;
   user-select: none;
+  display: none;
 }
 .vault-tile {
   position: relative;
   background: var(--cv-surface-high);
   border-radius: var(--cv-radius-md);
+  box-shadow: var(--cv-shadow);
 }
 .vault-tile__link {
   display: grid;
@@ -797,10 +825,24 @@ form.stack input {
 @media (max-width: 860px) {
   .hero {
     grid-template-columns: 1fr;
-    padding-top: 20px;
-  }
-  .vault-panel {
     min-height: 0;
+    padding: 24px 20px 24px;
+    gap: 16px;
+  }
+  .hero__photo {
+    position: relative;
+    inset: auto;
+    height: 300px;
+    margin: -24px -20px 0;
+    border-radius: var(--cv-radius-lg) var(--cv-radius-lg) 0 0;
+    overflow: hidden;
+  }
+  .hero__photo::after {
+    background: linear-gradient(to top, rgba(226, 229, 232, 1) 0%, rgba(226, 229, 232, 0) 55%);
+  }
+  .hero__tiles {
+    width: 100%;
+    justify-self: stretch;
   }
 }
 

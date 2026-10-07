@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import {
@@ -120,6 +121,16 @@ export default async function HomePage() {
       />
 
       <section className="hero">
+        <div className="hero__photo" aria-hidden="true">
+          <Image
+            src="/hero-player.webp"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 860px) 100vw, 60vw"
+            className="hero__img"
+          />
+        </div>
         <div className="hero__copy">
           <h1>{HOME_KEYWORD}</h1>
           <p className="hero__lead">
@@ -133,46 +144,43 @@ export default async function HomePage() {
               See last night&apos;s movers
             </Link>
           </div>
-          <p className="muted small">
+          <p className="hero__meta">
             {cardCount.toLocaleString('en-US')} cards from {sets.length} Topps sets, priced every
             night. Free, Premium at {formatUsd(PRICING.monthlyUsd)}/month or{' '}
             {formatUsd(PRICING.yearlyUsd)}/year.
           </p>
         </div>
-
-        <div
-          className="vault-panel"
-          aria-label="Three rookie cards and their current asking prices"
+        <ul
+          className="hero__tiles"
+          aria-label="Trending rookie cards and their current asking prices"
         >
-          <span className="watermark" aria-hidden="true">
-            Vault
-          </span>
-          <p className="vault-panel__title">Trending rookies, Base parallel, raw</p>
-          <ul className="vault-panel__list">
-            {heroCards.map((r, i) => {
-              const foil = foilProps(i === 0 ? 'Refractor' : 'Base', null);
-              return (
-                <li key={r.card_id} className={`vault-tile ${foil.className}`} style={foil.style}>
-                  <Link href={`/cards/${r.card_slug}`} className="vault-tile__link">
-                    <span className="vault-tile__name">
-                      #{r.card_number} {r.player_name} <span className="badge">RC</span>
-                    </span>
-                    <span className="muted small">
-                      {r.season} {r.set_name}
-                    </span>
-                    <span className="vault-tile__price">
-                      <Price cents={r.price_cents} />
-                    </span>
-                    <span className="small">
-                      <Delta cents={r.change_7d_cents} /> <span className="muted">7 days</span>
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="vault-panel__note">Median asking prices, refreshed every night.</p>
-        </div>
+          {heroCards.slice(0, 2).map((r, i) => {
+            const foil = foilProps(i === 0 ? 'Refractor' : 'Base', null);
+            return (
+              <li key={r.card_id} className={`vault-tile ${foil.className}`} style={foil.style}>
+                <Link href={`/cards/${r.card_slug}`} className="vault-tile__link">
+                  <span className="vault-tile__name">
+                    #{r.card_number} {r.player_name} <span className="badge">RC</span>
+                  </span>
+                  <span className="muted small">
+                    {r.season} {r.set_name}
+                  </span>
+                  <span className="vault-tile__price">
+                    <Price cents={r.price_cents} />
+                  </span>
+                  <span className="small">
+                    <Delta cents={r.change_7d_cents} /> <span className="muted">7 days</span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+        <span className="hero__word" aria-hidden="true">
+          Hoop
+          <br />
+          Ticker
+        </span>
       </section>
 
       {movers.length > 0 && night?.day ? (
