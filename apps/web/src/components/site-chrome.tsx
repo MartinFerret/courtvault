@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { PATHS } from '@/lib/paths';
-import { NavLinks } from './nav-links';
+import { SiteNav } from './nav-links';
 import { LogoMark } from './logo';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
 
@@ -17,12 +17,9 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="container site-header__row">
         <Link href="/" className="brand" aria-label={`${SITE_NAME} home`}>
-          <LogoMark size={34} className="brand__mark" />
+          <LogoMark size={30} className="brand__mark" />
           <span>{SITE_NAME}</span>
         </Link>
-        <nav className="nav" aria-label="Main">
-          <NavLinks items={NAV} />
-        </nav>
         <Link
           href="/waitlist"
           className="button button--small site-header__cta"
@@ -30,6 +27,7 @@ export function SiteHeader() {
         >
           Join the waitlist
         </Link>
+        <SiteNav items={NAV} />
       </div>
     </header>
   );
