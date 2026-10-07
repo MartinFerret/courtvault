@@ -1,11 +1,11 @@
-# Courtvault
+# Hoopfolio
 
 Catalog website and mobile app for basketball trading card collectors in the United States.
 The website captures search traffic with one page per card, player and set. The app scans a
 card, shows its value by parallel and grade, tracks a collection, and every morning shows how
 last night's games moved the value of the user's cards.
 
-`courtvault` is a neutral codename. The product name is TBD. Not affiliated with the NBA, NBPA or Topps.
+The product is **Hoopfolio** (`BRAND_NAME` in `packages/shared`). `courtvault` stays as the technical codename in package names, database objects and the repo. Not affiliated with the NBA, NBPA or Topps.
 
 - **Backend**: Supabase only (Postgres, Auth, Storage, Edge Functions, pg_cron). No custom server.
 - **Website**: Next.js (App Router) on Netlify Free.
@@ -182,7 +182,7 @@ no-op), far below the 500k/month free quota. App traffic (scan-match, export, de
 5. Auth: Dashboard > Authentication. Email provider on, "Confirm email" off, Magic Link
    template = `supabase/templates/magic_link.html` with subject "Your sign-in code". Add the
    Apple and Google providers when their keys exist. Redirect URLs: the website origin and
-   `courtvault://auth/callback`.
+   `hoopfolio://auth/callback`.
 6. Functions: `supabase functions deploy`, then
    `supabase secrets set --env-file supabase/functions/.env` with the production values.
    `JOB_SECRET` must equal the Vault `job_secret`.
@@ -201,8 +201,9 @@ no-op), far below the 500k/month free quota. App traffic (scan-match, export, de
 
 ### 3. RevenueCat
 
-Create the app (iOS + Android), products `premium_monthly` ($5.99) and `premium_yearly`
-($39.99 with a 7-day trial), the entitlement `premium` and a default offering. Webhook URL:
+Create the app (iOS + Android), products `premium_monthly` ($5.99), `premium_yearly`
+($49.99 with a 7-day trial) and the non-consumable `founders_lifetime` ($149), the entitlement
+`premium` and a default offering. The amounts live in `PRICING` (`packages/shared`); a test pins them. Webhook URL:
 `https://<ref>.supabase.co/functions/v1/revenuecat-webhook`, Authorization header value equal
 to `REVENUECAT_WEBHOOK_SECRET`. The app user id is the Supabase user id (set by the app).
 

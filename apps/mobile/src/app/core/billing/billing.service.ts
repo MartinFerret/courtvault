@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { Purchases, type PurchasesPackage } from '@revenuecat/purchases-capacitor';
-import { PREMIUM_PRICING } from '@courtvault/shared';
+import { PRICING } from '@courtvault/shared';
 import { environment } from '../../../environments/environment';
 import { SupabaseService } from '../supabase/supabase.service';
 import { PlanService } from '../plan/plan.service';
@@ -52,7 +52,7 @@ export class BillingService {
         title: pkg.product.title,
         priceString: pkg.product.priceString,
         period: /annual|year/i.test(pkg.packageType) ? 'yearly' : 'monthly',
-        trialDays: pkg.product.introPrice ? PREMIUM_PRICING.trialDaysYearly : 0,
+        trialDays: pkg.product.introPrice ? PRICING.trialDaysYearly : 0,
         pkg,
       })),
     );
@@ -66,7 +66,7 @@ export class BillingService {
     this.busy.set(true);
     try {
       const { customerInfo } = await Purchases.purchasePackage({ aPackage: offering.pkg });
-      const active = !!customerInfo.entitlements.active[PREMIUM_PRICING.entitlementId];
+      const active = !!customerInfo.entitlements.active[PRICING.entitlementId];
       // The webhook updates the profile; refresh after a short delay so the UI catches up.
       setTimeout(() => void this.plan.load(), 2000);
       return active;
@@ -79,13 +79,13 @@ export class BillingService {
     if (!this.configured()) throw new Error('Restore is only available in the iOS and Android apps.');
     const { customerInfo } = await Purchases.restorePurchases();
     setTimeout(() => void this.plan.load(), 2000);
-    return !!customerInfo.entitlements.active[PREMIUM_PRICING.entitlementId];
+    return !!customerInfo.entitlements.active[PRICING.entitlementId];
   }
 }
 
 function mockOfferings(): Offering[] {
   return [
-    { identifier: 'monthly', title: 'Premium monthly', priceString: `$${PREMIUM_PRICING.monthlyUsd}/month`, period: 'monthly', trialDays: 0, pkg: null },
-    { identifier: 'yearly', title: 'Premium yearly', priceString: `$${PREMIUM_PRICING.yearlyUsd}/year`, period: 'yearly', trialDays: PREMIUM_PRICING.trialDaysYearly, pkg: null },
+    { identifier: 'monthly', title: 'Premium monthly', priceString: `$${PRICING.monthlyUsd}/month`, period: 'monthly', trialDays: 0, pkg: null },
+    { identifier: 'yearly', title: 'Premium yearly', priceString: `$${PRICING.yearlyUsd}/year`, period: 'yearly', trialDays: PRICING.trialDaysYearly, pkg: null },
   ];
 }

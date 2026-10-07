@@ -1,5 +1,6 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
+import { APP_SCHEME } from '@courtvault/shared';
 import { environment } from '../../../environments/environment';
 import { SupabaseService } from '../supabase/supabase.service';
 
@@ -57,6 +58,6 @@ export class AuthService {
   }
 
   private redirectTo(): string {
-    return Capacitor.isNativePlatform() ? 'courtvault://auth/callback' : `${location.origin}/auth/callback`;
+    return Capacitor.isNativePlatform() ? `${APP_SCHEME}auth/callback` : `${location.origin}/auth/callback`;
   }
 }

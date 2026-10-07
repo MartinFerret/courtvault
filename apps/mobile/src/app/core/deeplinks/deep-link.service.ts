@@ -5,7 +5,7 @@ import { Capacitor } from '@capacitor/core';
 import { environment } from '../../../environments/environment';
 
 /**
- * Universal Links (iOS), App Links (Android) and the courtvault:// scheme share the website's
+ * Universal Links (iOS), App Links (Android) and the hoopfolio:// scheme share the website's
  * paths: /cards/:slug, /players/:slug, /sets/:slug, /rankings/rookies.
  * Native config (apple-app-site-association, assetlinks.json) is documented in the README.
  */
@@ -26,9 +26,9 @@ export class DeepLinkService {
     let path: string;
     try {
       const parsed = new URL(url);
-      if (parsed.protocol === 'courtvault:') {
+      if (parsed.protocol === 'hoopfolio:') {
         path = `/${parsed.host}${parsed.pathname}`;
-      } else if (parsed.origin === environment.webUrl || parsed.hostname.endsWith('courtvault.app')) {
+      } else if (parsed.origin === environment.webUrl || parsed.hostname.endsWith('hoopfolio.app')) {
         path = parsed.pathname;
       } else {
         return null;

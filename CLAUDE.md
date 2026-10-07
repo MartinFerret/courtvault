@@ -26,8 +26,25 @@ A catalog website + mobile app for basketball trading card collectors in the Uni
   screen. Never a photo or likeness of a real NBA player (legal). Theming goes through tokens only (`apps/mobile/src/theme/tokens.scss`,
   `apps/web/src/app/globals.css`); templates carry the layout, services never change for design.
 
-Product name TBD. Codename `courtvault` everywhere in code. Never use "NBA", a team name,
-"Topps" or any trademark in the product name, logo, domain or branding.
+Product name: **Hoopfolio** (`BRAND_NAME` in `packages/shared`, the only place it is spelled;
+tagline `BRAND_TAGLINE`). Codename `courtvault` stays in package names, database objects,
+env variable names and the GitHub repo. Bundle id `app.hoopfolio.mobile`, scheme `hoopfolio://`.
+Domains (to be confirmed by Martin): `hoopfolio.app` for the website, `vault.hoopfolio.app`
+for the web app. Never use "NBA", a team name, "Topps" or any trademark in the product name,
+logo, domain or branding.
+
+## Two surfaces, one codebase per surface (plan of 2026-10-07)
+
+| Surface | Host | Code | Indexed |
+| --- | --- | --- | --- |
+| Public website (acquisition) | `hoopfolio.app` | `apps/web`, Next.js on Netlify | Yes |
+| Web app (logged-in product) | `vault.hoopfolio.app` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
+
+Same account, data and Premium everywhere. Never a third codebase. The SEO standard is
+`docs/seo-rules.md` (rules R1 to R117, mandatory, referenced by number in commits and PRs;
+copy its checklists into PRs). Keyword map: `docs/keyword-map.csv` (source) and
+`docs/keyword-map.md` (generated). Architecture and slugs: `docs/site-architecture.md`.
+Full plan and decisions: `docs/plan-web-seo.md`.
 
 ## Vocabulary
 
@@ -90,8 +107,12 @@ price source for a paid sold-price provider touches only `providers/prices.ts`.
 | Collection export | Basic (cards only) | Full with values, 24h/30d change, gains, summary |
 | Card photos (storage budget) | 300 | 1,000 |
 
-- Premium: $5.99/month or $39.99/year with a 7-day trial on the annual plan, via RevenueCat.
-  App user id = Supabase user id.
+- Premium: $5.99/month or $49.99/year with a 7-day trial on the annual plan ("save 30%" is
+  computed, never typed), plus the Founder's Lifetime at $149 one-time during the launch period
+  (feature flag with end date and buyer cap, honest remaining count). All amounts live in
+  `PRICING` (`packages/shared`), pinned by a test, and must match the RevenueCat products
+  `premium_monthly`, `premium_yearly`, `founders_lifetime`. Sold on web (RevenueCat Web
+  Billing), iOS and Android. App user id = Supabase user id. No weekly plan.
 - Limits live in `plan_limits` and are enforced by the database (triggers, storage policy,
   RLS on `price_points`). Clients read them for display only.
 - On violation the database raises `LIMIT_REACHED:<key>`. `parseLimitReached()` in
