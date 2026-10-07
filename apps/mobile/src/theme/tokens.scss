@@ -1050,7 +1050,7 @@ ion-checkbox.cv-consent {
         .cv-hero__word {
           left: 40px;
           bottom: 0.1em;
-          font-size: clamp(120px, 15vw, 200px);
+          font-size: clamp(112px, 13vw, 176px);
         }
       }
       h1 {
@@ -1070,8 +1070,8 @@ ion-checkbox.cv-consent {
     .cv-auth__brand {
       display: block;
     }
-    .cv-auth__panel .cv-auth__title,
-    .cv-auth__panel .cv-auth__sub {
+    .cv-auth__panel:not(.cv-auth__panel--code) .cv-auth__title,
+    .cv-auth__panel:not(.cv-auth__panel--code) .cv-auth__sub {
       display: block;
     }
   }
