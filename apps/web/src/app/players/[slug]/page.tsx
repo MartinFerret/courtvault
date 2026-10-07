@@ -6,7 +6,7 @@ import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
-import { getPlayer, indexStatus, listPlayers } from '@/lib/data';
+import { getPlayer, indexStatus, listPlayers, playerAliasTarget } from '@/lib/data';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 
@@ -50,7 +50,12 @@ export async function generateMetadata({
 export default async function PlayerPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const player = await getPlayer(slug);
-  if (!player) notFound();
+  if (!player) {
+    // Merged duplicate ("cade-cunnigham-cards"): the old URL goes to the canonical player.
+    const target = await playerAliasTarget(slug);
+    if (target) permanentRedirect(playerPath(target));
+    notFound();
+  }
   const publicSlug = player.public_slug ?? player.slug;
   if (publicSlug !== slug) permanentRedirect(playerPath(publicSlug));
   const rookie = player.cards.some((c) => c.is_rookie);

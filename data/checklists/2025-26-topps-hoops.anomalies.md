@@ -109,3 +109,16 @@ variation section; verify with a real card photo before trusting them:
 - AUTOGRAPH / HHS-SGA: 0 rows
 - AUTOGRAPH / HHS-TSA: 0 rows
 - AUTOGRAPH / HHS-TSH: 1 rows
+
+## Import (2025-26-topps-hoops.csv)
+
+Last run 2026-10-07. Player names that were not an exact match of an
+existing player. "merged" rows were attached to the existing player and recorded as aliases;
+"suffix" and "ambiguous" rows created a player to confirm; "new" names were not close to any
+existing player. Add a typo to player-aliases.csv once it is confirmed to be a known player.
+
+- merged: "Onyeka Okungwu" -> "Onyeka Okongwu" (Onyeka Okongwu (1 edits, 0.65))
+- merged: "Ronald Holland II" -> "Ron Holland II" (Ron Holland II (3 edits, 0.74))
+- merged: "Alperun Sengun" -> "Alperen Sengun" (Alperen Sengun (1 edits, 0.71))
+- merged: "Kristaps Porziņģis" -> "Kristaps Porzingis" (Kristaps Porzingis (2 edits, 0.65))
+- new (18): "Saddiq Bey", "Gary Payton II", "Larry Nance Jr.", "Andre Drummond", "Jakob Poeltl", "Jae Crowder", "Tre Mann", "Xavier Tillman", "Mitchell Robinson", "Julian Phillips", "John Tonje", "Scotty Pippen Jr.", "Jamal Shead", "Zach Collins", "John Collins", "Johnny Furphy", "Caris LeVert", "Bruce Brown"

@@ -89,16 +89,13 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
         {name} has {set.cards.length} base cards
         {rookies.length > 0 ? `, ${rookies.length} of them rookie cards` : ''}
         {set.release_date ? `, released ${set.release_date}` : ''}.
-        {priced.length > 0
-          ? ` ${priced.length} cards have a current median asking price for the Base parallel, raw`
-          : ''}
         {top && top.base_cents !== null ? (
           <>
-            ; the highest is #{top.number} {top.player?.name} at <Price cents={top.base_cents} />.
+            {' '}
+            {priced.length} cards have a current median asking price for the Base parallel, raw; the
+            highest is #{top.number} {top.player?.name} at <Price cents={top.base_cents} />.
           </>
-        ) : (
-          '.'
-        )}{' '}
+        ) : null}{' '}
         Every parallel and print run is listed on each card page.
       </p>
       {priced.length > 0 ? <PriceNote /> : null}

@@ -468,6 +468,69 @@ export type Database = {
         };
         Relationships: [];
       };
+      player_aliases: {
+        Row: {
+          alias: string;
+          alias_key: string;
+          created_at: string;
+          old_public_slug: string | null;
+          old_slug: string | null;
+          player_id: string;
+          source: string;
+        };
+        Insert: {
+          alias: string;
+          alias_key: string;
+          created_at?: string;
+          old_public_slug?: string | null;
+          old_slug?: string | null;
+          player_id: string;
+          source: string;
+        };
+        Update: {
+          alias?: string;
+          alias_key?: string;
+          created_at?: string;
+          old_public_slug?: string | null;
+          old_slug?: string | null;
+          player_id?: string;
+          source?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'player_aliases_player_id_fkey';
+            columns: ['player_id'];
+            isOneToOne: false;
+            referencedRelation: 'collection_items_detailed';
+            referencedColumns: ['player_id'];
+          },
+          {
+            foreignKeyName: 'player_aliases_player_id_fkey';
+            columns: ['player_id'];
+            isOneToOne: false;
+            referencedRelation: 'players';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      player_distinct: {
+        Row: {
+          key_a: string;
+          key_b: string;
+          note: string | null;
+        };
+        Insert: {
+          key_a: string;
+          key_b: string;
+          note?: string | null;
+        };
+        Update: {
+          key_a?: string;
+          key_b?: string;
+          note?: string | null;
+        };
+        Relationships: [];
+      };
       player_game_lines: {
         Row: {
           assists: number | null;
@@ -906,6 +969,7 @@ export type Database = {
           skipped: number;
         }[];
       };
+      import_set_key: { Args: { p_name: string }; Returns: string };
       invoke_job: { Args: { p_body?: Json; p_job: string }; Returns: number };
       is_premium: { Args: { uid?: string }; Returns: boolean };
       match_import_rows: {
@@ -926,6 +990,10 @@ export type Database = {
           set_name: string;
           status: string;
         }[];
+      };
+      merge_players: {
+        Args: { p_canonical: string; p_duplicate: string; p_source?: string };
+        Returns: undefined;
       };
       morning_email_recipients: {
         Args: { p_day?: string };
@@ -989,6 +1057,9 @@ export type Database = {
           set_name: string;
         }[];
       };
+      player_base_key: { Args: { p_name: string }; Returns: string };
+      player_key: { Args: { p_name: string }; Returns: string };
+      players_distinct: { Args: { p_a: string; p_b: string }; Returns: boolean };
       price_at: {
         Args: {
           p_at: string;
@@ -1045,6 +1116,16 @@ export type Database = {
         Returns: undefined;
       };
       refresh_public_slugs: { Args: Record<PropertyKey, never>; Returns: undefined };
+      resolve_player_names: {
+        Args: { p_names: string[] };
+        Returns: {
+          name: string;
+          note: string;
+          player_id: string;
+          player_name: string;
+          status: string;
+        }[];
+      };
       rookie_rankings: {
         Args: { p_limit?: number };
         Returns: {

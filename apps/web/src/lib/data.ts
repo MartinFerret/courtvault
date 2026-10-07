@@ -144,6 +144,20 @@ export async function getPlayer(slug: string) {
   };
 }
 
+/** Public slug of the canonical player when `slug` belongs to a merged duplicate (301 target). */
+export async function playerAliasTarget(slug: string): Promise<string | null> {
+  if (!SLUG.test(slug)) return null;
+  const { data, error } = await supabase()
+    .from('player_aliases')
+    .select('players(slug, public_slug)')
+    .or(`old_public_slug.eq.${slug},old_slug.eq.${slug}`)
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  const player = data?.players as unknown as { slug: string; public_slug: string | null } | null;
+  return player ? (player.public_slug ?? player.slug) : null;
+}
+
 export async function listCardSlugs(): Promise<{ slug: string; updated: string | null }[]> {
   const rows = await fetchAll((from, to) =>
     supabase().from('cards').select('public_slug, created_at').order('id').range(from, to),

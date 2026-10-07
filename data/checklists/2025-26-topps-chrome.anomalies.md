@@ -82,3 +82,13 @@ variation section; verify with a real card photo before trusting them:
 - RELIC / TOPPS CHROME GOLD LOGOMAN RELICS REDEMPTION CARD: 3 rows
 - AUTOGRAPH RELIC / TOPPS CHROME GOLD LOGOMAN II: 3 rows
 - AUTOGRAPH RELIC / TOPPS CHROME GOLD LOGOMAN II AUTOGRAPH RELICS REDEMPTION CARD: 3 rows
+
+## Import (2025-26-topps-chrome.csv)
+
+Last run 2026-10-07. Player names that were not an exact match of an
+existing player. "merged" rows were attached to the existing player and recorded as aliases;
+"suffix" and "ambiguous" rows created a player to confirm; "new" names were not close to any
+existing player. Add a typo to player-aliases.csv once it is confirmed to be a known player.
+
+- suffix: "P.J. Washington" (near P.J. Washington Jr. (2 edits, 0.88))
+- new (77): "Tobias Harris", "Tim Hardaway Jr.", "Terance Mann", "Talen Horton-Tucker", "T.J. McConnell", "Steven Adams", "Spencer Dinwiddie", "Sam Hauser", "Oshae Brissett", "Noah Clowney", "Luke Kornet", "Kevin Huerter", "K.J. Simpson Jr.", "Josh Green", "Jae'Sean Tate", "Jaden Hardy", "Grant Williams", "Fred VanVleet", "De'Andre Hunter", "Day'Ron Sharpe", "DaRon Holmes II", "Dario Šarić", "Daniel Gafford", "Chris Duarte", "Cam Whitmore", "Caleb Martin", "Bones Hyland", "Dariq Whitehead", "Bogdan Bogdanović", "Ben Sheppard", "Ayo Dosunmu", "Al Horford", "Aaron Gordon", "Jaylin Williams", "Mason Plumlee", "Antonio Reeves", "Pacôme Dadiet", "Terry Rozier III", "Luke Kennard", "Gabe Vincent", "Bobby Portis", "Jaxson Hayes", "Brandon Clarke", "Thaddeus Young", "Joe Ingles", "Kentavious Caldwell-Pope", "Jose Alvarado", "Donte DiVincenzo", "Tyus Jones", "Taurean Prince", "Kyle Lowry", "Maxi Kleber", "Bol Bol", "Jonathan Isaac", "Matisse Thybulle", "Alex Caruso", "Adem Bona", "Eric Gordon", "Pat Connaughton", "Nickeil Alexander-Walker", "Aaron Wiggins", "Devin Vassell", "Walker Kessler", "Jonas Valančiūnas", "Collin Sexton", "Harrison Barnes", "Kris Murray", "Harrison Ingram", "Dwight Powell", "Marcus Smart", "Jake LaRavia", "Richaun Holmes", "Will Richard", "Rocco Zikarsky", "Amari Williams", "Alex Toohey", "Javon Small"

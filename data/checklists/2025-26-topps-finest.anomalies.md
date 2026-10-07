@@ -51,3 +51,14 @@ variation section; verify with a real card photo before trusting them:
 - AUTOGRAPH / MASTERS AUTOGRAPHS: 47 rows
 - AUTOGRAPH / ELECTRIFYING SIGNATURES: 49 rows
 - AUTOGRAPH / COLOSSAL SHOTS AUTOGRAPHS: 49 rows
+
+## Import (2025-26-topps-finest.csv)
+
+Last run 2026-10-07. Player names that were not an exact match of an
+existing player. "merged" rows were attached to the existing player and recorded as aliases;
+"suffix" and "ambiguous" rows created a player to confirm; "new" names were not close to any
+existing player. Add a typo to player-aliases.csv once it is confirmed to be a known player.
+
+- merged: "Cade Cunnigham" -> "Cade Cunningham" (Cade Cunningham (1 edits, 0.71))
+- merged: "Deni Avdja" -> "Deni Avdija" (Deni Avdija (1 edits, 0.64))
+- new (1): "Ray Allen"

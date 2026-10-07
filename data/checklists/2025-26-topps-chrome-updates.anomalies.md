@@ -65,3 +65,12 @@ variation section; verify with a real card photo before trusting them:
 - AUTOGRAPH / CHROMOGRAPHS: 94 rows
 - AUTOGRAPH RELIC / NBA DEBUT PATCH AUTOGRAPHS: 93 rows
 - RELIC / NBA DEBUT PATCH (NON-AUTOGRAPH): 6 rows
+
+## Import (2025-26-topps-chrome-updates.csv)
+
+Last run 2026-10-07. Player names that were not an exact match of an
+existing player. "merged" rows were attached to the existing player and recorded as aliases;
+"suffix" and "ambiguous" rows created a player to confirm; "new" names were not close to any
+existing player. Add a typo to player-aliases.csv once it is confirmed to be a known player.
+
+- new (5): "Luka Dončić", "Aaron Nesmith", "Duncan Robinson", "Ryan Nembhard", "Caleb Love"

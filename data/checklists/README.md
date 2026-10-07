@@ -40,6 +40,15 @@ pnpm convert:checklist /path/to/2025-26_Topps_Chrome_Basketball_Checklist.pdf \
   odd casing, non-player rows, variations without a base card) go to the anomalies report
   instead of being guessed. Review it, fix the CSV by hand if needed, then
   `pnpm import:checklist data/checklists/<set_slug>.csv`.
+- Player identity: the import resolves every name with `resolve_player_names()` (same spelling
+  once casing, punctuation and diacritics are ignored, a recorded alias, or a single existing
+  player within two edits). Anything that is not an exact match is appended to the set's
+  `*.anomalies.md` under "Import": `merged` rows were attached to the existing player, `new`,
+  `suffix` (only Jr./II differs, never merged automatically) and `ambiguous` rows created a
+  player to confirm. Known Topps typos and name variants live in `player-aliases.csv`
+  (alias, canonical): the import renames, merges or records them so they never come back, and
+  old player URLs redirect to the canonical page. Pairs of real players with close names
+  (Jović/Jokić) are listed in `player_distinct` so they are never merged.
 
 Format (header required, UTF-8):
 
