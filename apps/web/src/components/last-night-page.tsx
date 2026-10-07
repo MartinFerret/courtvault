@@ -10,6 +10,8 @@ import { AppCta } from './app-cta';
 import { FoilCard } from './foil-card';
 import { JsonLd } from './json-ld';
 import { FreshnessLine } from './freshness';
+import { EmptyState } from './empty-state';
+import { NightPager } from './night-pager';
 import type { Freshness } from '@/lib/freshness';
 import { absoluteUrl } from '@/lib/site';
 import type { LastNight, Mover, StatLine } from '@/lib/last-night';
@@ -61,11 +63,13 @@ export function LastNightView({
   day,
   slugs,
   freshness = null,
+  days = [],
 }: {
   data: LastNight;
   day: string;
   slugs: SlugMaps;
   freshness?: Freshness | null;
+  days?: { game_day: string }[];
 }) {
   const finals = data.games.filter((g) => g.home_score !== null && g.away_score !== null);
   const jsonLd = {
@@ -84,7 +88,8 @@ export function LastNightView({
 
       <header className="ln__hero">
         <p className="ln__eyebrow">
-          <Link href={PATHS.movers}>Last night</Link> · {formatEasternDay(day)}
+          <Link href={PATHS.movers}>Last night</Link>, {formatEasternDay(day)}
+          {data.is_preseason ? <span className="tag">Preseason</span> : null}
           {data.is_off_day && !data.requested_day ? (
             <span className="muted"> · no games last night, latest game night shown</span>
           ) : null}
@@ -104,113 +109,127 @@ export function LastNightView({
         </ul>
       </header>
 
-      <AppCta context="what last night did to YOUR collection" />
-
-      <section className="ln__section">
-        <div className="ln__movers">
-          <div>
-            <h2 className="ln__h2 gain">Up</h2>
-            {data.gainers.length === 0 ? (
-              <p className="muted">Nothing moved up enough to list.</p>
-            ) : null}
-            <ol className="ln__list">
-              {data.gainers.map((m) => (
-                <MoverCard
-                  slugs={slugs}
-                  key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
-                  m={m}
-                />
-              ))}
-            </ol>
-          </div>
-          <div>
-            <h2 className="ln__h2 loss">Down</h2>
-            {data.losers.length === 0 ? (
-              <p className="muted">Nothing moved down enough to list.</p>
-            ) : null}
-            <ol className="ln__list">
-              {data.losers.map((m) => (
-                <MoverCard
-                  slugs={slugs}
-                  key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
-                  m={m}
-                />
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      <section className="ln__section">
-        <h2 className="ln__h2">Performances of the night</h2>
-        <ol className="ln__perf">
-          {data.performances.map((p, i) => (
-            <li key={p.player_slug} id={p.player_slug} className="perf">
-              <div className="perf__rank">{i + 1}</div>
-              <div className="perf__body">
-                <div className="perf__head">
-                  <Link
-                    href={playerPath(slugs.players.get(p.player_slug) ?? p.player_slug)}
-                    className="perf__name"
-                  >
-                    {p.player_name}
-                  </Link>
-                  <span className="perf__game">
-                    {p.away_team} {p.away_score}–{p.home_score} {p.home_team}
-                  </span>
-                </div>
-                <div className="perf__stats">
-                  <span className="perf__big">{p.points ?? 0}</span>
-                  <span className="perf__label">pts</span>
-                  <span className="perf__sep" />
-                  <span>{p.rebounds ?? 0} reb</span>
-                  <span>{p.assists ?? 0} ast</span>
-                  <span>{p.steals ?? 0} stl</span>
-                  <span>{p.blocks ?? 0} blk</span>
-                </div>
-                {p.top_cards.length > 0 ? (
-                  <div className="foil-row">
-                    {p.top_cards.map((c) => (
-                      <FoilCard
-                        key={`${c.card_slug}-${c.parallel_name}-${c.grade}`}
-                        compact
-                        href={cardPath(slugs.cards.get(c.card_slug) ?? c.card_slug)}
-                        number={c.card_number}
-                        player={p.player_name}
-                        setLabel={`${c.season} ${c.set_name}`}
-                        parallelName={c.parallel_name}
-                        serialRun={c.serial_run}
-                        grade={c.grade}
-                        isRookie={c.is_rookie}
-                        footer={
-                          <>
-                            <span className="mono">{formatCents(c.after_cents)}</span>
-                            {c.change_cents ? (
-                              <span className={`mono ${c.change_cents > 0 ? 'gain' : 'loss'}`}>
-                                {' '}
-                                {formatCentsDelta(c.change_cents)}
-                              </span>
-                            ) : null}
-                          </>
-                        }
-                      />
-                    ))}
+      <div className="ln__grid">
+        <div className="ln__col">
+          <section className="ln__section ln__section--perf">
+            <h2 className="ln__h2">Performances of the night</h2>
+            <ol className="ln__perf">
+              {data.performances.map((p, i) => (
+                <li key={p.player_slug} id={p.player_slug} className="perf">
+                  <div className="perf__rank">{i + 1}</div>
+                  <div className="perf__body">
+                    <div className="perf__head">
+                      <Link
+                        href={playerPath(slugs.players.get(p.player_slug) ?? p.player_slug)}
+                        className="perf__name"
+                      >
+                        {p.player_name}
+                      </Link>
+                      <span className="perf__game">
+                        {p.away_team} {p.away_score}–{p.home_score} {p.home_team}
+                      </span>
+                    </div>
+                    <div className="perf__stats">
+                      <span className="perf__big">{p.points ?? 0}</span>
+                      <span className="perf__label">pts</span>
+                      <span className="perf__sep" />
+                      <span>{p.rebounds ?? 0} reb</span>
+                      <span>{p.assists ?? 0} ast</span>
+                      <span>{p.steals ?? 0} stl</span>
+                      <span>{p.blocks ?? 0} blk</span>
+                    </div>
+                    {p.top_cards.length > 0 ? (
+                      <div className="foil-row">
+                        {p.top_cards.map((c) => (
+                          <FoilCard
+                            key={`${c.card_slug}-${c.parallel_name}-${c.grade}`}
+                            compact
+                            href={cardPath(slugs.cards.get(c.card_slug) ?? c.card_slug)}
+                            number={c.card_number}
+                            player={p.player_name}
+                            setLabel={`${c.season} ${c.set_name}`}
+                            parallelName={c.parallel_name}
+                            serialRun={c.serial_run}
+                            grade={c.grade}
+                            isRookie={c.is_rookie}
+                            footer={
+                              <>
+                                <span className="mono">{formatCents(c.after_cents)}</span>
+                                {c.change_cents ? (
+                                  <span className={`mono ${c.change_cents > 0 ? 'gain' : 'loss'}`}>
+                                    {' '}
+                                    {formatCentsDelta(c.change_cents)}
+                                  </span>
+                                ) : null}
+                              </>
+                            }
+                          />
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </div>
+        <div className="ln__col">
+          <section className="ln__section">
+            <div className="ln__movers">
+              <div>
+                <h2 className="ln__h2 gain">Up after the games</h2>
+                {data.gainers.length === 0 ? (
+                  <EmptyState
+                    title={
+                      freshness?.priced_cards
+                        ? 'Nothing moved up enough to list.'
+                        : 'Movers start with the regular season.'
+                    }
+                  >
+                    {freshness?.priced_cards
+                      ? `A mover needs ${data.thresholds.min_sample_size} listings and a change since tip-off.`
+                      : 'Box scores are in; asking prices are compared before tip-off and the next morning once cards are priced.'}
+                  </EmptyState>
                 ) : null}
+                <ol className="ln__list">
+                  {data.gainers.map((m) => (
+                    <MoverCard
+                      slugs={slugs}
+                      key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
+                      m={m}
+                    />
+                  ))}
+                </ol>
               </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+              <div hidden={!freshness?.priced_cards && data.losers.length === 0}>
+                <h2 className="ln__h2 loss">Down after the games</h2>
+                {data.losers.length === 0 && freshness?.priced_cards ? (
+                  <EmptyState title="Nothing moved down enough to list." />
+                ) : null}
+                <ol className="ln__list">
+                  {data.losers.map((m) => (
+                    <MoverCard
+                      slugs={slugs}
+                      key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
+                      m={m}
+                    />
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <NightPager days={days} current={day} />
 
       <AppCta context="what last night did to YOUR collection" />
 
       <p className="ln__footnote">
-        {PRICE_LABEL} from active eBay listings, not sold prices. Prices compared before tip-off and
-        after the next morning&apos;s update, for cards of players who played, with at least{' '}
-        {data.thresholds.min_sample_size} listings and a price above{' '}
-        {formatCents(data.thresholds.min_price_cents)}. Prices move for many reasons: this page
-        reports what moved, not why.
+        {PRICE_LABEL} compared before tip-off and after the next morning&apos;s update, for cards of
+        players who played, with at least {data.thresholds.min_sample_size} listings and a price
+        above {formatCents(data.thresholds.min_price_cents)}. This page reports what moved, not why.{' '}
+        <Link href={PATHS.method}>How we price cards</Link>
       </p>
     </article>
   );

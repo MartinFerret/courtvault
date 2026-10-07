@@ -73,8 +73,12 @@ marketplace, sealed products.
 
 ### Legal
 
-- No official imagery: no player photos, no Topps artwork, no NBA or team logos. The only card
-  images are photos taken by the user, private by default, never shown on the public website.
+- Official imagery: no player photos, no NBA or team logos. Topps card and set images are
+  allowed on the public website only, strictly within the written permission kept in
+  `docs/legal/topps-permission.md` (read it before adding any image; ask Martin when the scope is
+  unclear), served from our files with the credit "Card images courtesy of Topps" (pipeline:
+  `apps/web/tools/images.mjs`, originals in `data/images/topps/`). User photos taken in the app
+  stay private and never appear on the website.
 - Set names ("Topps Chrome") are nominative use only: plain text, no logos, no Topps
   typography, nothing implying a partnership. Player names and stats are factual information.
 - No scraping (eBay, Trading Card Database, Beckett...). Official APIs or files provided by

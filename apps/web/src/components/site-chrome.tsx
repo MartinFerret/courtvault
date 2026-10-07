@@ -3,6 +3,7 @@ import { PATHS } from '@/lib/paths';
 import { SiteNav } from './nav-links';
 import { LogoMark } from './logo';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
+import { IMAGE_CREDIT, hasOfficialImages } from '@/lib/images';
 
 const NAV = [
   { href: PATHS.players, label: 'Players' },
@@ -47,7 +48,8 @@ export function SiteFooter() {
           </p>
           <p className="muted small">
             Prices are median asking prices from active eBay listings, not sold prices. Set and
-            player names are used for identification only. No official imagery.
+            player names are used for identification only.
+            {hasOfficialImages() ? ` ${IMAGE_CREDIT}` : ''}
           </p>
           <p className="muted small">{DISCLAIMER}</p>
         </div>

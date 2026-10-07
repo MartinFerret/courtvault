@@ -48,3 +48,7 @@ data/checklists/source/
 
 # Unlicensed artwork previews (Adobe Stock comps) stay local
 docs/img_2.png
+
+# Official image originals (optimised copies live in apps/web/public/img)
+data/images/topps/**
+!data/images/topps/README.md

@@ -2050,3 +2050,483 @@ form.stack input {
     white-space: normal;
   }
 }
+
+/* ---------------------------------------------------------------------------------------
+   Review pass (2026-10-07): one clear hero per page type, visuals with a foil fallback,
+   empty states, related lists. */
+.tag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(247, 248, 249, 0.14);
+  color: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.ln__eyebrow .tag {
+  background: var(--cv-surface-2);
+}
+
+/* Card visual: image or foil frame, three sizes, always a 5:7 box. */
+.card-visual {
+  display: block;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.card-visual--frame {
+  position: relative;
+  aspect-ratio: 5 / 7;
+  background: var(--cv-surface-high);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  box-shadow: var(--cv-shadow);
+}
+.card-visual--thumb {
+  width: 72px;
+}
+.card-visual--medium {
+  width: 240px;
+}
+.card-visual--large {
+  width: min(100%, 360px);
+  border-radius: 18px;
+}
+.card-visual--frame.card-visual--large {
+  padding: 18px;
+}
+.card-visual__number {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.card-visual--large .card-visual__number {
+  font-size: 1.4rem;
+}
+.card-visual__rc {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--cv-accent);
+}
+.card-visual--large .card-visual__rc {
+  top: 18px;
+  right: 18px;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+}
+.card-visual__parallel {
+  font-size: 0.65rem;
+  color: var(--cv-text-muted);
+}
+.card-visual--large .card-visual__parallel {
+  font-size: 0.95rem;
+}
+.card-visual--thumb .card-visual__parallel,
+.card-visual--thumb .card-visual__rc {
+  display: none;
+}
+
+/* Set visual: image or typographic tile. */
+.set-visual {
+  display: block;
+  width: 100%;
+  border-radius: var(--cv-radius-md);
+}
+.set-visual--tile {
+  aspect-ratio: 4 / 3;
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px 20px;
+}
+.set-visual__count {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.set-visual__count::after {
+  content: ' cards';
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  opacity: 0.7;
+}
+.set-visual__name {
+  margin-top: 8px;
+  font-weight: 600;
+}
+.set-visual__season {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* Hero card visual on the homepage (replaces the price tiles). */
+.hero__card {
+  position: relative;
+  z-index: 2;
+  align-self: end;
+  justify-self: end;
+  width: min(100%, 250px);
+  text-decoration: none;
+  transform: rotate(-3deg);
+}
+@media (max-width: 860px) {
+  .hero__card {
+    justify-self: center;
+    width: 200px;
+    transform: none;
+  }
+}
+
+/* Steps with visuals. */
+.step__visual {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 72px;
+  margin-bottom: 12px;
+}
+.mini-card {
+  position: relative;
+  width: 36px;
+  height: 50px;
+  border-radius: 6px;
+  background: var(--cv-surface-high);
+  box-shadow: var(--cv-shadow);
+}
+.mini-tile,
+.mini-morning {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--cv-surface-high);
+  font-size: 0.8rem;
+  color: var(--cv-text-muted);
+}
+.mini-tile strong,
+.mini-morning strong {
+  color: var(--cv-text);
+  font-size: 1rem;
+}
+.mini-morning {
+  background: var(--cv-primary);
+  color: var(--cv-primary-contrast);
+}
+.mini-morning span {
+  opacity: 0.75;
+}
+.timeline-mini {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 14px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-surface);
+  font-size: 0.9rem;
+}
+.timeline-mini strong {
+  font-variant-numeric: tabular-nums;
+}
+.timeline-mini__link {
+  margin-left: auto;
+}
+
+/* Featured sets on the homepage. */
+.featured-sets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.featured-set {
+  display: block;
+  text-decoration: none;
+}
+.featured-set__label {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  font-weight: 600;
+}
+@media (max-width: 860px) {
+  .featured-sets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Final call to action. */
+.final-cta {
+  margin: 48px 0 0;
+  padding: 40px 32px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-primary);
+  color: var(--cv-primary-contrast);
+  text-align: center;
+}
+.final-cta h2 {
+  margin-top: 0;
+}
+.final-cta p {
+  max-width: 48ch;
+  margin: 0 auto 20px;
+}
+.final-cta .button {
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+}
+
+/* Player, card and checklist heroes. */
+.phero,
+.chero,
+.shero {
+  display: grid;
+  gap: 28px;
+  align-items: start;
+  margin: 8px 0 24px;
+}
+.phero {
+  grid-template-columns: minmax(0, 1fr) 240px;
+}
+.phero__card {
+  justify-self: end;
+  width: 240px;
+  text-decoration: none;
+}
+.phero__meta,
+.chero__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 12px;
+  color: var(--cv-text-muted);
+}
+.chero {
+  grid-template-columns: 300px minmax(0, 1fr);
+  padding: 24px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface);
+}
+.chero__visual .card-visual {
+  width: 100%;
+}
+.chero__set {
+  margin: 0 0 6px;
+  color: var(--cv-text-muted);
+}
+.chero__title {
+  max-width: 24ch;
+}
+.shero {
+  grid-template-columns: 300px minmax(0, 1fr);
+}
+@media (max-width: 860px) {
+  .phero,
+  .chero,
+  .shero {
+    grid-template-columns: 1fr;
+  }
+  .phero__card {
+    justify-self: start;
+    width: 180px;
+  }
+  .chero {
+    padding: 18px;
+  }
+  .chero__visual .card-visual {
+    width: min(100%, 220px);
+  }
+}
+
+/* Cards grouped by set on the player page, related cards elsewhere. */
+.cardset {
+  margin: 16px 0 24px;
+}
+.cardset__title {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+}
+.cardset__list,
+.related {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.cardset__item,
+.related__item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-surface);
+  text-decoration: none;
+}
+.cardset__item:hover,
+.related__item:hover {
+  background: var(--cv-surface-2);
+  text-decoration: none;
+}
+.cardset__label,
+.related__item > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 500;
+}
+.td-visual {
+  width: 60px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.td-visual .card-visual {
+  width: 44px;
+}
+
+/* Empty states. */
+.empty {
+  padding: 20px 22px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-surface);
+}
+.empty__title {
+  margin: 0;
+  font-weight: 600;
+}
+.empty__body {
+  margin: 4px 0 0;
+  color: var(--cv-text-muted);
+}
+
+/* Price history. */
+.ph {
+  margin: 8px 0 0;
+  padding: 16px 12px 8px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface);
+}
+.ph__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: var(--cv-font);
+}
+.ph__line {
+  fill: none;
+  stroke: var(--cv-text);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+.ph__dot {
+  fill: var(--cv-primary);
+  stroke: var(--cv-text);
+  stroke-width: 2;
+}
+.ph__axis,
+.ph__value {
+  font-size: 12px;
+  fill: var(--cv-text-muted);
+}
+
+/* Movers page: two columns, pager. */
+.ln__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+.ln__col > .ln__section:first-child {
+  margin-top: 0;
+}
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 28px 0 0;
+  padding: 14px 18px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-surface);
+}
+@media (max-width: 860px) {
+  .ln__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Waitlist page. */
+.wl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+.wl__list {
+  padding-left: 20px;
+  color: var(--cv-text-muted);
+}
+.wl__list li + li {
+  margin-top: 8px;
+}
+.wl__form {
+  padding: 24px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface);
+}
+@media (max-width: 860px) {
+  .wl {
+    grid-template-columns: 1fr;
+  }
+}
+.image-credit {
+  margin: 8px 0 0;
+}
+.card-visual__name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: auto 0 8px;
+  line-height: 1.15;
+}
+.card-visual__name strong {
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+.card-visual--large .card-visual__name strong {
+  font-size: 1.5rem;
+}
+.card-visual__name small {
+  color: var(--cv-text-muted);
+  font-size: 0.75rem;
+}
+.card-visual--large .card-visual__name small {
+  font-size: 0.95rem;
+}
+.facts__date {
+  font-size: 1.35rem;
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .facts__date {
+    font-size: 1.15rem;
+    white-space: normal;
+  }
+}

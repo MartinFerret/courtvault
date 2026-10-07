@@ -9,29 +9,27 @@ import {
 import type { Freshness } from '@/lib/freshness';
 import { formatEasternTime } from '@/lib/freshness';
 import type { LastNight, Performance } from '@/lib/last-night';
-import { PATHS, cardPath, moversPath, playerPath } from '@/lib/paths';
+import { cardPath, moversPath, playerPath } from '@/lib/paths';
 import { FreshnessLine } from './freshness';
 
 /**
  * The product in one band: a stat line from last night on the left (ink), the asking price of
- * the same player's card this morning on the right (lime). Picks the performance whose card
- * moved the most; without prices, the best performance and the catalog facts. Both are facts
- * side by side: the copy never says one caused the other.
+ * the same player's card this morning on the right (lime). The performance is chosen by
+ * pickNotable(); without prices the right side is a one-line teaser. Both sides are facts side
+ * by side: the copy never says one caused the other.
  */
 export function LastNightModule({
   night,
+  pick,
   freshness,
   slugs,
-  cardCount,
 }: {
   night: LastNight;
+  pick: Performance;
   freshness: Freshness | null;
   slugs: { cards: Map<string, string>; players: Map<string, string> };
-  cardCount: number | null;
 }) {
-  const pick = pickPerformance(night.performances);
-  if (!pick || !night.day) return null;
-  // The everyday reference first (Base, raw), then whatever moved, then the most valuable card.
+  if (!night.day) return null;
   const card =
     pick.top_cards.find(
       (c) => c.parallel_name === 'Base' && c.grade === 'RAW' && c.change_cents !== null,
@@ -49,11 +47,15 @@ export function LastNightModule({
         Last night, this morning
       </h2>
       <div className="lnm__night">
-        <p className="lnm__kicker">Last night, {formatEasternDay(night.day)}</p>
+        <p className="lnm__kicker">
+          Last night, {formatEasternDay(night.day)}
+          {night.is_preseason ? <span className="tag">Preseason</span> : null}
+        </p>
         <p className="lnm__who">
           <Link href={playerPath(slugs.players.get(pick.player_slug) ?? pick.player_slug)}>
             {pick.player_name}
           </Link>
+          {pick.is_rookie ? <span className="badge">RC</span> : null}
           {pick.team ? <span className="lnm__team">{pick.team}</span> : null}
         </p>
         <dl className="lnm__stats">
@@ -101,49 +103,19 @@ export function LastNightModule({
                 </>
               )}
             </p>
-            <p className="lnm__note">
-              Median asking price on eBay. After the game, not because of it.
-            </p>
           </>
         ) : (
-          <>
-            <p className="lnm__value lnm__value--text">
-              {cardCount
-                ? `${cardCount} card${cardCount > 1 ? 's' : ''} in the catalog`
-                : 'His cards are in the catalog'}
-            </p>
-            <p className="lnm__note">
-              Asking prices appear here after the first nightly price update. Box scores are already
-              in.
-            </p>
-          </>
+          <p className="lnm__value lnm__value--text">Card values start with the regular season.</p>
         )}
         <p className="lnm__links">
           <Link href={moversPath(night.day)} data-attr="band-movers">
-            Every mover and box score of the night
+            Every performance and mover of the night
           </Link>
         </p>
       </div>
       <div className="lnm__foot">
         <FreshnessLine data={freshness} />
-        <p>
-          Box score and asking prices, side by side, every morning.{' '}
-          <Link href={PATHS.method}>How we price cards</Link>
-        </p>
       </div>
     </section>
   );
-}
-
-/** The performance with the largest overnight card move, or the best game score of the night. */
-function pickPerformance(performances: Performance[]): Performance | null {
-  if (performances.length === 0) return null;
-  const moved = performances
-    .map((p) => ({
-      p,
-      move: Math.max(0, ...p.top_cards.map((c) => Math.abs(c.change_cents ?? 0))),
-    }))
-    .filter((x) => x.move > 0)
-    .sort((a, b) => b.move - a.move)[0];
-  return moved?.p ?? performances[0] ?? null;
 }

@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   alternates: { canonical: '/waitlist' },
 };
 
+const YOU_GET = [
+  'Scan a card or search the catalog, every parallel and print run included.',
+  'Values by parallel and grade, refreshed every night from live listings.',
+  'Every morning, the box score of your players next to where your cards stand.',
+];
+
 export default function WaitlistPage() {
   return (
     <>
@@ -21,13 +27,20 @@ export default function WaitlistPage() {
           { name: 'Get the app', href: '/waitlist' },
         ]}
       />
-      <h1>Get the app</h1>
-      <p className="muted">
-        iOS and Android. Scan a card, see its value by parallel and grade, track your collection,
-        and get a “Last night” report every morning. Leave your email and we will tell you when it
-        is live.
-      </p>
-      <WaitlistForm action={joinWaitlist} />
+      <div className="wl">
+        <div className="wl__copy">
+          <h1>Get the app</h1>
+          <p className="lead">iOS and Android. One email when it is live, nothing else.</p>
+          <ul className="wl__list">
+            {YOU_GET.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="wl__form">
+          <WaitlistForm action={joinWaitlist} />
+        </div>
+      </div>
     </>
   );
 }

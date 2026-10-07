@@ -4,9 +4,13 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { JsonLd } from '@/components/json-ld';
+import { CardVisual } from '@/components/card-visual';
+import { ImageCredit } from '@/components/image-credit';
+import { SetVisual } from '@/components/set-visual';
 import { ListFilter } from '@/components/list-filter';
 import { Price, PriceNote } from '@/components/price';
-import { getSet, indexStatus, listSets } from '@/lib/data';
+import { getSet, indexStatus, listSets, topRookiesOfSet } from '@/lib/data';
+import { cardImage } from '@/lib/images';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 
@@ -68,6 +72,8 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
   const priced = set.cards.filter((c) => c.base_cents !== null);
   const top = [...priced].sort((a, b) => (b.base_cents ?? 0) - (a.base_cents ?? 0))[0];
   const name = `${set.season} ${set.name}`;
+  const topRookies = await topRookiesOfSet(set.id).catch(() => []);
+  const thumbs = set.cards.some((c) => cardImage(c.public_slug));
   return (
     <>
       <JsonLd
@@ -91,45 +97,58 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
           { name, href: checklistPath(set.public_slug ?? set.slug) },
         ]}
       />
-      <h1>
-        {name}
-        {/basketball/i.test(set.name) ? '' : ' basketball'} checklist
-      </h1>
-      <dl className="facts">
-        <div>
-          <dd>{set.cards.length}</dd>
-          <dt>base cards</dt>
+      <header className="shero">
+        <div className="shero__visual">
+          <SetVisual
+            setSlug={set.slug}
+            name={set.name}
+            season={set.season}
+            cardCount={set.cards.length}
+            priority
+          />
         </div>
-        <div>
-          <dd>{rookies.length}</dd>
-          <dt>rookie cards</dt>
+        <div className="shero__copy">
+          <h1>
+            {name}
+            {/basketball/i.test(set.name) ? '' : ' basketball'} checklist
+          </h1>
+          <dl className="facts">
+            <div>
+              <dd>{set.cards.length}</dd>
+              <dt>base cards</dt>
+            </div>
+            <div>
+              <dd>{rookies.length}</dd>
+              <dt>rookie cards</dt>
+            </div>
+            {set.release_date ? (
+              <div>
+                <dd className="facts__date">{releaseLabel(set.release_date)}</dd>
+                <dt>released</dt>
+              </div>
+            ) : null}
+            {priced.length > 0 ? (
+              <div>
+                <dd>{priced.length}</dd>
+                <dt>cards with a value</dt>
+              </div>
+            ) : null}
+          </dl>
+          <p className="lead">
+            {name} has {set.cards.length} base cards
+            {rookies.length > 0 ? `, ${rookies.length} of them rookie cards` : ''}
+            {set.release_date ? `, released ${set.release_date}` : ''}.
+            {top && top.base_cents !== null ? (
+              <>
+                {' '}
+                {priced.length} cards have a current median asking price for the Base parallel, raw;
+                the highest is #{top.number} {top.player?.name} at <Price cents={top.base_cents} />.
+              </>
+            ) : null}{' '}
+            Every parallel and print run is listed on each card page.
+          </p>
         </div>
-        {set.release_date ? (
-          <div>
-            <dd className="facts__date">{releaseLabel(set.release_date)}</dd>
-            <dt>released</dt>
-          </div>
-        ) : null}
-        {priced.length > 0 ? (
-          <div>
-            <dd>{priced.length}</dd>
-            <dt>cards with a value</dt>
-          </div>
-        ) : null}
-      </dl>
-      <p className="lead">
-        {name} has {set.cards.length} base cards
-        {rookies.length > 0 ? `, ${rookies.length} of them rookie cards` : ''}
-        {set.release_date ? `, released ${set.release_date}` : ''}.
-        {top && top.base_cents !== null ? (
-          <>
-            {' '}
-            {priced.length} cards have a current median asking price for the Base parallel, raw; the
-            highest is #{top.number} {top.player?.name} at <Price cents={top.base_cents} />.
-          </>
-        ) : null}{' '}
-        Every parallel and print run is listed on each card page.
-      </p>
+      </header>
       {priced.length > 0 ? <PriceNote /> : null}
       <ListFilter
         target="checklist"
@@ -144,6 +163,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
           <thead>
             <tr>
               <th>#</th>
+              {thumbs ? <th className="th-visual" aria-label="Card"></th> : null}
               <th>Player</th>
               <th>Team</th>
               {priced.length > 0 ? <th className="num">Base, raw</th> : null}
@@ -157,6 +177,19 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
                 data-rookie={c.is_rookie ? '' : undefined}
               >
                 <td className="mono">{c.number}</td>
+                {thumbs ? (
+                  <td className="td-visual">
+                    {cardImage(c.public_slug) ? (
+                      <CardVisual
+                        publicSlug={c.public_slug}
+                        name={`${name} ${c.player?.name ?? ''} ${c.is_rookie ? 'rookie card' : 'card'} #${c.number}`}
+                        number={c.number}
+                        isRookie={c.is_rookie}
+                        size="thumb"
+                      />
+                    ) : null}
+                  </td>
+                ) : null}
                 <td>
                   <Link href={cardPath(c.public_slug)}>{c.player?.name}</Link>{' '}
                   {c.is_rookie ? <span className="badge">RC</span> : null}
@@ -180,6 +213,37 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
           </tbody>
         </table>
       </div>
+      {topRookies.length > 0 ? (
+        <>
+          <h2>Top rookies of this set</h2>
+          <ul className="related">
+            {topRookies.map((c) => (
+              <li key={c.id}>
+                <Link href={cardPath(c.public_slug ?? c.slug)} className="related__item">
+                  <CardVisual
+                    publicSlug={c.public_slug ?? c.slug}
+                    name={`${name} ${c.player?.name ?? ''} rookie card #${c.number}`}
+                    number={c.number}
+                    isRookie
+                    size="thumb"
+                  />
+                  <span>
+                    {c.player?.name} #{c.number}
+                    <span className="muted small">
+                      {c.base_cents !== null ? <Price cents={c.base_cents} /> : c.player?.team}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+      <ImageCredit />
+      <p className="muted small">
+        Track your {name} cards with the <Link href="/">basketball card collection tracker</Link>.
+      </p>
+
       <AppCta context={`your ${name} cards`} />
     </>
   );

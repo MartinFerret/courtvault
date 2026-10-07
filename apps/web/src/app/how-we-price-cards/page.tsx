@@ -88,7 +88,7 @@ export default async function MethodPage() {
           <a href="#schedule">When values update</a>
           <a href="#form">The form badge</a>
           <a href="#claims">What we never claim</a>
-          <a href="#limits">Limits</a>
+          <a href="#limits">Limits and what we do not do</a>
           <a href="#faq">Common questions</a>
         </nav>
         <div className="method__body">
@@ -159,9 +159,14 @@ export default async function MethodPage() {
               Scope: NBA basketball, Topps sets from 2025-26 on. Checklists come from the official
               Topps files.
             </li>
+            <li>No marketplace and no trading between users: we show listings, we do not sell.</li>
             <li>
-              No card images: the only photos are the ones you take in the app, and they stay
-              private.
+              No sold-price promises: asking prices from live listings, labelled as such, nothing
+              else.
+            </li>
+            <li>
+              Photos you take in the app stay private; official card images appear on the website
+              only, with credit to Topps.
             </li>
             <li>
               Not affiliated with the NBA, the NBPA or Topps. Set and player names identify cards,

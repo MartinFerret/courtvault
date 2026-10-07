@@ -4,7 +4,10 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { CardVisual } from '@/components/card-visual';
+import { EmptyState } from '@/components/empty-state';
 import { FormBadge } from '@/components/form-badge';
+import { ImageCredit } from '@/components/image-credit';
 import { FormPriceChart } from '@/components/form-price-chart';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
@@ -67,7 +70,23 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
   const priced = player.cards.filter((c) => c.base_cents !== null);
   const top = [...priced].sort((a, b) => (b.base_cents ?? 0) - (a.base_cents ?? 0))[0];
   const sets = [...new Set(player.cards.map((c) => `${c.set?.season} ${c.set?.name}`))];
-  const last = player.lines[0];
+  const best =
+    [...player.cards].sort(
+      (a, b) =>
+        (b.base_cents ?? -1) - (a.base_cents ?? -1) || Number(b.is_rookie) - Number(a.is_rookie),
+    )[0] ?? null;
+  const bestName = best
+    ? `${best.set?.season} ${best.set?.name} ${player.name} ${best.is_rookie ? 'rookie card' : 'card'} #${best.number}`
+    : '';
+  const bySet = [
+    ...player.cards
+      .reduce((m, c) => {
+        const key = `${c.set?.season} ${c.set?.name}`;
+        m.set(key, [...(m.get(key) ?? []), c]);
+        return m;
+      }, new Map<string, typeof player.cards>())
+      .entries(),
+  ];
   return (
     <>
       <JsonLd
@@ -86,31 +105,86 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
           { name: player.name, href: playerPath(publicSlug) },
         ]}
       />
-      <h1>
-        {player.name} {rookie ? 'rookie cards' : 'cards'} <FormBadge badge={form?.badge} />
-      </h1>
-      <p className="lead">
-        {player.name}
-        {player.team ? ` (${player.team})` : ''} has {player.cards.length} {rookie ? 'rookie ' : ''}
-        card
-        {player.cards.length > 1 ? 's' : ''} in {sets.join(' and ')}.
-        {top && top.base_cents !== null ? (
-          <>
-            {' '}
-            The highest median asking price, Base parallel raw, is <Price
-              cents={top.base_cents}
-            />{' '}
-            for #{top.number} {top.set?.season} {top.set?.name}.
-          </>
+      <header className="phero">
+        <div className="phero__copy">
+          <h1>
+            {player.name} {rookie ? 'rookie cards' : 'cards'}
+          </h1>
+          <p className="phero__meta">
+            {player.team ? <span>{player.team}</span> : null}
+            {rookie ? <span className="badge">RC</span> : null}
+            <FormBadge badge={form?.badge} />
+          </p>
+          <p className="lead">
+            {player.cards.length} {rookie ? 'rookie ' : ''}card{player.cards.length > 1 ? 's' : ''}{' '}
+            in {sets.length} Topps set{sets.length > 1 ? 's' : ''}
+            {top && top.base_cents !== null ? (
+              <>
+                . The highest median asking price, Base raw, is <Price cents={top.base_cents} /> for
+                #{top.number} {top.set?.season} {top.set?.name}.
+              </>
+            ) : (
+              '. Values appear with the first nightly price update.'
+            )}
+          </p>
+        </div>
+        {best ? (
+          <Link href={cardPath(best.public_slug)} className="phero__card" aria-label={bestName}>
+            <CardVisual
+              publicSlug={best.public_slug}
+              name={bestName}
+              number={best.number}
+              player={player.name}
+              setLabel={`${best.set?.season} ${best.set?.name}`}
+              isRookie={best.is_rookie}
+              size="large"
+              priority
+            />
+          </Link>
         ) : null}
-        {last?.game ? (
-          <>
-            {' '}
-            Last game, {formatEasternDay(last.game.game_day)}: {last.points ?? 0} points,{' '}
-            {last.rebounds ?? 0} rebounds, {last.assists ?? 0} assists.
-          </>
-        ) : null}
-      </p>
+      </header>
+
+      <h2>Recent games</h2>
+      {player.lines.length > 0 ? (
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Game</th>
+                <th className="num">MIN</th>
+                <th className="num">PTS</th>
+                <th className="num">REB</th>
+                <th className="num">AST</th>
+                <th className="num">STL</th>
+                <th className="num">BLK</th>
+              </tr>
+            </thead>
+            <tbody>
+              {player.lines.map((l, i) => (
+                <tr key={i}>
+                  <td>{l.game ? formatEasternDay(l.game.game_day) : '–'}</td>
+                  <td>
+                    {l.game
+                      ? `${l.game.away_team} at ${l.game.home_team}, ${l.game.away_score ?? '-'}–${l.game.home_score ?? '-'}`
+                      : '–'}
+                  </td>
+                  <td className="num">{l.minutes ?? '–'}</td>
+                  <td className="num">{l.points ?? '–'}</td>
+                  <td className="num">{l.rebounds ?? '–'}</td>
+                  <td className="num">{l.assists ?? '–'}</td>
+                  <td className="num">{l.steals ?? '–'}</td>
+                  <td className="num">{l.blocks ?? '–'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <EmptyState title="No game tracked yet this season.">
+          Box scores arrive the morning after each game.
+        </EmptyState>
+      )}
 
       {form && form.season.games > 0 ? (
         <dl className="facts facts--lime">
@@ -143,100 +217,60 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
 
       {chartable && form ? (
         <section className="fp">
-          <div className="section__head">
-            <h2>Form and price, same dates</h2>
-          </div>
+          <h2>Form and price, same dates</h2>
           <FormPriceChart form={form} />
           <p className="muted small">
-            {form.price ? (
-              <>
-                Points per game, and the median asking price of {form.price.season}{' '}
-                {form.price.set_name} #{form.price.card_number} Base raw the morning after each
-                game. Two facts on the same dates; a game can move a card, we never claim it did.
-              </>
-            ) : (
-              'Points per game. The value track appears once one of his cards has price history.'
-            )}
+            {form.price
+              ? `Points per game, and the median asking price of ${form.price.season} ${form.price.set_name} #${form.price.card_number} Base raw the morning after each game.`
+              : 'Points per game. The value track appears once one of his cards has price history.'}
           </p>
         </section>
       ) : null}
 
-      <h2>{priced.length > 0 ? 'Cards and values' : 'Cards'}</h2>
+      <h2>{priced.length > 0 ? 'Cards and values by set' : 'Cards by set'}</h2>
       {priced.length > 0 ? <PriceNote /> : null}
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Set</th>
-              <th>#</th>
-              {priced.length > 0 ? <th className="num">Base, raw</th> : null}
-            </tr>
-          </thead>
-          <tbody>
-            {player.cards.map((c) => (
-              <tr key={c.id}>
-                <td>
-                  <Link href={cardPath(c.public_slug)}>
-                    {c.set?.season} {c.set?.name}
-                  </Link>{' '}
-                  {c.is_rookie ? <span className="badge">RC</span> : null}{' '}
-                  {c.set ? (
-                    <Link href={checklistPath(c.set.public_slug)} className="muted small">
-                      checklist
-                    </Link>
-                  ) : null}
-                </td>
-                <td className="mono">{c.number}</td>
-                {priced.length > 0 ? (
-                  <td className="num">
-                    <Price cents={c.base_cents} />
-                  </td>
-                ) : null}
-              </tr>
+      {bySet.map(([setKey, cards]) => (
+        <section key={setKey} className="cardset">
+          <h3 className="cardset__title">
+            {cards[0]?.set ? (
+              <Link href={checklistPath(cards[0].set.public_slug)}>
+                {cards[0].set.season} {cards[0].set.name} checklist
+              </Link>
+            ) : (
+              setKey
+            )}
+          </h3>
+          <ul className="cardset__list">
+            {cards.map((c) => (
+              <li key={c.id}>
+                <Link href={cardPath(c.public_slug)} className="cardset__item">
+                  <CardVisual
+                    publicSlug={c.public_slug}
+                    name={`${c.set?.season} ${c.set?.name} ${player.name} ${c.is_rookie ? 'rookie card' : 'card'} #${c.number}`}
+                    number={c.number}
+                    isRookie={c.is_rookie}
+                    size="thumb"
+                  />
+                  <span className="cardset__label">
+                    #{c.number} {player.name}{' '}
+                    {c.is_rookie ? <span className="badge">RC</span> : null}
+                    {priced.length > 0 ? (
+                      <span className="muted small">
+                        Base raw <Price cents={c.base_cents} />
+                      </span>
+                    ) : null}
+                  </span>
+                </Link>
+              </li>
             ))}
-          </tbody>
-        </table>
-      </div>
-
-      {player.lines.length > 0 ? (
-        <>
-          <h2>Recent games</h2>
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Game</th>
-                  <th className="num">MIN</th>
-                  <th className="num">PTS</th>
-                  <th className="num">REB</th>
-                  <th className="num">AST</th>
-                  <th className="num">STL</th>
-                  <th className="num">BLK</th>
-                </tr>
-              </thead>
-              <tbody>
-                {player.lines.map((l, i) => (
-                  <tr key={i}>
-                    <td>{l.game ? formatEasternDay(l.game.game_day) : '–'}</td>
-                    <td>
-                      {l.game
-                        ? `${l.game.away_team} at ${l.game.home_team}, ${l.game.away_score ?? '-'}–${l.game.home_score ?? '-'}`
-                        : '–'}
-                    </td>
-                    <td className="num">{l.minutes ?? '–'}</td>
-                    <td className="num">{l.points ?? '–'}</td>
-                    <td className="num">{l.rebounds ?? '–'}</td>
-                    <td className="num">{l.assists ?? '–'}</td>
-                    <td className="num">{l.steals ?? '–'}</td>
-                    <td className="num">{l.blocks ?? '–'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      ) : null}
+          </ul>
+        </section>
+      ))}
+      <ImageCredit />
+      <p className="muted small">
+        Track {player.name}&apos;s cards with the{' '}
+        <Link href="/">basketball card collection tracker</Link>.
+      </p>
 
       <AppCta context={`your ${player.name} cards`} />
     </>

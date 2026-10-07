@@ -7,7 +7,18 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
-import { getCard, indexStatus, listCardSlugs } from '@/lib/data';
+import { CardVisual } from '@/components/card-visual';
+import { EmptyState } from '@/components/empty-state';
+import { ImageCredit } from '@/components/image-credit';
+import { PriceHistory } from '@/components/price-history';
+import {
+  getCard,
+  getPlayer,
+  getPriceHistory,
+  indexStatus,
+  listCardSlugs,
+  setNeighbours,
+} from '@/lib/data';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 
@@ -65,7 +76,13 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
   const card = await getCard(slug);
   if (!card) notFound();
   if (card.public_slug !== slug) permanentRedirect(cardPath(card.public_slug));
-  const name = `${card.set.season} ${card.set.name} #${card.number} ${card.player.name}`;
+  const name = `${card.set.season} ${card.set.name} ${card.player.name} ${card.is_rookie ? 'rookie card' : 'card'} #${card.number}`;
+  const [history, playerFull, neighbours] = await Promise.all([
+    getPriceHistory(card.public_slug).catch(() => []),
+    getPlayer(card.player.public_slug).catch(() => null),
+    setNeighbours(card.set.id, card.number).catch(() => []),
+  ]);
+  const related = (playerFull?.cards ?? []).filter((c) => c.id !== card.id).slice(0, 4);
   const allPrices = card.parallels.flatMap((p) => p.prices.map((pr) => pr.price_cents));
   const priced = card.parallels.filter((p) => p.prices.length > 0);
   const numbered = card.parallels.filter((p) => p.serial_run !== null);
@@ -73,10 +90,6 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
     .map((p) => ({ p, max: Math.max(...p.prices.map((pr) => pr.price_cents)) }))
     .sort((a, b) => b.max - a.max)[0];
   const base = card.parallels.find((p) => p.name === 'Base');
-  const rarestParallel = [...card.parallels].sort(
-    (a, b) => (a.serial_run ?? Number.MAX_SAFE_INTEGER) - (b.serial_run ?? Number.MAX_SAFE_INTEGER),
-  )[0];
-  const rarest = foilProps(rarestParallel?.name ?? 'Base', rarestParallel?.serial_run ?? null);
   const baseRaw = base?.prices.find((pr) => pr.grade === 'RAW');
   const basePsa10 = base?.prices.find((pr) => pr.grade === 'PSA10');
   const product = {
@@ -117,64 +130,69 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
           { name: `#${card.number} ${card.player.name}`, href: cardPath(card.public_slug) },
         ]}
       />
-      <header className={`plaque ${rarest.className}`} style={rarest.style}>
-        <span className="plaque__number">#{card.number}</span>
-        <h1 className="plaque__title">
-          {card.set.season} {card.set.name} {card.player.name}{' '}
-          {card.is_rookie ? 'rookie card' : 'card'} #{card.number}
-        </h1>
-        <p className="plaque__links">
-          <Link href={checklistPath(card.set.public_slug)}>
-            {card.set.season} {card.set.name} checklist
-          </Link>
-          <Link href={playerPath(card.player.public_slug)}>
-            {card.player.name} {card.is_rookie ? 'rookie cards' : 'cards'}
-          </Link>
-          {card.player.team ? <span className="muted">{card.player.team}</span> : null}
-        </p>
-        <ul className="ladder" aria-label="Parallels of this card">
-          {card.parallels.map((p) => {
-            const foil = foilProps(p.name, p.serial_run);
-            return (
-              <li key={p.id} className={`ladder__chip ${foil.className}`} style={foil.style}>
-                {formatParallel(p.name, p.serial_run)}
-              </li>
-            );
-          })}
-        </ul>
-      </header>
-      <p className="lead">
-        {card.player.name}&apos;s {card.set.season} {card.set.name}{' '}
-        {card.is_rookie ? 'rookie card' : 'card'} #{card.number} has {card.parallels.length}{' '}
-        parallels, {numbered.length} of them numbered
-        {numbered.length > 0
-          ? ` (from /${Math.max(...numbered.map((p) => p.serial_run ?? 0))} down to ${numbered.some((p) => p.serial_run === 1) ? '1 of 1' : `/${Math.min(...numbered.map((p) => p.serial_run ?? 0))}`})`
-          : ''}
-        .
-        {baseRaw ? (
-          <>
-            {' '}
-            The Base parallel asks <Price cents={baseRaw.price_cents} /> raw
-            {basePsa10 ? (
+      <header className="chero">
+        <div className="chero__visual">
+          <CardVisual
+            publicSlug={card.public_slug}
+            name={name}
+            number={card.number}
+            player={card.player.name}
+            setLabel={`${card.set.season} ${card.set.name}`}
+            isRookie={card.is_rookie}
+            size="large"
+            priority
+          />
+        </div>
+        <div className="chero__copy">
+          <p className="chero__set">
+            <Link href={checklistPath(card.set.public_slug)}>
+              {card.set.season} {card.set.name} checklist
+            </Link>
+          </p>
+          <h1 className="chero__title">
+            {card.set.season} {card.set.name} {card.player.name}{' '}
+            {card.is_rookie ? 'rookie card' : 'card'} #{card.number}
+          </h1>
+          <p className="chero__meta">
+            <span className="plaque__number">#{card.number}</span>
+            {card.is_rookie ? <span className="badge">RC</span> : null}
+            <Link href={playerPath(card.player.public_slug)}>
+              {card.player.name} {card.is_rookie ? 'rookie cards' : 'cards'}
+            </Link>
+            {card.player.team ? <span className="muted">{card.player.team}</span> : null}
+          </p>
+          <p className="lead">
+            {card.parallels.length} parallels, {numbered.length} of them numbered
+            {numbered.length > 0
+              ? ` (from /${Math.max(...numbered.map((p) => p.serial_run ?? 0))} down to ${numbered.some((p) => p.serial_run === 1) ? '1 of 1' : `/${Math.min(...numbered.map((p) => p.serial_run ?? 0))}`})`
+              : ''}
+            .
+            {baseRaw ? (
               <>
                 {' '}
-                and <Price cents={basePsa10.price_cents} /> in PSA 10
+                Base asks <Price cents={baseRaw.price_cents} /> raw
+                {basePsa10 ? (
+                  <>
+                    {' '}
+                    and <Price cents={basePsa10.price_cents} /> in PSA 10
+                  </>
+                ) : null}
+                .
               </>
             ) : null}
-            .
-          </>
-        ) : null}
-        {top && top.p.name !== 'Base' ? (
-          <>
-            {' '}
-            The most valuable priced parallel is {formatParallel(
-              top.p.name,
-              top.p.serial_run,
-            )} at <Price cents={top.max} />.
-          </>
-        ) : null}
-        {priced.length === 0 ? ' Values appear once listings have been priced.' : ''}
-      </p>
+            {top && top.p.name !== 'Base' ? (
+              <>
+                {' '}
+                Most valuable priced parallel: {formatParallel(
+                  top.p.name,
+                  top.p.serial_run,
+                )} at <Price cents={top.max} />.
+              </>
+            ) : null}
+          </p>
+          <ImageCredit />
+        </div>
+      </header>
 
       <h2>{priced.length > 0 ? 'Value by parallel and grade' : 'Parallels and print runs'}</h2>
       {priced.length > 0 ? <PriceNote /> : null}
@@ -252,9 +270,65 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
         </table>
       </div>
       <p className="muted small">
-        {priced.length > 0 ? 'Buy links may be affiliate links. ' : ''}No card images are shown:
-        photos in the app are private and taken by their owners.
+        {priced.length > 0 ? 'Buy links may be affiliate links. ' : ''}Photos you take in the app
+        stay private.
       </p>
+
+      <h2>Price history</h2>
+      {history.length >= 2 ? (
+        <PriceHistory points={history} />
+      ) : (
+        <EmptyState title="No price history yet.">
+          The Base raw asking price is recorded each night it changes; the chart starts after the
+          second point.
+        </EmptyState>
+      )}
+
+      {related.length > 0 || neighbours.length > 0 ? (
+        <>
+          <h2>Related cards</h2>
+          <ul className="related">
+            {related.map((c) => (
+              <li key={c.id}>
+                <Link href={cardPath(c.public_slug)} className="related__item">
+                  <CardVisual
+                    publicSlug={c.public_slug}
+                    name={`${c.set?.season} ${c.set?.name} ${card.player.name} ${c.is_rookie ? 'rookie card' : 'card'} #${c.number}`}
+                    number={c.number}
+                    isRookie={c.is_rookie}
+                    size="thumb"
+                  />
+                  <span>
+                    {card.player.name} #{c.number}
+                    <span className="muted small">
+                      {c.set?.season} {c.set?.name}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+            {neighbours.map((c) => (
+              <li key={c.id}>
+                <Link href={cardPath(c.public_slug ?? c.slug)} className="related__item">
+                  <CardVisual
+                    publicSlug={c.public_slug ?? c.slug}
+                    name={`${card.set.season} ${card.set.name} ${c.player?.name ?? ''} ${c.is_rookie ? 'rookie card' : 'card'} #${c.number}`}
+                    number={c.number}
+                    isRookie={c.is_rookie}
+                    size="thumb"
+                  />
+                  <span>
+                    {c.player?.name} #{c.number}
+                    <span className="muted small">
+                      {card.set.season} {card.set.name}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
 
       <AppCta context={`your ${card.player.name} #${card.number}`} />
     </>

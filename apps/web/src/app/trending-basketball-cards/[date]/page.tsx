@@ -45,6 +45,10 @@ export default async function LastNightArchivePage({
   if (!DAY.test(date)) notFound();
   const data = await getLastNight(date);
   if (!data || !data.day) notFound();
-  const [cards, players] = await Promise.all([cardPublicSlugMap(), playerPublicSlugMap()]);
-  return <LastNightView data={data} day={data.day} slugs={{ cards, players }} />;
+  const [cards, players, days] = await Promise.all([
+    cardPublicSlugMap(),
+    playerPublicSlugMap(),
+    listLastNightDays().catch(() => []),
+  ]);
+  return <LastNightView data={data} day={data.day} slugs={{ cards, players }} days={days} />;
 }

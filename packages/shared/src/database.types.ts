@@ -1094,6 +1094,14 @@ export type Database = {
           games: number;
         }[];
       };
+      public_price_history: {
+        Args: { p_card_slug: string; p_days?: number };
+        Returns: {
+          captured_at: string;
+          price_cents: number;
+          sample_size: number;
+        }[];
+      };
       record_price: {
         Args: {
           p_buy_url?: string;

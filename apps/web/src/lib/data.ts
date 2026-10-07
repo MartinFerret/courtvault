@@ -312,6 +312,60 @@ export async function getCard(slug: string): Promise<CardPage | null> {
   };
 }
 
+/** 90 days of the Base raw asking price of a card (public_price_history). */
+export async function getPriceHistory(publicSlug: string) {
+  const { data, error } = await supabase().rpc('public_price_history', {
+    p_card_slug: publicSlug,
+    p_days: 90,
+  });
+  if (error) throw error;
+  return data ?? [];
+}
+
+/** The cards just before and after one card in its set, for the related block. */
+export async function setNeighbours(setId: string, number: string, limit = 4) {
+  const n = Number(number);
+  if (!Number.isFinite(n)) return [];
+  const around = Array.from({ length: limit }, (_, i) =>
+    String(n - Math.ceil(limit / 2) + i + (i >= limit / 2 ? 1 : 0)),
+  );
+  const { data, error } = await supabase()
+    .from('cards')
+    .select('id, slug, public_slug, number, is_rookie, players(name)')
+    .eq('set_id', setId)
+    .in('number', around);
+  if (error) throw error;
+  return (data ?? [])
+    .map((c) => ({ ...c, player: c.players as unknown as { name: string } | null }))
+    .sort((a, b) => Number(a.number) - Number(b.number));
+}
+
+/** Rookie cards of a set, priced first then by number. */
+export async function topRookiesOfSet(setId: string, limit = 6) {
+  const { data, error } = await supabase()
+    .from('cards')
+    .select('id, slug, public_slug, number, is_rookie, players(name, slug, public_slug, team)')
+    .eq('set_id', setId)
+    .eq('is_rookie', true);
+  if (error) throw error;
+  const cards = (data ?? []).map((c) => ({
+    ...c,
+    player: c.players as unknown as {
+      name: string;
+      slug: string;
+      public_slug: string;
+      team: string | null;
+    } | null,
+  }));
+  const base = await basePricesForCards(cards.map((c) => c.id));
+  return cards
+    .map((c) => ({ ...c, base_cents: base.get(c.id) ?? null }))
+    .sort(
+      (a, b) => (b.base_cents ?? -1) - (a.base_cents ?? -1) || Number(a.number) - Number(b.number),
+    )
+    .slice(0, limit);
+}
+
 export async function rookieRankings(limit = 20) {
   const { data, error } = await supabase().rpc('rookie_rankings', { p_limit: limit });
   if (error) throw error;
