@@ -11,7 +11,7 @@ import { CatalogService, type CardDetail } from '../../core/catalog/catalog.serv
 import { CollectionService } from '../../core/collection/collection.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { PlanService } from '../../core/plan/plan.service';
-import { CentsPipe, DeltaPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
+import { CentsPipe, DeltaPipe, GradePipe, ParallelPipe, FoilClassPipe, FoilHuePipe, FoilSatPipe } from '../../shared/pipes';
 
 /**
  * Card page: price by grade for the selected parallel, history, gain/loss for an owned item,
@@ -22,8 +22,7 @@ import { CentsPipe, DeltaPipe, GradePipe, ParallelPipe } from '../../shared/pipe
   selector: 'cv-card',
   imports: [
     FormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonContent, IonItem, IonLabel,
-    IonNote, IonIcon, IonInput, SlicePipe, CentsPipe, DeltaPipe, ParallelPipe, GradePipe,
-  ],
+    IonNote, IonIcon, IonInput, SlicePipe, CentsPipe, DeltaPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe],
   templateUrl: './card.page.html',
 })
 export class CardPage {

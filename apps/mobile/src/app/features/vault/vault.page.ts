@@ -8,7 +8,7 @@ import { PRICE_LABEL, type Grade } from '@courtvault/shared';
 import { CollectionService } from '../../core/collection/collection.service';
 import { PlanService } from '../../core/plan/plan.service';
 import { PaywallService } from '../../core/billing/paywall.service';
-import { CentsPipe, DeltaPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
+import { CentsPipe, DeltaPipe, FoilClassPipe, FoilHuePipe, FoilSatPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
 
 type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
 
@@ -17,7 +17,7 @@ type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
   imports: [
     RouterLink, IonButton, IonContent, IonList, IonItem, IonItemSliding, IonItemOptions,
     IonItemOption, IonLabel, IonNote, IonIcon, IonSearchbar, IonSegment, IonSegmentButton, IonRefresher, IonRefresherContent,
-    CentsPipe, DeltaPipe, ParallelPipe, GradePipe,
+    CentsPipe, DeltaPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe,
   ],
   templateUrl: './vault.page.html',
 })

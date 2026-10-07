@@ -8,7 +8,7 @@
   @if (error(); as message) { <ion-note class="cv-error" role="alert">{{ message }}</ion-note> }
 
   @if (card(); as c) {
-    <div class="cv-card" style="margin-top: 8px">
+    <div class="cv-card" style="margin-top: 8px" [class]="'cv-card ' + (parallel()?.name | foilClass: parallel()?.serial_run)" [style.--foil-hue]="parallel()?.name | foilHue: parallel()?.serial_run" [style.--foil-sat]="parallel()?.name | foilSat: parallel()?.serial_run">
       <span class="cv-watermark" aria-hidden="true">#{{ c.number }}</span>
       <p class="cv-caption">{{ c.set.season }} {{ c.set.name }}@if (c.player.team) { · {{ c.player.team }} }</p>
       <h1 style="margin-top: 8px; font-size: 32px">{{ c.player.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h1>
@@ -26,7 +26,7 @@
       <h2>Parallel</h2>
       <div class="cv-chips" role="radiogroup" aria-label="Parallel">
         @for (p of c.parallels; track p.id) {
-          <ion-button size="small" role="radio" [attr.aria-checked]="p.id === selectedParallelId()" [fill]="p.id === selectedParallelId() ? 'solid' : 'outline'" (click)="selectedParallelId.set(p.id)">
+          <ion-button size="small" role="radio" [attr.aria-checked]="p.id === selectedParallelId()" [fill]="p.id === selectedParallelId() ? 'solid' : 'outline'" (click)="selectedParallelId.set(p.id)" [class]="p.name | foilClass: p.serial_run" [style.--foil-hue]="p.name | foilHue: p.serial_run" [style.--foil-sat]="p.name | foilSat: p.serial_run">
             {{ p.name | parallel: p.serial_run }}
           </ion-button>
         }

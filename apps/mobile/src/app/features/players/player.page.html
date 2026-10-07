@@ -12,7 +12,7 @@
         <h1>{{ p.name }}</h1>
       </div>
       <div class="cv-page-head__actions">
-        <ion-button class="cv-tile-btn" [class.cv-tile-btn--lime]="follows.playerIds().has(p.id)" (click)="toggleFollow()" [attr.aria-pressed]="follows.playerIds().has(p.id)" aria-label="Follow player">
+        <ion-button class="cv-tile-btn" [class.cv-tile-btn--accent]="follows.playerIds().has(p.id)" (click)="toggleFollow()" [attr.aria-pressed]="follows.playerIds().has(p.id)" aria-label="Follow player">
           <ion-icon slot="icon-only" [name]="follows.playerIds().has(p.id) ? 'heart' : 'heart-outline'"></ion-icon>
         </ion-button>
       </div>

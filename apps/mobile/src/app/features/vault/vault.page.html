@@ -7,17 +7,17 @@
       <h1>Vault</h1>
     </div>
     <div class="cv-page-head__actions">
-      <ion-button class="cv-tile-btn cv-tile-btn--lime" routerLink="/tabs/scan" aria-label="Scan a card"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+      <ion-button class="cv-tile-btn cv-tile-btn--accent" routerLink="/tabs/scan" aria-label="Scan a card"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
     </div>
   </div>
 
   @if (collection.summary(); as s) {
-    <div class="cv-card cv-card--lime">
+    <div class="cv-card cv-card--accent">
       <span class="cv-watermark" aria-hidden="true">Vault</span>
       <div class="cv-stat cv-stat--hero" style="min-height: 0; gap: 12px">
         <span class="cv-stat__label">Total value</span>
         <span class="cv-stat__value">{{ s.total_cents | cents }}</span>
-        <span class="cv-stat__note" style="color: var(--cv-on-lime)">{{ priceLabel }}</span>
+        <span class="cv-stat__note" style="color: var(--cv-on-accent)">{{ priceLabel }}</span>
       </div>
     </div>
     <div class="cv-stat-grid" style="margin-top: 12px">
@@ -59,7 +59,7 @@
   <ion-list style="margin-top: 16px">
     @for (item of visible(); track item.id) {
       <ion-item-sliding>
-        <ion-item [routerLink]="['/card', item.parallel_id]" [queryParams]="{ grade: item.grade, item: item.id }" [detail]="true">
+        <ion-item [routerLink]="['/card', item.parallel_id]" [queryParams]="{ grade: item.grade, item: item.id }" [detail]="true" [class]="item.parallel_name | foilClass: item.serial_run" [style.--foil-hue]="item.parallel_name | foilHue: item.serial_run" [style.--foil-sat]="item.parallel_name | foilSat: item.serial_run">
           <ion-label>
             <h2>#{{ item.card_number }} {{ item.player_name }} @if (item.is_rookie) { <span class="cv-badge">RC</span> }</h2>
             <p>{{ item.season }} {{ item.set_name }} · {{ item.parallel_name ?? '' | parallel: item.serial_run }}@if (item.serial_number) { {{ item.serial_number }}/{{ item.serial_run }} } · {{ gradeOf(item.grade ?? 'RAW') | grade }}</p>

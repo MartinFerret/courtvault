@@ -27,7 +27,7 @@
   @switch (step()) {
     @case ('idle') {
       <div class="cv-scan-grid">
-        <button type="button" class="cv-scan-tile cv-scan-tile--lime" (click)="start()">
+        <button type="button" class="cv-scan-tile cv-scan-tile--accent" (click)="start()">
           <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
           <span>{{ sessionCount() > 0 ? 'Scan next card' : 'Scan a card' }}</span>
         </button>
@@ -104,7 +104,7 @@
           <h2>Pick the parallel</h2>
           <div class="cv-parallel-grid">
             @for (p of selectedParallels(); track p.id) {
-              <ion-button fill="outline" (click)="addParallel(p.id, labelFor(c, p))">{{ p.name | parallel: p.serialRun }}</ion-button>
+              <ion-button fill="outline" (click)="addParallel(p.id, labelFor(c, p))" [class]="p.name | foilClass: p.serialRun" [style.--foil-hue]="p.name | foilHue: p.serialRun" [style.--foil-sat]="p.name | foilSat: p.serialRun">{{ p.name | parallel: p.serialRun }}</ion-button>
             }
           </div>
         </section>

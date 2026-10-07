@@ -68,6 +68,9 @@ importers:
       '@courtvault/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@fontsource-variable/big-shoulders-display':
+        specifier: 5.3.0
+        version: 5.3.0
       '@fontsource-variable/outfit':
         specifier: ^5.3.0
         version: 5.3.0
@@ -879,6 +882,9 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
+
+  '@fontsource-variable/big-shoulders-display@5.3.0':
+    resolution: {integrity: sha512-7k1REXMZFEa7gSWOURbmCJW5Gv9D0EbEFQgosZidM8Ob/qpPlK96vqyIzCTnNZ/C0XFZWxeKU53D3QdeHctYCA==}
 
   '@fontsource-variable/outfit@5.3.0':
     resolution: {integrity: sha512-fPb5XnYK0k7SbR++HEmm4+ZqDszmLKQ+sPRUr8oQ/KNC0vy6r6hazJFe8iYozv4cqlHbvJ/JECkJWrfDodUMVQ==}
@@ -5277,6 +5283,8 @@ snapshots:
       levn: 0.4.1
 
   '@exodus/bytes@1.16.0': {}
+
+  '@fontsource-variable/big-shoulders-display@5.3.0': {}
 
   '@fontsource-variable/outfit@5.3.0': {}
 

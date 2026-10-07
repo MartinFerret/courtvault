@@ -11,7 +11,7 @@ import { CollectionService } from '../../core/collection/collection.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { PushService } from '../../core/push/push.service';
 import { ScanService, type CapturedPhoto, type ScanCandidate } from '../../core/scan/scan.service';
-import { CentsPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
+import { CentsPipe, FoilClassPipe, FoilHuePipe, FoilSatPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
 
 type Step = 'idle' | 'scanning' | 'pick-card' | 'pick-parallel' | 'no-match';
 
@@ -23,7 +23,7 @@ type Step = 'idle' | 'scanning' | 'pick-card' | 'pick-parallel' | 'no-match';
   selector: 'cv-scan',
   imports: [
     FormsModule, IonButton, IonContent, IonIcon, IonList, IonItem, IonLabel,
-    IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner, IonInput, CentsPipe, ParallelPipe, GradePipe,
+    IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner, IonInput, CentsPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe,
   ],
   templateUrl: './scan.page.html',
 })
