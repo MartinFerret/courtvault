@@ -15,7 +15,7 @@ import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
 import { Delta, Price, PriceNote } from '@/components/price';
 import { cardPublicSlugMap, listSets, rookieRankings } from '@/lib/data';
-import { PATHS, cardPath, checklistPath, moversPath } from '@/lib/paths';
+import { PATHS, cardPath, checklistPath } from '@/lib/paths';
 import { getLastNight } from '@/lib/last-night';
 import {
   HOME_KEYWORD,

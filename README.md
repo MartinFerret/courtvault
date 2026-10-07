@@ -8,7 +8,8 @@ last night's games moved the value of the user's cards.
 The product is **HoopTicker** (`BRAND_NAME` in `packages/shared`). `courtvault` stays as the technical codename in package names, database objects and the repo. Not affiliated with the NBA, NBPA or Topps.
 
 - **Backend**: Supabase only (Postgres, Auth, Storage, Edge Functions, pg_cron). No custom server.
-- **Website**: Next.js (App Router) on Netlify Free.
+- **Website**: Next.js (App Router) on Netlify Free (hoopticker.com). The app also runs in the
+  browser at vault.hoopticker.com on Cloudflare Pages Free.
 - **App**: Angular + Ionic + Capacitor (iOS and Android).
 - **Shared**: generated database types and domain helpers in `packages/shared`.
 
@@ -95,7 +96,7 @@ local http Supabase. Turn it off for production builds. Use a hardware GPU for t
 
 ```
 apps/web          Next.js website (Netlify)
-apps/mobile       Angular + Ionic + Capacitor app (android/ and ios/ are generated, not committed)
+apps/mobile       Angular + Ionic + Capacitor app, also built for the browser (Cloudflare Pages)
 packages/shared   database types, money/date/slug helpers, LIMIT_REACHED parser
 supabase/
   migrations/     schema, RLS, triggers, views, RPC, storage, cron, usage
@@ -201,15 +202,51 @@ no-op), far below the 500k/month free quota. App traffic (scan-match, export, de
 7. Import the catalog: `SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... pnpm import:checklist data/checklists/<file>.csv`.
 8. GitHub repository secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY` for the keep-alive workflow.
 
-### 2. Netlify (website)
+### 2. Netlify (website, hoopticker.com)
 
-1. New site from the GitHub repo. Set the package directory to `apps/web`; build command and
-   plugin come from `apps/web/netlify.toml`.
-2. Environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-   `NEXT_PUBLIC_SITE_URL` (https origin), `REVALIDATE_SECRET`, later `NEXT_PUBLIC_APPLE_APP_ID`.
-3. Deploy previews and branch deploys are disabled in `netlify.toml` because they cost credits.
-4. Set `WEB_REVALIDATE_URL=https://<site>/api/revalidate` and `WEB_REVALIDATE_SECRET` as
-   function secrets so price updates refresh pages without a redeploy.
+The site is deployed from the CLI, not from a GitHub integration (no build minutes spent on
+pushes, no deploy previews). `netlify-cli` is a global install; the site link lives in
+`apps/web/.netlify/state.json` (gitignored). Build command, publish directory
+(`apps/web/.next`) and the Next.js plugin come from `netlify.toml` at the repository root:
+the CLI resolves the publish directory and the generated server function from the same root
+only when the config lives there and the deploy runs from the root with `--filter`.
+
+1. `netlify login`, then from `apps/web`: `netlify sites:create --name hoopticker` and
+   `netlify link`.
+2. Environment variables (production context, values from `apps/web/.env`):
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL`
+   (`https://hoopticker.com`), `REVALIDATE_SECRET`, later `NEXT_PUBLIC_APPLE_APP_ID`.
+   `netlify env:set KEY value --context production`.
+3. Deploy from the repository root: `netlify deploy --prod --filter @courtvault/web`
+   (the build runs locally, then the static files and the server function are uploaded;
+   check the log says "1 function"). Each production deploy costs 15 credits: deploy only
+   for code changes, data changes revalidate pages on demand.
+4. Function secrets `WEB_REVALIDATE_URL=https://hoopticker.com/api/revalidate` and
+   `WEB_REVALIDATE_SECRET` (same value as `REVALIDATE_SECRET`) so job-prices refreshes pages.
+5. Custom domain: add `hoopticker.com` and `www.hoopticker.com` in Netlify > Domain
+   management, point the registrar's DNS to Netlify (apex ALIAS/A to the Netlify load
+   balancer, `www` CNAME to `hoopticker.netlify.app`), HTTPS is issued automatically. Then
+   Search Console: verify the domain (DNS TXT) and submit `https://hoopticker.com/sitemap.xml`.
+
+### 2b. Cloudflare Pages (web app, vault.hoopticker.com)
+
+The Angular app is also served in the browser as a single-page app. Cloudflare Pages Free has
+unlimited bandwidth and 500 builds/month, which Netlify's credit model cannot offer for an app.
+
+1. Cloudflare dashboard > Workers & Pages > Create > Pages > connect the GitHub repo.
+   Production branch `main`. Build command `pnpm --filter @courtvault/mobile build`, build
+   output directory `apps/mobile/dist/mobile/browser`, root directory `/` (the workspace root,
+   so pnpm resolves `packages/shared`). Environment variable `NODE_VERSION=22`.
+2. Build variables (production): `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+   `WEB_URL=https://hoopticker.com`, plus `GOOGLE_WEB_CLIENT_ID` and `APPLE_SIGN_IN_ENABLED`
+   once the providers exist. `tools/write-env.mjs` reads them from the process env at build time.
+3. `apps/mobile/public/_redirects` sends every path to `index.html` (client routing and
+   `/auth/callback`), `_headers` sets `noindex` and cache rules, `robots.txt` disallows all:
+   the web app is never indexed, only the website is.
+4. Custom domain `vault.hoopticker.com` in the Pages project (CNAME to
+   `<project>.pages.dev`), then add `https://vault.hoopticker.com/auth/callback` to the
+   Supabase Auth redirect URLs. Disable preview deployments for non-production branches if
+   builds pile up.
 
 ### 3. Stripe (web checkout)
 

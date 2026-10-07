@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PATHS, moversPath } from '@/lib/paths';
+import { moversPath } from '@/lib/paths';
 import { notFound } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { LastNightView, lastNightTitle } from '@/components/last-night-page';

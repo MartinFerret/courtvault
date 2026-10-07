@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PATHS, moversPath } from '@/lib/paths';
+import { PATHS } from '@/lib/paths';
 import { formatEasternDay } from '@courtvault/shared';
 import { LastNightView, lastNightTitle } from '@/components/last-night-page';
 import { cardPublicSlugMap, playerPublicSlugMap } from '@/lib/data';

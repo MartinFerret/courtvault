@@ -23,7 +23,6 @@ export const generatedEnvironment = {
   revenueCatGoogleKey: ${JSON.stringify(get('REVENUECAT_GOOGLE_KEY'))},
   googleWebClientId: ${JSON.stringify(get('GOOGLE_WEB_CLIENT_ID'))},
   appleSignInEnabled: ${JSON.stringify(get('APPLE_SIGN_IN_ENABLED') === 'true')},
-  revenueCatWebKey: ${JSON.stringify(get('REVENUECAT_WEB_KEY'))},
   webUrl: ${JSON.stringify(get('WEB_URL', 'http://localhost:3000'))},
 } as const;
 `;

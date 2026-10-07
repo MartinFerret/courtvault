@@ -221,12 +221,18 @@ When the mockups arrive: use the `frontend-design` skill, then `ui-ux-pro-max`, 
 and website screens, and the SEO skills (`seo-audit`) for the website. Change the theme tokens
 and the templates only; do not touch services, RPC contracts or routing.
 
-## Status (2026-10-06)
+## Status (2026-10-07)
 
 Done and verified locally: database with pgTAP tests, edge functions with Deno tests and mock
-providers, website (built, SEO tags, sitemap, waitlist, public Last night page with archive),
-app walked through in the browser and on an Android emulator (OTP sign-in, follows, simulated
-and native scan, Vault, Card, Last night, Sets, Profile, paywall on card and follow limits,
-basic/full export). Official 2025-26 Topps checklists converted and imported
-(`pnpm convert:checklist`, anomalies reports in `data/checklists/`). Not yet: iOS (needs Xcode), real
-provider keys, cloud deployment, native deep-link files, store assets.
+providers, website (SEO standard `docs/seo-rules.md`, frozen public slugs with a quality gate,
+sitemap index, public Last night archive, new homepage), app in the browser (desktop layout
+with sidebar and Vault table, sign-in/sign-up, CSV import, Stripe web checkout, foil frames)
+and on an Android emulator (OTP sign-in, follows, scan, Vault, Card, Last night, Sets,
+Profile, paywalls, exports). Nine official 2025-26 Topps checklists imported (base cards only,
+numbered parallels missing for seven sets, see `data/checklists/README.md`).
+
+Cloud: Supabase project live (migrations pushed, functions and secrets deployed in mock mode,
+catalog imported), Netlify site `hoopticker` created from the CLI for the website. Not yet:
+custom domains and DNS, Cloudflare Pages project for the web app, real provider keys (eBay,
+Highlightly, Brevo, Stripe), iOS build (needs Xcode), native deep-link files, store assets,
+guides and trust pages (need the owner's bio and legal details).
