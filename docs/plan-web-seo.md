@@ -25,6 +25,11 @@ Written 2026-10-07, decisions recorded the same day. Rules are referenced by num
     and contact email.
 11. AI-assisted guide drafts: allowed, always marked for Martin's review, never published
     without it.
+12. (later on 2026-10-07) Web checkout goes through **Stripe directly** (hosted Checkout +
+    Customer Portal), not RevenueCat Web Billing. A `stripe-webhook` edge function becomes the
+    second service-role writer of `profiles.is_premium` next to `revenuecat-webhook`; the
+    database stays the single source of Premium for every platform. RevenueCat keeps the App
+    Store and Google Play purchases.
 
 ## 0. What I found in the repo before planning
 
