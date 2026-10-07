@@ -1927,3 +1927,19 @@ form.stack input {
     grid-template-columns: 1fr;
   }
 }
+
+/* Brand lockup: the mark sits on the baseline of the wordmark. */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand__mark {
+  flex: 0 0 auto;
+  display: block;
+}
+.site-footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}

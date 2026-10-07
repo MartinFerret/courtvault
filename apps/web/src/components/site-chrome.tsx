@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { PATHS } from '@/lib/paths';
 import { NavLinks } from './nav-links';
+import { LogoMark } from './logo';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
 
 const NAV = [
@@ -16,7 +17,8 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="container site-header__row">
         <Link href="/" className="brand" aria-label={`${SITE_NAME} home`}>
-          {SITE_NAME}
+          <LogoMark size={34} className="brand__mark" />
+          <span>{SITE_NAME}</span>
         </Link>
         <nav className="nav" aria-label="Main">
           <NavLinks items={NAV} />
@@ -34,7 +36,10 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="container site-footer__grid">
         <div>
-          <p className="site-footer__brand">{SITE_NAME}</p>
+          <p className="site-footer__brand">
+            <LogoMark size={44} className="brand__mark" />
+            <span>{SITE_NAME}</span>
+          </p>
           <p className="site-footer__pitch">
             Card values updated every night, next to how the players played.
           </p>
