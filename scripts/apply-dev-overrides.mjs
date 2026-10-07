@@ -3,6 +3,7 @@
 // FREE_CARD_LIMIT_OVERRIDE=5 lowers the free card limit so the paywall can be tested quickly.
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const envPath = resolve(import.meta.dirname, '.env');
 if (existsSync(envPath)) {
@@ -13,8 +14,13 @@ if (existsSync(envPath)) {
 }
 const override = process.env.FREE_CARD_LIMIT_OVERRIDE;
 if (!override) process.exit(0);
-const url = process.env.SUPABASE_URL ?? 'http://127.0.0.1:54321';
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+let url = process.env.SUPABASE_URL ?? 'http://127.0.0.1:54321';
+let key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// `pnpm db:reset` sets SUPABASE_LOCAL=1: never patch a cloud project from here.
+if (process.env.SUPABASE_LOCAL) {
+  url = 'http://127.0.0.1:54321';
+  key = /^SERVICE_ROLE_KEY="?([^"\n]+)"?$/m.exec(execFileSync('supabase', ['status', '-o', 'env'], { encoding: 'utf8' }))?.[1];
+}
 const res = await fetch(`${url}/rest/v1/plan_limits?key=eq.cards`, {
   method: 'PATCH',
   headers: { 'Content-Type': 'application/json', apikey: key, Authorization: `Bearer ${key}`, Prefer: 'return=minimal' },

@@ -8,10 +8,24 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@courtvault/shared';
+import { execFileSync } from 'node:child_process';
 import { config as loadEnv } from 'dotenv';
 import { parseChecklistCsv, type ChecklistRow } from './checklist.js';
 
 loadEnv({ path: resolve(import.meta.dirname, '../.env') });
+// `pnpm db:reset` sets SUPABASE_LOCAL=1: always target the local stack, whatever scripts/.env says.
+if (process.env['SUPABASE_LOCAL']) {
+  process.env['SUPABASE_URL'] = 'http://127.0.0.1:54321';
+  process.env['SUPABASE_SERVICE_ROLE_KEY'] = localServiceRoleKey();
+}
+
+/** Service role key of the running local Supabase (same on every machine, printed by `supabase status`). */
+function localServiceRoleKey(): string {
+  const out = execFileSync('supabase', ['status', '-o', 'env'], { encoding: 'utf8' });
+  const key = /^SERVICE_ROLE_KEY="?([^"\n]+)"?$/m.exec(out)?.[1];
+  if (!key) throw new Error('Local Supabase is not running (supabase status found no SERVICE_ROLE_KEY).');
+  return key;
+}
 
 async function main(): Promise<void> {
   const files = process.argv.slice(2);

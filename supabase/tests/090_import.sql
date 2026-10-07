@@ -1,5 +1,5 @@
 begin;
-select plan(9);
+select plan(11);
 
 select tests.authenticate_as('00000000-0000-0000-0000-000000000002');
 
@@ -7,6 +7,10 @@ select tests.authenticate_as('00000000-0000-0000-0000-000000000002');
 select is(
   (select status from public.match_import_rows('[{"player":"Cooper Flagg","set":"Topps Chrome","season":"2025-26","number":"251","parallel":"Base"}]') limit 1),
   'matched', 'clean row matches');
+select is(
+  (select set_name from public.match_import_rows('[{"player":"Cooper Flagg","set":"Chrome Sapphire","number":"251"}]') limit 1),
+  'Topps Chrome Sapphire', 'the longer sibling set wins when it is the one typed');
+select is(public.import_set_key('2025-26 Topps Chrome Basketball'), 'chrome', 'set key drops brand, sport and season');
 select is(
   (select card_number from public.match_import_rows('[{"player":"Cooper Flagg","set":"Topps Chrome","season":"2025-26","number":"251"}]') limit 1),
   '251', 'the card number wins');
