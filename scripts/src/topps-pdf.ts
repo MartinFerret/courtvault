@@ -232,6 +232,10 @@ export function parseChecklistText(text: string): {
     const trimmed = line.trim();
     if (GROUP_HEADERS.has(trimmed)) {
       group = trimmed;
+      // Bowman lists its base rows right under "BASE" with no section line: implicit section.
+      section = group === 'BASE' ? 'BASE CARDS' : '';
+      current = section ? { group, section, rows: 0 } : null;
+      if (current) sections.push(current);
       return;
     }
     // A line that is only a team name continues the previous row (long names wrap the team).

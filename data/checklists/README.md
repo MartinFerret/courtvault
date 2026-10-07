@@ -17,7 +17,7 @@ by hand. Imported on 2026-10-07 (base cards, variations, rookies):
 | 2025-26 Topps Chrome Sapphire | 300                                               | 50                                                              | **missing**             |
 | 2025-26 Topps Midnight        | 100                                               | 40                                                              | **missing**             |
 
-Bowman: no PDF yet. Numbered parallels for the six new sets come from the Topps collector
+Numbered parallels for the seven new sets come from the Topps collector
 guides on ripped.topps.com (`parallels/<set_slug>.json`, then re-run the conversion and import).
 `--rookies-from <csv>` flags rookies from a sibling set when the PDF carries no marker. **Files prefixed `DEMO-` are demo data written by
 hand** (the 2026-27 set does not exist yet); players whose team is empty had not been drafted.
