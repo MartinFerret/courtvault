@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
     default: SITE_NAME,
-    // R27/R28: `[Keyword]: [promise] | Hoopfolio`, short brand suffix on every page.
+    // R27/R28: `[Keyword]: [promise] | HoopTicker`, short brand suffix on every page.
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,

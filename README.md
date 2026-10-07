@@ -1,11 +1,11 @@
-# Hoopfolio
+# HoopTicker
 
 Catalog website and mobile app for basketball trading card collectors in the United States.
 The website captures search traffic with one page per card, player and set. The app scans a
 card, shows its value by parallel and grade, tracks a collection, and every morning shows how
 last night's games moved the value of the user's cards.
 
-The product is **Hoopfolio** (`BRAND_NAME` in `packages/shared`). `courtvault` stays as the technical codename in package names, database objects and the repo. Not affiliated with the NBA, NBPA or Topps.
+The product is **HoopTicker** (`BRAND_NAME` in `packages/shared`). `courtvault` stays as the technical codename in package names, database objects and the repo. Not affiliated with the NBA, NBPA or Topps.
 
 - **Backend**: Supabase only (Postgres, Auth, Storage, Edge Functions, pg_cron). No custom server.
 - **Website**: Next.js (App Router) on Netlify Free.
@@ -191,10 +191,10 @@ no-op), far below the 500k/month free quota. App traffic (scan-match, export, de
    **Custom SMTP is mandatory in production**: Supabase's built-in sender allows a few emails
    per hour. Use Brevo (free plan 300 emails/day, shared with the digest): host
    `smtp-relay.brevo.com`, port 587, the SMTP login and key from Brevo, sender
-   `hello@hoopfolio.app` on a verified domain. Add the Google provider (web client id, also
+   `hello@hoopticker.com` on a verified domain. Add the Google provider (web client id, also
    set as `GOOGLE_WEB_CLIENT_ID` in the app) and the Apple provider (Services ID, team id,
    key id, private key; then `APPLE_SIGN_IN_ENABLED=true` in the app). Redirect URLs:
-   `https://vault.hoopfolio.app/auth/callback`, the website origin and `hoopfolio://auth/callback`.
+   `https://vault.hoopticker.com/auth/callback`, the website origin and `hoopticker://auth/callback`.
 6. Functions: `supabase functions deploy`, then
    `supabase secrets set --env-file supabase/functions/.env` with the production values.
    `JOB_SECRET` must equal the Vault `job_secret`.

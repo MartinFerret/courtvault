@@ -1,4 +1,4 @@
-# Plan: Hoopfolio web version and SEO acquisition machine
+# Plan: HoopTicker web version and SEO acquisition machine
 
 Written 2026-10-07, decisions recorded the same day. Rules are referenced by number from
 `docs/seo-rules.md`. Phase 1 deliverables: `docs/keyword-map.csv`, `docs/keyword-map.md`,
@@ -12,14 +12,14 @@ Written 2026-10-07, decisions recorded the same day. Rules are referenced by num
 2. Keyword volumes: Martin sends a Google Keyword Planner export. Volumes stay `TBD` until
    then.
 3. Slugs: proposals accepted as pending; frozen only after the volumes are in.
-4. Web app hosting: **Cloudflare Pages** for `vault.hoopfolio.app`; Netlify credits stay
+4. Web app hosting: **Cloudflare Pages** for `vault.hoopticker.com`; Netlify credits stay
    with the public website.
 5. Email: **Brevo** (300/day free) for login codes and digests, with the rule "daily digest
    for Premium, weekly for free".
 6. Paying referrers: bank the free months, grant them when the paid period ends.
 7. Creators: free Premium at launch, flat bounty later.
 8. Rename: keep `@courtvault/*` packages, database names and the repo; switch the bundle id
-   and the URL scheme to Hoopfolio now.
+   and the URL scheme to HoopTicker now.
 9. Founder's Lifetime: sold on web, iOS and Android.
 10. About and trust pages: placeholders until Martin sends bio, photo, legal entity, address
     and contact email.
@@ -60,11 +60,11 @@ Written 2026-10-07, decisions recorded the same day. Rules are referenced by num
 3. **Rules file vs brief on titles.** The rules say `[Keyword]: [promise] | Brand` (R27).
    The current layout deliberately omits the brand suffix. R27 wins.
 
-## 1. Rename to Hoopfolio
+## 1. Rename to HoopTicker
 
 Recommendation:
 
-- User-facing name comes from one constant, `BRAND_NAME = 'Hoopfolio'`, in
+- User-facing name comes from one constant, `BRAND_NAME = 'HoopTicker'`, in
   `packages/shared` (R69), with `BRAND_TAGLINE = 'Turn your basketball card collection into
 a portfolio.'` and the differentiator line next to it. Website, app, emails, legal pages,
   structured data and Open Graph all import it.
@@ -72,7 +72,7 @@ a portfolio.'` and the differentiator line next to it. Website, app, emails, leg
   (`@courtvault/*`), database objects, `APP_CODENAME`, the GitHub repo, env variable names.
 - Change now, because they become permanent at store submission: the Capacitor app id
   (bundle id / Android application id), the deep link scheme (`courtvault://` becomes
-  `hoopfolio://`), the Android AVD name is irrelevant.
+  `hoopticker://`), the Android AVD name is irrelevant.
 - After the rename: `grep -ri "courtvault"` over the repo, review every hit, keep only the
   technical ones listed above (R76). Same grep for "Courtvault", "codename", "TBD".
 
@@ -80,16 +80,16 @@ a portfolio.'` and the differentiator line next to it. Website, app, emails, leg
 
 | Surface | Host                  | Code                                           | Indexed |
 | ------- | --------------------- | ---------------------------------------------- | ------- |
-| Website | `hoopfolio.app`       | `apps/web`                                     | Yes     |
-| Web app | `vault.hoopfolio.app` | `apps/mobile` built with the web configuration | No      |
+| Website | `hoopticker.com`       | `apps/web`                                     | Yes     |
+| Web app | `vault.hoopticker.com` | `apps/mobile` built with the web configuration | No      |
 
 - `.app` is an HTTPS-only TLD (HSTS preloaded): one canonical host, no www, no redirect
   chain (R56, R57). Trailing slash policy: none (R58).
 - Web app: `<meta name="robots" content="noindex, nofollow">` in its `index.html` and a
   `robots.txt` with `Disallow: /` on the subdomain. The website's robots.txt cannot block
   another host, so the subdomain carries its own.
-- Supabase Auth: `site_url` and redirect allow-list get `https://vault.hoopfolio.app/auth/callback`
-  and the localhost equivalents. Referral cookie is set on `.hoopfolio.app` so the website
+- Supabase Auth: `site_url` and redirect allow-list get `https://vault.hoopticker.com/auth/callback`
+  and the localhost equivalents. Referral cookie is set on `.hoopticker.com` so the website
   can store it and the web app can read it.
 - Hosting of the web app: a static SPA (no functions). Netlify Free credits are shared by
   the whole team, and the README already estimates about 220 of 300 credits for the website.
@@ -215,7 +215,7 @@ event.
 
 ### Phase 3: website templates on the SEO rules
 
-- Titles `[Keyword]: [promise] | Hoopfolio`, ≤ 60 characters, from a `seo()` helper that also
+- Titles `[Keyword]: [promise] | HoopTicker`, ≤ 60 characters, from a `seo()` helper that also
   enforces 155-character descriptions (R27 to R34). A vitest "SEO lint" runs over every static
   route and every template with fixture data: keyword present in title, H1 and slug (R2), one
   H1, title length, description length, canonical absolute (R53).
@@ -253,7 +253,7 @@ event.
 
 - Tools: grading calculator (raw vs PSA 9 vs PSA 10 minus a grading fee you confirm the
   source of) and set completion cost, each on its own keyword page, client-side only.
-- Widget: `<script async src="https://hoopfolio.app/widget.js" data-card="…">` injects an
+- Widget: `<script async src="https://hoopticker.com/widget.js" data-card="…">` injects an
   iframe to `/embed/card/[slug]` (ISR, noindex, credited link to the card page). The script
   is under 2 KB and loads nothing until the iframe is in view.
 - Open Graph images per player and per card with `opengraph-image.tsx` under those routes,
@@ -358,7 +358,7 @@ Referral:
 - UI: Profile > Invite friends (link, share sheet on mobile, copy on web, referral list with
   status), one mention after the first Last night report, one line on the paywall.
 - Website: `/referral-terms` (indexable, brand-only title), `/r/[code]` noindex, cookie on
-  `.hoopfolio.app`.
+  `.hoopticker.com`.
 
 Creator program (section 3.8 item 10), simplest tracking that works:
 

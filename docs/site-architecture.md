@@ -8,8 +8,8 @@ derive from `docs/keyword-map.csv` (R7): no page without a row.
 
 | Host                  | What                               | Indexed                                        |
 | --------------------- | ---------------------------------- | ---------------------------------------------- |
-| `hoopfolio.app`       | Public website, Next.js, Netlify   | Yes                                            |
-| `vault.hoopfolio.app` | Web app, Angular, Cloudflare Pages | No: `noindex` meta, `robots.txt` `Disallow: /` |
+| `hoopticker.com`       | Public website, Next.js, Netlify   | Yes                                            |
+| `vault.hoopticker.com` | Web app, Angular, Cloudflare Pages | No: `noindex` meta, `robots.txt` `Disallow: /` |
 
 One canonical host, HTTPS only (`.app` is HSTS-preloaded), no `www`, no trailing slash
 (R56 to R58). The website links to the web app with plain action buttons (R43); the web app
@@ -21,9 +21,9 @@ links back to the card, player and checklist pages it shows.
 | ----------- | ------------------------------------------------- | -------------------------------------------------------------------------------- |
 | Card values | Players, Checklists, Rookie rankings, Card movers | `/players`, `/checklists`, `/most-valuable-basketball-rookie-cards`, movers page |
 | Guides      | Learn, Grade and sell, Protect and insure         | `/guides` plus one hub per step                                                  |
-| App         | Pricing, Open the web app                         | `/pricing`, `vault.hoopfolio.app`                                                |
+| App         | Pricing, Open the web app                         | `/pricing`, `vault.hoopticker.com`                                                |
 
-Header: brand, the three menus, one action button "Open Hoopfolio". Footer identical on
+Header: brand, the three menus, one action button "Open HoopTicker". Footer identical on
 every page (R46): Card values, Guides (hubs), Company (About, Trust, How we price cards,
 Roadmap, Press, Creators), Legal (Terms, Privacy, Account deletion, Referral terms),
 Community (Discord, X, Instagram, TikTok, YouTube placeholders), the affiliation disclaimer
@@ -99,7 +99,7 @@ Rules applied:
 
 ## Title and H1 patterns (R27 to R37)
 
-| Page | Title (`[Keyword]: [promise] | Hoopfolio`) | H1 |
+| Page | Title (`[Keyword]: [promise] | HoopTicker`) | H1 |
 | --- | --- | --- |
 | Homepage | `<commercial keyword>: <promise>` | the keyword alone (R37); the portfolio line as subtitle |
 | Checklist | `2025-26 Topps Chrome Basketball Checklist: 299 cards, parallels, values` | `2025-26 Topps Chrome Basketball checklist` |
@@ -108,7 +108,7 @@ Rules applied:
 | Rookie card | `2025-26 Topps Chrome Cooper Flagg Rookie Card #251: value by grade` | `2025-26 Topps Chrome Cooper Flagg rookie card #251` |
 | Ranking | `Most Valuable Basketball Rookie Cards (2025-26): ranked by asking price` | `Most valuable 2025-26 basketball rookie cards` |
 | Guide | `<keyword>: <promise> (2026)` when updated yearly (R31) | the keyword |
-| Institutional | `About | Hoopfolio`, `Pricing | Hoopfolio` | brand wording |
+| Institutional | `About | HoopTicker`, `Pricing | HoopTicker` | brand wording |
 
 Titles are capped at 60 characters by the `seo()` helper; descriptions at 155 (R33). Both
 come from the same data as the page (R69).

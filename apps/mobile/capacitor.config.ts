@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.hoopfolio.mobile',
-  appName: 'Hoopfolio',
+  appId: 'app.hoopticker.mobile',
+  appName: 'HoopTicker',
   webDir: 'dist/mobile/browser',
   server: {
     androidScheme: 'https',

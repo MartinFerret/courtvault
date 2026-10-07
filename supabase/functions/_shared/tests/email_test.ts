@@ -3,13 +3,13 @@ import { brevoPayload, LogEmailProvider, parseSender } from '../providers/email.
 import { buildDigest, digestSubject } from '../../job-morning/digest.ts';
 
 Deno.test('parseSender reads "Name <email>" and bare addresses', () => {
-  assertEquals(parseSender('Hoopfolio <hello@hoopfolio.app>'), {
-    name: 'Hoopfolio',
-    email: 'hello@hoopfolio.app',
+  assertEquals(parseSender('HoopTicker <hello@hoopticker.com>'), {
+    name: 'HoopTicker',
+    email: 'hello@hoopticker.com',
   });
-  assertEquals(parseSender('hello@hoopfolio.app'), {
-    name: 'Hoopfolio',
-    email: 'hello@hoopfolio.app',
+  assertEquals(parseSender('hello@hoopticker.com'), {
+    name: 'HoopTicker',
+    email: 'hello@hoopticker.com',
   });
 });
 
@@ -23,7 +23,7 @@ Deno.test('brevoPayload matches the transactional email contract', () => {
       tag: 'digest',
       headers: { 'List-Unsubscribe': '<u>' },
     },
-    { name: 'Hoopfolio', email: 'hello@hoopfolio.app' },
+    { name: 'HoopTicker', email: 'hello@hoopticker.com' },
   );
   assertEquals(payload.to, [{ email: 'a@b.co' }]);
   assertEquals(payload.htmlContent, '<p>h</p>');
@@ -71,9 +71,9 @@ const input = {
     },
   ],
   unsubscribeUrl: 'https://x.supabase.co/functions/v1/unsubscribe?token=t&scope=digest',
-  webAppUrl: 'https://vault.hoopfolio.app',
-  siteUrl: 'https://hoopfolio.app',
-  postalAddress: 'Hoopfolio, somewhere',
+  webAppUrl: 'https://vault.hoopticker.com',
+  siteUrl: 'https://hoopticker.com',
+  postalAddress: 'HoopTicker, somewhere',
 };
 
 Deno.test('digest subject leads with the best line and the total change', () => {
@@ -87,7 +87,7 @@ Deno.test('digest carries unsubscribe headers, the weekly note and locked rows',
   assertMatch(m.html, /Stats on Premium/);
   assertMatch(m.html, /1 more player hidden/);
   assertMatch(m.text, /Unsubscribe: https:\/\/x\.supabase\.co/);
-  assertMatch(m.text, /Hoopfolio, somewhere/);
+  assertMatch(m.text, /HoopTicker, somewhere/);
 });
 
 Deno.test('log provider counts every message as sent', async () => {

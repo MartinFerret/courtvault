@@ -11,13 +11,13 @@ the command yourself in this terminal with the `!` prefix.
 
 | #   | What                                                                                                                                                      | Where it goes                                                                                                                                                                                     | Why                                                         |
 | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| 1   | Domain `hoopfolio.app` bought, registrar DNS access                                                                                                       | you                                                                                                                                                                                               | canonical host (R56)                                        |
+| 1   | Domain `hoopticker.com` bought, registrar DNS access                                                                                                       | you                                                                                                                                                                                               | canonical host (R56)                                        |
 | 2   | Supabase project (Free, region **us-east-1**): project ref, database password, anon key, service role key                                                 | `! supabase login` then `! supabase link --project-ref <ref>` (asks the password); anon key to `apps/web/.env` and GitHub secrets; service role key only to `scripts/.env` for the catalog import | database, auth, functions, cron                             |
 | 3   | Highlightly subscription: API key (`x-rapidapi-key`)                                                                                                      | `supabase/functions/.env` as `HIGHLIGHTLY_API_KEY`                                                                                                                                                | box scores, ~16 calls per night, free plan 100/day          |
 | 4   | eBay developer account, **production** keyset: client id + client secret (Browse API, marketplace EBAY_US)                                                | `supabase/functions/.env` as `EBAY_CLIENT_ID`, `EBAY_CLIENT_SECRET`                                                                                                                               | prices, up to 3,500 calls per night                         |
 | 5   | eBay Partner Network campaign id (optional)                                                                                                               | `EBAY_AFFILIATE_CAMPAIGN_ID`                                                                                                                                                                      | affiliate buy links; plain links without it                 |
 | 6   | Netlify site created from the GitHub repo, package directory `apps/web` (build settings come from `apps/web/netlify.toml`); tell me the Netlify site name | Netlify dashboard                                                                                                                                                                                 | hosting                                                     |
-| 7   | Search Console: **Domain** property for `hoopfolio.app`, copy the `google-site-verification=…` TXT token                                                  | you add it at the registrar (TXT on the apex)                                                                                                                                                     | R60; I declare the sitemap once it is verified              |
+| 7   | Search Console: **Domain** property for `hoopticker.com`, copy the `google-site-verification=…` TXT token                                                  | you add it at the registrar (TXT on the apex)                                                                                                                                                     | R60; I declare the sitemap once it is verified              |
 | 8   | GitHub repository secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY`                                                                                          | GitHub > Settings > Secrets                                                                                                                                                                       | keep-alive workflow (Free projects pause after 7 idle days) |
 
 Not needed for this launch: Brevo (no email is sent by the website), RevenueCat, Apple and
@@ -34,13 +34,13 @@ Google sign-in, Cloudflare Pages (web app comes with phase 2).
    `price_coverage` and the eBay call count; then let cron take over (schedules in
    `supabase/migrations/20261005000800_jobs_and_cron.sql`, UTC at both Eastern offsets).
 4. Netlify environment: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-   `NEXT_PUBLIC_SITE_URL=https://hoopfolio.app`, `REVALIDATE_SECRET`,
-   `NEXT_PUBLIC_SLUGS_FROZEN=false`. Custom domain `hoopfolio.app` with the DNS records
+   `NEXT_PUBLIC_SITE_URL=https://hoopticker.com`, `REVALIDATE_SECRET`,
+   `NEXT_PUBLIC_SLUGS_FROZEN=false`. Custom domain `hoopticker.com` with the DNS records
    Netlify shows (apex record plus, if you keep `www`, a CNAME that Netlify redirects in one hop
    to the apex, R56/R57). HTTPS is automatic.
 5. Smoke test on the live site: homepage, waitlist form (row in `waitlist`), `/last-night`,
    `/robots.txt`, `/sitemap.xml`, a 404, the `/api/revalidate` ping from a job.
-6. Search Console: sitemap `https://hoopfolio.app/sitemap.xml`, baseline noted (R114).
+6. Search Console: sitemap `https://hoopticker.com/sitemap.xml`, baseline noted (R114).
 7. PageSpeed mobile on the homepage (R61), Rich Results test on the homepage markup (R88).
 
 ## 3. Indexing policy at launch (R25, R49, R55)

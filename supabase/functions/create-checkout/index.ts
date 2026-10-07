@@ -32,7 +32,7 @@ serve(async (req) => {
     if (!status?.[0]?.available) return error("The Founder's Lifetime offer is closed.", 409);
   }
 
-  const appUrl = env('WEB_APP_URL') ?? 'https://vault.hoopfolio.app';
+  const appUrl = env('WEB_APP_URL') ?? 'https://vault.hoopticker.com';
   const price = requireEnv(
     plan === 'monthly'
       ? 'STRIPE_PRICE_MONTHLY'

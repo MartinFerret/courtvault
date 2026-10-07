@@ -80,9 +80,9 @@ async function sendDigests(
 
   const provider = createEmailProvider();
   const supabaseUrl = requireEnv('SUPABASE_URL');
-  const webAppUrl = env('WEB_APP_URL') ?? 'https://vault.hoopfolio.app';
-  const siteUrl = env('SITE_URL') ?? 'https://hoopfolio.app';
-  const postalAddress = env('EMAIL_POSTAL_ADDRESS') ?? 'Hoopfolio, address to be confirmed';
+  const webAppUrl = env('WEB_APP_URL') ?? 'https://vault.hoopticker.com';
+  const siteUrl = env('SITE_URL') ?? 'https://hoopticker.com';
+  const postalAddress = env('EMAIL_POSTAL_ADDRESS') ?? 'HoopTicker, address to be confirmed';
   const dayLabel = formatEasternDay(day);
 
   let emailSent = 0;

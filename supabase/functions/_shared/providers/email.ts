@@ -41,10 +41,10 @@ export class LogEmailProvider implements EmailProvider {
   }
 }
 
-/** Sender identity from EMAIL_FROM ("Hoopfolio <hello@hoopfolio.app>" or a bare address). */
+/** Sender identity from EMAIL_FROM ("HoopTicker <hello@hoopticker.com>" or a bare address). */
 export function parseSender(from: string): { name: string; email: string } {
   const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(from);
-  return m ? { name: m[1] || 'Hoopfolio', email: m[2] } : { name: 'Hoopfolio', email: from.trim() };
+  return m ? { name: m[1] || 'HoopTicker', email: m[2] } : { name: 'HoopTicker', email: from.trim() };
 }
 
 /** Body of a Brevo "send transactional email" request (POST /v3/smtp/email). Exported for tests. */

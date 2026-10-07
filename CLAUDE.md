@@ -26,10 +26,10 @@ A catalog website + mobile app for basketball trading card collectors in the Uni
   screen. Never a photo or likeness of a real NBA player (legal). Theming goes through tokens only (`apps/mobile/src/theme/tokens.scss`,
   `apps/web/src/app/globals.css`); templates carry the layout, services never change for design.
 
-Product name: **Hoopfolio** (`BRAND_NAME` in `packages/shared`, the only place it is spelled;
+Product name: **HoopTicker** (`BRAND_NAME` in `packages/shared`, the only place it is spelled;
 tagline `BRAND_TAGLINE`). Codename `courtvault` stays in package names, database objects,
-env variable names and the GitHub repo. Bundle id `app.hoopfolio.mobile`, scheme `hoopfolio://`.
-Domains (to be confirmed by Martin): `hoopfolio.app` for the website, `vault.hoopfolio.app`
+env variable names and the GitHub repo. Bundle id `app.hoopticker.mobile`, scheme `hoopticker://`.
+Domains (to be confirmed by Martin): `hoopticker.com` for the website, `vault.hoopticker.com`
 for the web app. Never use "NBA", a team name, "Topps" or any trademark in the product name,
 logo, domain or branding.
 
@@ -37,8 +37,8 @@ logo, domain or branding.
 
 | Surface                      | Host                  | Code                                                  | Indexed                         |
 | ---------------------------- | --------------------- | ----------------------------------------------------- | ------------------------------- |
-| Public website (acquisition) | `hoopfolio.app`       | `apps/web`, Next.js on Netlify                        | Yes                             |
-| Web app (logged-in product)  | `vault.hoopfolio.app` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
+| Public website (acquisition) | `hoopticker.com`       | `apps/web`, Next.js on Netlify                        | Yes                             |
+| Web app (logged-in product)  | `vault.hoopticker.com` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
 
 Same account, data and Premium everywhere. Never a third codebase. The SEO standard is
 `docs/seo-rules.md` (rules R1 to R117, mandatory, referenced by number in commits and PRs;

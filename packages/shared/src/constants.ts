@@ -2,13 +2,13 @@
 export const APP_CODENAME = 'courtvault';
 
 /** Public product name: the only place it is spelled. Every user-facing text imports it (R69, R76). */
-export const BRAND_NAME = 'Hoopfolio';
+export const BRAND_NAME = 'HoopTicker';
 /** Positioning line, used on the website, the app stores and the onboarding hero. */
 export const BRAND_TAGLINE = 'Turn your basketball card collection into a portfolio.';
 /** The daily reason to open the app, appended to the tagline where there is room. */
 export const BRAND_DIFFERENTIATOR = 'See what last night\'s games did to it.';
 /** Deep link scheme of the mobile app (Universal Links / App Links use the website paths). */
-export const APP_SCHEME = 'hoopfolio://';
+export const APP_SCHEME = 'hoopticker://';
 
 /** Shown in the website footer and the app's About screen. Required by the brief. */
 export const AFFILIATION_DISCLAIMER = 'Not affiliated with the NBA, NBPA or Topps.';

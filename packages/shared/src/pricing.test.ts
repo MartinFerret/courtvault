@@ -21,6 +21,6 @@ describe('pricing single source of truth', () => {
   });
 
   it('spells the brand once', () => {
-    expect(BRAND_NAME).toBe('Hoopfolio');
+    expect(BRAND_NAME).toBe('HoopTicker');
   });
 });

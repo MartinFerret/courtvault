@@ -82,7 +82,7 @@ export class VaultPage {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `hoopfolio-vault-${mode}.csv`;
+      a.download = `hoopticker-vault-${mode}.csv`;
       a.click();
       URL.revokeObjectURL(url);
       this.message.set('Export downloaded.');
