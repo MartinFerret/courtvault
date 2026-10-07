@@ -1021,7 +1021,11 @@ form.stack input {
   gap: 4px;
 }
 
-/* Client-side filter above long lists (players, checklists). */
+/* Client-side filter above long lists (players, checklists). Author display rules on .card
+   and table rows would beat the browser's [hidden] style: this one wins. */
+[hidden] {
+  display: none !important;
+}
 .list-filter {
   display: flex;
   align-items: center;
