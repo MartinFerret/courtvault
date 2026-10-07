@@ -13,6 +13,7 @@ export function requireEnv(name: string): string {
 export type StatsProviderName = 'mock' | 'highlightly';
 export type PriceProviderName = 'mock' | 'ebay';
 export type PushProviderName = 'log' | 'fcm';
+export type EmailProviderName = 'log' | 'brevo';
 
 export function statsProviderName(): StatsProviderName {
   return env('STATS_PROVIDER') === 'highlightly' ? 'highlightly' : 'mock';
@@ -22,4 +23,12 @@ export function priceProviderName(): PriceProviderName {
 }
 export function pushProviderName(): PushProviderName {
   return env('PUSH_PROVIDER') === 'fcm' ? 'fcm' : 'log';
+}
+export function emailProviderName(): EmailProviderName {
+  return env('EMAIL_PROVIDER') === 'brevo' ? 'brevo' : 'log';
+}
+/** Digest emails a single run may send (Brevo free plan: 300/day shared with login codes). */
+export function emailDailyBudget(): number {
+  const n = Number.parseInt(env('EMAIL_DAILY_BUDGET') ?? '', 10);
+  return Number.isFinite(n) && n > 0 ? n : 220;
 }

@@ -434,6 +434,8 @@ verify_jwt = false
 verify_jwt = false
 [functions.delete-account]
 verify_jwt = false
+[functions.unsubscribe]
+verify_jwt = false
 
 # Email one-time code (the app verifies the 6-digit {{ .Token }} instead of a link).
 # Configure the same template in the cloud project's Auth > Email Templates (Magic Link).

@@ -16,15 +16,15 @@ See `CLAUDE.md` for the product brief, constraints and conventions.
 
 ## Prerequisites
 
-| Tool | Version | Install |
-| --- | --- | --- |
-| Node.js | 22.22+ (`.nvmrc`) | `nvm install` |
-| pnpm | 10 | `npm i -g pnpm` |
-| Docker Desktop | current | docker.com |
-| Supabase CLI | 2.x | `brew install supabase/tap/supabase` |
-| Deno | 2.x | `brew install deno` |
+| Tool               | Version           | Install                                                           |
+| ------------------ | ----------------- | ----------------------------------------------------------------- |
+| Node.js            | 22.22+ (`.nvmrc`) | `nvm install`                                                     |
+| pnpm               | 10                | `npm i -g pnpm`                                                   |
+| Docker Desktop     | current           | docker.com                                                        |
+| Supabase CLI       | 2.x               | `brew install supabase/tap/supabase`                              |
+| Deno               | 2.x               | `brew install deno`                                               |
 | Android (optional) | SDK 35/36, JDK 21 | Android Studio, or `brew install --cask android-commandlinetools` |
-| Xcode (optional) | current | App Store, iOS only |
+| Xcode (optional)   | current           | App Store, iOS only                                               |
 
 ## Quick start (no external keys, mock mode)
 
@@ -39,11 +39,11 @@ pnpm dev               # functions + website (3000) + app (4200)
 `pnpm dev` creates the local `.env` files from the `.env.example` files when they are missing.
 The local anon and service role keys printed by `supabase status` are the same on every machine.
 
-| URL | What |
-| --- | --- |
-| http://localhost:4200 | App in the browser (scan is simulated) |
-| http://localhost:3000 | Website |
-| http://127.0.0.1:54323 | Supabase Studio |
+| URL                    | What                                         |
+| ---------------------- | -------------------------------------------- |
+| http://localhost:4200  | App in the browser (scan is simulated)       |
+| http://localhost:3000  | Website                                      |
+| http://127.0.0.1:54323 | Supabase Studio                              |
 | http://127.0.0.1:54324 | Mailpit: the 6-digit sign-in codes land here |
 
 Demo users: `demo@courtvault.local` (collection, follows, one alert) and `other@courtvault.local`.
@@ -67,11 +67,11 @@ FREE_CARD_LIMIT_OVERRIDE=5 pnpm db:reset   # lower the free card limit to test t
 
 Set in `supabase/functions/.env` (local) or as function secrets (cloud):
 
-| Variable | Values |
-| --- | --- |
-| `STATS_PROVIDER` | `mock` or `highlightly` (+ `HIGHLIGHTLY_API_KEY`) |
+| Variable         | Values                                                                                             |
+| ---------------- | -------------------------------------------------------------------------------------------------- |
+| `STATS_PROVIDER` | `mock` or `highlightly` (+ `HIGHLIGHTLY_API_KEY`)                                                  |
 | `PRICE_PROVIDER` | `mock` or `ebay` (+ `EBAY_CLIENT_ID`, `EBAY_CLIENT_SECRET`, optional `EBAY_AFFILIATE_CAMPAIGN_ID`) |
-| `PUSH_PROVIDER` | `log` or `fcm` (+ `FCM_PROJECT_ID`, `FCM_CLIENT_EMAIL`, `FCM_PRIVATE_KEY`) |
+| `PUSH_PROVIDER`  | `log` or `fcm` (+ `FCM_PROJECT_ID`, `FCM_CLIENT_EMAIL`, `FCM_PRIVATE_KEY`)                         |
 
 Prices come from the eBay Browse API **active listings**: they are asking prices and are
 labeled "Median asking price" everywhere. Swapping to a sold-price provider means adding a
@@ -141,13 +141,13 @@ pg_cron (UTC) calls the edge functions through pg_net with the `x-job-secret` he
 is scheduled at both Eastern offsets (EST and EDT); the function skips when the local hour is
 before its target and is idempotent per Eastern day via `job_runs`.
 
-| Job | Target (New York) | Cron (UTC) |
-| --- | --- | --- |
-| job-stats | 5:00 | `0 9,10 * * *` |
-| job-prices | 5:30 | `30 9,10 * * *` |
-| job-alerts | 6:00 | `0 10,11 * * *` |
-| job-morning | 8:00 | `0 12,13 * * *` |
-| compact-price-points (SQL only) | weekly | `0 11 * * 0` |
+| Job                             | Target (New York) | Cron (UTC)      |
+| ------------------------------- | ----------------- | --------------- |
+| job-stats                       | 5:00              | `0 9,10 * * *`  |
+| job-prices                      | 5:30              | `30 9,10 * * *` |
+| job-alerts                      | 6:00              | `0 10,11 * * *` |
+| job-morning                     | 8:00              | `0 12,13 * * *` |
+| compact-price-points (SQL only) | weekly            | `0 11 * * 0`    |
 
 Price coverage: user pairs (collections, alerts) first, then the showcase (players who played
 last night, rookies, top 60 players by recent performance), capped by
@@ -155,6 +155,13 @@ last night, rookies, top 60 players by recent performance), capped by
 calls/day). Expected load per night with the two 2025-26 sets: rookies ~390 pairs (98 cards ×
 Base in Raw and PSA 10 + 2 parallels), top players ~360, players of the night mostly overlap;
 about 800 to 1,600 calls. `price_coverage` keeps a per-reason log; edit the settings in Studio.
+
+Morning email digest (`job-morning`, after the push): daily for Premium, weekly on Monday
+for free users, `off` respected; recipients from `morning_email_recipients()`, Premium first,
+capped by `EMAIL_DAILY_BUDGET` per run (Brevo free plan: 300 emails/day shared with the auth
+SMTP). Every email carries RFC 8058 one-click unsubscribe headers pointing at the
+`unsubscribe` function (token per profile, scopes `digest`, `marketing`, `all`) and the postal
+address from `EMAIL_POSTAL_ADDRESS`. `EMAIL_PROVIDER=log` prints instead of sending.
 
 Cron accounts for about 8 edge invocations per day (two firings per job, the second is a
 no-op), far below the 500k/month free quota. App traffic (scan-match, export, delete) adds to it.
@@ -235,11 +242,11 @@ Price history size, measured on the seed: 160 bytes per `price_points` row inclu
 points = 129 rows = 21 KB, then about 12 monthly rows per year. With about 1.5 priced grades
 per tracked parallel:
 
-| Tracked parallels | price_points after 1 year | Verdict |
-| --- | --- | --- |
-| 1,000 | ~31 MB | fine |
-| 10,000 | ~310 MB | ~65% of the free database, plan the move to Pro |
-| 50,000 | ~1.5 GB | needs Supabase Pro (8 GB included) |
+| Tracked parallels | price_points after 1 year | Verdict                                         |
+| ----------------- | ------------------------- | ----------------------------------------------- |
+| 1,000             | ~31 MB                    | fine                                            |
+| 10,000            | ~310 MB                   | ~65% of the free database, plan the move to Pro |
+| 50,000            | ~1.5 GB                   | needs Supabase Pro (8 GB included)              |
 
 Only parallels in a collection or an alert plus the top rookies are priced, so tracked
 parallels grow with users, not with the catalog.

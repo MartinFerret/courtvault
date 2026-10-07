@@ -1,6 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { ActionSheetController, AlertController, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonList, IonNote, IonToggle } from '@ionic/angular';
+import {
+  ActionSheetController,
+  AlertController,
+  IonButton,
+  IonContent,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonSegment,
+  IonSegmentButton,
+  IonToggle,
+} from '@ionic/angular';
 import { AFFILIATION_DISCLAIMER, parseLimitReached } from '@courtvault/shared';
 import { AuthService } from '../../core/auth/auth.service';
 import { CollectionService } from '../../core/collection/collection.service';
@@ -11,7 +24,19 @@ import { SupabaseService } from '../../core/supabase/supabase.service';
 
 @Component({
   selector: 'cv-profile',
-  imports: [RouterLink, IonContent, IonList, IonItem, IonLabel, IonNote, IonIcon, IonButton, IonToggle],
+  imports: [
+    RouterLink,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonNote,
+    IonIcon,
+    IonButton,
+    IonToggle,
+    IonSegment,
+    IonSegmentButton,
+  ],
   templateUrl: './profile.page.html',
 })
 export class ProfilePage {
@@ -35,6 +60,19 @@ export class ProfilePage {
     void this.paywall.open(null);
   }
 
+  async setDigest(value: string | number | undefined): Promise<void> {
+    if (value === 'daily' || value === 'weekly' || value === 'off') {
+      await this.plan.updateEmailPreferences({ digest_frequency: value });
+      this.message.set(
+        value === 'off' ? 'Morning email turned off.' : `Morning email set to ${value}.`,
+      );
+    }
+  }
+
+  async setMarketing(enabled: boolean): Promise<void> {
+    await this.plan.updateEmailPreferences({ marketing: enabled });
+  }
+
   async toggleNotifications(enabled: boolean): Promise<void> {
     if (enabled) await this.push.register();
     else await this.push.disable();
@@ -46,7 +84,10 @@ export class ProfilePage {
       header: 'Export my collection',
       buttons: [
         { text: 'Basic (cards only)', handler: () => void this.exportCsv('basic') },
-        { text: this.plan.isPremium() ? 'Full with values' : 'Full with values · Premium', handler: () => void this.exportCsv('full') },
+        {
+          text: this.plan.isPremium() ? 'Full with values' : 'Full with values · Premium',
+          handler: () => void this.exportCsv('full'),
+        },
         { text: 'Cancel', role: 'cancel' },
       ],
     });
@@ -81,7 +122,8 @@ export class ProfilePage {
   async deleteAccount(): Promise<void> {
     const alert = await this.alerts.create({
       header: 'Delete your account?',
-      message: 'Your collection, follows, alerts and photos will be deleted. This cannot be undone. You can download your data first.',
+      message:
+        'Your collection, follows, alerts and photos will be deleted. This cannot be undone. You can download your data first.',
       buttons: [
         { text: 'Cancel', role: 'cancel' },
         {
@@ -99,7 +141,9 @@ export class ProfilePage {
               .invoke('delete-account', {})
               .then(() => this.auth.signOut())
               .then(() => this.router.navigateByUrl('/onboarding'))
-              .catch((err: unknown) => this.message.set(err instanceof Error ? err.message : 'Deletion failed.'));
+              .catch((err: unknown) =>
+                this.message.set(err instanceof Error ? err.message : 'Deletion failed.'),
+              );
           },
         },
       ],

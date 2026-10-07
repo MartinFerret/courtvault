@@ -33,3 +33,14 @@ export function previousEasternDay(date: Date = new Date()): string {
 export function isIsoDay(value: unknown): value is string {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
+
+/** "Tue, Oct 6" for a YYYY-MM-DD Eastern day (same as packages/shared formatEasternDay). */
+export function formatEasternDay(day: string): string {
+  const [y, m, d] = day.split('-').map(Number) as [number, number, number];
+  return new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(Date.UTC(y, m - 1, d)));
+}

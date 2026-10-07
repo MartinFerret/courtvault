@@ -1,5 +1,12 @@
 import { Component, computed, input } from '@angular/core';
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { AFFILIATION_DISCLAIMER, PRICE_LABEL } from '@courtvault/shared';
 
 const PAGES: Record<string, { title: string; paragraphs: string[] }> = {
@@ -37,7 +44,9 @@ const PAGES: Record<string, { title: string; paragraphs: string[] }> = {
   template: `
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/profile"></ion-back-button></ion-buttons>
+        <ion-buttons slot="start"
+          ><ion-back-button defaultHref="/tabs/profile"></ion-back-button
+        ></ion-buttons>
         <ion-title>{{ content().title }}</ion-title>
       </ion-toolbar>
     </ion-header>
