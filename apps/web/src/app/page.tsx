@@ -88,8 +88,12 @@ export default async function HomePage() {
     : null;
   const featuredSets = sets.slice(0, 6);
   // Hero visual: the first set with an official key visual (Topps Chrome today).
+  // Hero visual: the flagship Chrome set first, then any set with an official key visual.
   const heroVisual =
-    sets
+    [...sets]
+      .sort(
+        (a, b) => Number(b.slug.includes('topps-chrome')) - Number(a.slug.includes('topps-chrome')),
+      )
       .map((set) => ({ set, image: setImage(set.slug) }))
       .find(
         (x): x is { set: (typeof sets)[number]; image: NonNullable<ReturnType<typeof setImage>> } =>
