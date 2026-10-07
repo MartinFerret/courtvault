@@ -423,3 +423,11 @@ proxied through `/ingest/` (blocked in robots.txt, R52). Funnel events: `landing
 10. **About and trust content**: your bio, photo, legal entity name, registry link, address,
     contact email. Needed for phase 4.
 11. **AI-assisted guide drafts** marked for your review in the PR: confirmed?
+
+## 12. Roadmap (not built now, shown on the future /roadmap page)
+
+- **Web scanner: evaluate after the mobile launch.** The webcam / photo scanner exists behind
+  `app_settings.web_scanner` (disabled, no accuracy testing done). On the web, cards are added
+  through manual search and CSV import. Decision of 2026-10-07.
+- **Binder page scan**: recognizing the 9 cards of a binder page at once from their fronts
+  (image recognition, likely a paid service, Premium only).
