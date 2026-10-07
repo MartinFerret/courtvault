@@ -33,9 +33,9 @@ export default async function RookieRankingsPage() {
         />
         <h1>Most valuable basketball rookie cards</h1>
         <p className="lead">
-          The ranking appears once rookie cards have a median asking price from live eBay
-          listings. Until then, browse the <Link href={PATHS.checklists}>checklists</Link> and
-          the <Link href={PATHS.players}>players</Link>.
+          The ranking appears once rookie cards have a median asking price from live eBay listings.
+          Until then, browse the <Link href={PATHS.checklists}>checklists</Link> and the{' '}
+          <Link href={PATHS.players}>players</Link>.
         </p>
         <AppCta context="your rookies" />
       </>

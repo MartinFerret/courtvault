@@ -1058,6 +1058,7 @@ export type Database = {
         }[];
       };
       player_base_key: { Args: { p_name: string }; Returns: string };
+      player_form: { Args: { p_games?: number; p_player_id: string }; Returns: Json };
       player_key: { Args: { p_name: string }; Returns: string };
       players_distinct: { Args: { p_a: string; p_b: string }; Returns: boolean };
       price_at: {
@@ -1178,6 +1179,7 @@ export type Database = {
           reason: string;
         }[];
       };
+      site_freshness: { Args: Record<PropertyKey, never>; Returns: Json };
       start_job_run: { Args: { p_job: string; p_run_key: string }; Returns: boolean };
       top_players_recent: {
         Args: { p_limit?: number; p_window_days?: number };

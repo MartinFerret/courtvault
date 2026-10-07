@@ -158,6 +158,17 @@ export async function playerAliasTarget(slug: string): Promise<string | null> {
   return player ? (player.public_slug ?? player.slug) : null;
 }
 
+/** Number of catalog cards of a player, by internal slug (hero module without prices). */
+export async function playerCardCount(slug: string): Promise<number | null> {
+  if (!SLUG.test(slug)) return null;
+  const { count, error } = await supabase()
+    .from('cards')
+    .select('id, players!inner(slug)', { count: 'exact', head: true })
+    .eq('players.slug', slug);
+  if (error) throw error;
+  return count;
+}
+
 export async function listCardSlugs(): Promise<{ slug: string; updated: string | null }[]> {
   const rows = await fetchAll((from, to) =>
     supabase().from('cards').select('public_slug, created_at').order('id').range(from, to),

@@ -13,8 +13,18 @@ import { checklistPublicSlug } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
+import { LastNightModule } from '@/components/last-night-module';
 import { Delta, Price, PriceNote } from '@/components/price';
-import { cardPublicSlugMap, listSets, pricesAvailable, rookieRankings } from '@/lib/data';
+import { UpdateTimeline } from '@/components/update-timeline';
+import { getFreshness } from '@/lib/freshness';
+import {
+  cardPublicSlugMap,
+  listSets,
+  playerCardCount,
+  playerPublicSlugMap,
+  pricesAvailable,
+  rookieRankings,
+} from '@/lib/data';
 import { PATHS, cardPath, checklistPath } from '@/lib/paths';
 import { getLastNight } from '@/lib/last-night';
 import {
@@ -59,13 +69,20 @@ const NOT_DOING = [
 ];
 
 export default async function HomePage() {
-  const [ranked, sets, night, slugs, priced] = await Promise.all([
+  const [ranked, sets, night, slugs, priced, freshness, playerSlugs] = await Promise.all([
     rookieRankings(6),
     listSets(),
     getLastNight().catch(() => null),
     cardPublicSlugMap(),
     pricesAvailable(),
+    getFreshness().catch(() => null),
+    playerPublicSlugMap(),
   ]);
+  const featured = night?.performances[0];
+  const featuredCards =
+    featured && featured.top_cards.length === 0
+      ? await playerCardCount(featured.player_slug)
+      : null;
   // Unpriced rookies come back in alphabetical order: nothing to show until prices exist.
   const rookies = ranked.filter((r) => r.price_cents !== null);
   const card = (internal: string) => cardPath(slugs.get(internal) ?? internal);
@@ -192,10 +209,19 @@ export default async function HomePage() {
         </span>
       </section>
 
+      {night && night.day && night.performances.length > 0 ? (
+        <LastNightModule
+          night={night}
+          freshness={freshness}
+          slugs={{ cards: slugs, players: playerSlugs }}
+          cardCount={featuredCards}
+        />
+      ) : null}
+
       {movers.length > 0 && night?.day ? (
         <section className="section">
           <div className="section__head">
-            <h2>What last night did to the market</h2>
+            <h2>What moved after last night&apos;s games</h2>
             <Link href={PATHS.movers}>All movers and box scores</Link>
           </div>
           <ul className="movers">
@@ -234,6 +260,18 @@ export default async function HomePage() {
           </ul>
         </section>
       ) : null}
+
+      <section className="section section--night">
+        <div className="section__head">
+          <h2>How your cards get updated every night</h2>
+          <Link href={PATHS.method}>How we price cards</Link>
+        </div>
+        <UpdateTimeline />
+        <p className="muted section__note">
+          Every morning you get both: how your players played and what their cards ask now. A game
+          can move a card; we never claim it did.
+        </p>
+      </section>
 
       <section className="section">
         <h2>How it works</h2>

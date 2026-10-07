@@ -4,10 +4,13 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { FormBadge } from '@/components/form-badge';
+import { FormPriceChart } from '@/components/form-price-chart';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
 import { getPlayer, indexStatus, listPlayers, playerAliasTarget } from '@/lib/data';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
+import { getPlayerForm } from '@/lib/player-form';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 
 export const revalidate = 3600;
@@ -58,6 +61,8 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
   }
   const publicSlug = player.public_slug ?? player.slug;
   if (publicSlug !== slug) permanentRedirect(playerPath(publicSlug));
+  const form = await getPlayerForm(player.id).catch(() => null);
+  const chartable = form && form.games.length >= 3;
   const rookie = player.cards.some((c) => c.is_rookie);
   const priced = player.cards.filter((c) => c.base_cents !== null);
   const top = [...priced].sort((a, b) => (b.base_cents ?? 0) - (a.base_cents ?? 0))[0];
@@ -82,7 +87,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
         ]}
       />
       <h1>
-        {player.name} {rookie ? 'rookie cards' : 'cards'}
+        {player.name} {rookie ? 'rookie cards' : 'cards'} <FormBadge badge={form?.badge} />
       </h1>
       <p className="lead">
         {player.name}
@@ -106,6 +111,32 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
           </>
         ) : null}
       </p>
+
+      {chartable && form ? (
+        <section className="fp">
+          <div className="section__head">
+            <h2>Form and price, same dates</h2>
+            {form.season.pra_avg !== null ? (
+              <span className="muted small">
+                {form.season.games} games this season, {form.season.pra_avg} points + rebounds +
+                assists per game
+              </span>
+            ) : null}
+          </div>
+          <FormPriceChart form={form} />
+          <p className="muted small">
+            {form.price ? (
+              <>
+                Points per game, and the median asking price of {form.price.season}{' '}
+                {form.price.set_name} #{form.price.card_number} Base raw the morning after each
+                game. Two facts on the same dates; a game can move a card, we never claim it did.
+              </>
+            ) : (
+              'Points per game. The value track appears once one of his cards has price history.'
+            )}
+          </p>
+        </section>
+      ) : null}
 
       <h2>{priced.length > 0 ? 'Cards and values' : 'Cards'}</h2>
       {priced.length > 0 ? <PriceNote /> : null}

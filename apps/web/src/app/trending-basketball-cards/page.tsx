@@ -4,6 +4,7 @@ import { formatEasternDay } from '@courtvault/shared';
 import { LastNightView, lastNightTitle } from '@/components/last-night-page';
 import { cardPublicSlugMap, playerPublicSlugMap } from '@/lib/data';
 import { getLastNight } from '@/lib/last-night';
+import { getFreshness } from '@/lib/freshness';
 
 export const revalidate = 3600;
 
@@ -21,6 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function LastNightLatestPage() {
   const data = await getLastNight();
+  const freshness = await getFreshness().catch(() => null);
   if (!data || !data.day) {
     return (
       <>
@@ -32,5 +34,7 @@ export default async function LastNightLatestPage() {
     );
   }
   const [cards, players] = await Promise.all([cardPublicSlugMap(), playerPublicSlugMap()]);
-  return <LastNightView data={data} day={data.day} slugs={{ cards, players }} />;
+  return (
+    <LastNightView data={data} day={data.day} slugs={{ cards, players }} freshness={freshness} />
+  );
 }

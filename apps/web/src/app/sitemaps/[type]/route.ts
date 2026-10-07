@@ -41,6 +41,7 @@ export async function GET(
         { loc: PATHS.checklists, lastmod: latest },
         { loc: PATHS.players, lastmod: latest },
         { loc: PATHS.rookies, lastmod: latest },
+        { loc: PATHS.method },
       ]);
     case 'checklists':
       return xml(

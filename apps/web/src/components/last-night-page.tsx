@@ -9,6 +9,8 @@ import {
 import { AppCta } from './app-cta';
 import { FoilCard } from './foil-card';
 import { JsonLd } from './json-ld';
+import { FreshnessLine } from './freshness';
+import type { Freshness } from '@/lib/freshness';
 import { absoluteUrl } from '@/lib/site';
 import type { LastNight, Mover, StatLine } from '@/lib/last-night';
 import { PATHS, cardPath, moversPath, playerPath } from '@/lib/paths';
@@ -58,10 +60,12 @@ export function LastNightView({
   data,
   day,
   slugs,
+  freshness = null,
 }: {
   data: LastNight;
   day: string;
   slugs: SlugMaps;
+  freshness?: Freshness | null;
 }) {
   const finals = data.games.filter((g) => g.home_score !== null && g.away_score !== null);
   const jsonLd = {
@@ -86,6 +90,7 @@ export function LastNightView({
           ) : null}
         </p>
         <h1 className="ln__title">Trending basketball cards after {formatEasternDay(day)}</h1>
+        <FreshnessLine data={freshness} />
         <ul className="ln__scores" aria-label="Final scores">
           {finals.map((g) => (
             <li key={g.id}>

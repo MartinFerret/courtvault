@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { formatCents, formatCentsDelta, PRICE_LABEL } from '@courtvault/shared';
+import { PATHS } from '@/lib/paths';
 
 export function Price({ cents }: { cents: number | null | undefined }) {
   return <span className="mono">{formatCents(cents)}</span>;
@@ -13,7 +15,8 @@ export function Delta({ cents }: { cents: number | null | undefined }) {
 export function PriceNote() {
   return (
     <p className="price-note">
-      {PRICE_LABEL} from active eBay listings (asking prices, not sold prices).
+      {PRICE_LABEL} from active eBay listings (asking prices, not sold prices).{' '}
+      <Link href={PATHS.method}>How we price cards</Link>
     </p>
   );
 }

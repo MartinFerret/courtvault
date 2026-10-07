@@ -1067,3 +1067,351 @@ form.stack input {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* ---------------------------------------------------------------------------------------
+   Last night / this morning: the one dark surface of the site. Night on ink, morning on
+   lime, the time of the update as the hinge between the two. */
+.lnm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  margin: 16px 0 0;
+  border-radius: var(--cv-radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+.lnm__night,
+.lnm__morning {
+  padding: 36px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.lnm__night {
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+}
+.lnm__night a {
+  color: inherit;
+  text-decoration-color: rgba(247, 248, 249, 0.35);
+}
+.lnm__morning {
+  background: var(--cv-primary);
+  color: var(--cv-primary-contrast);
+}
+.lnm__kicker {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+.lnm__who {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+}
+.lnm__team {
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+.lnm__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+}
+.lnm__stats div {
+  display: flex;
+  flex-direction: column;
+}
+.lnm__stats dd {
+  margin: 0;
+  font-size: clamp(2.4rem, 4.6vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.lnm__stats dt {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+.lnm__game {
+  margin: auto 0 0;
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+.lnm__card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.lnm__card a {
+  color: inherit;
+  text-decoration-color: rgba(18, 20, 23, 0.3);
+}
+.lnm__parallel {
+  font-weight: 400;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+.lnm__value {
+  margin: 6px 0 0;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.lnm__value--text {
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.lnm__delta {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.lnm__delta .gain,
+.lnm__delta .loss {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.lnm__morning .gain {
+  color: #136b3a;
+}
+.lnm__morning .loss {
+  color: #a8291f;
+}
+.lnm__note {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+.lnm__links {
+  margin: auto 0 0;
+  font-size: 0.95rem;
+}
+.lnm__links a {
+  color: inherit;
+  text-decoration-color: rgba(18, 20, 23, 0.3);
+}
+.lnm__fresh,
+.lnm__foot {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 12px 40px;
+  background: var(--cv-surface);
+  color: var(--cv-text-muted);
+  font-size: 0.9rem;
+}
+.lnm__fresh {
+  padding-bottom: 0;
+}
+.lnm__fresh + .lnm__foot {
+  padding-top: 4px;
+}
+.freshness {
+  margin: 0 0 12px;
+  color: var(--cv-text-muted);
+  font-size: 0.9rem;
+}
+.ln__hero .freshness {
+  margin-top: 8px;
+}
+@media (max-width: 860px) {
+  .lnm {
+    grid-template-columns: 1fr;
+  }
+  .lnm__night,
+  .lnm__morning {
+    padding: 24px 20px;
+  }
+  .lnm__fresh,
+  .lnm__foot {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* Form badge: stats only, documented on /how-we-price-cards#form. */
+.form-badge {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  padding: 5px 12px;
+  border-radius: var(--cv-radius-sm);
+  text-decoration: none;
+  line-height: 1.2;
+}
+.form-badge--hot {
+  background: var(--cv-primary);
+  color: var(--cv-primary-contrast);
+}
+.form-badge--cold {
+  background: var(--cv-surface-2);
+  color: var(--cv-text);
+}
+.lnm__night .form-badge {
+  align-self: flex-start;
+}
+
+/* Nightly cycle timeline: the times are the markers. */
+.section--night {
+  background: var(--cv-surface);
+  border-radius: var(--cv-radius-lg);
+  padding: 28px 32px 24px;
+}
+.section--night h2 {
+  margin-top: 0;
+}
+.section__note {
+  margin: 20px 0 0;
+  max-width: 64ch;
+}
+.timeline {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  position: relative;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 7px;
+  height: 2px;
+  background: var(--cv-surface-2);
+}
+.timeline__step {
+  position: relative;
+  padding-top: 24px;
+}
+.timeline__step::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cv-surface-high);
+  box-shadow: inset 0 0 0 4px var(--cv-text);
+}
+.timeline__step:last-child::before {
+  box-shadow: inset 0 0 0 8px var(--cv-primary);
+}
+.timeline__at {
+  display: block;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.timeline__what {
+  display: block;
+  color: var(--cv-text-muted);
+  font-size: 0.95rem;
+  margin-top: 4px;
+  max-width: 28ch;
+}
+@media (max-width: 860px) {
+  .section--night {
+    padding: 22px 20px;
+  }
+  .timeline {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    left: 7px;
+    right: auto;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    height: auto;
+  }
+  .timeline__step {
+    padding-top: 0;
+  }
+  .timeline__step::before {
+    left: -28px;
+    top: 4px;
+  }
+}
+
+/* Form vs price chart (player page). */
+.fp {
+  margin-top: 8px;
+}
+.fpc {
+  margin: 8px 0 0;
+  background: var(--cv-surface);
+  border-radius: var(--cv-radius-lg);
+  padding: 20px 16px 12px;
+}
+.fpc__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: var(--cv-font);
+}
+.fpc__line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.fpc__line--points {
+  stroke: var(--cv-text);
+}
+.fpc__line--price {
+  stroke: var(--cv-text-muted);
+  stroke-dasharray: 6 5;
+}
+.fpc__dot {
+  fill: var(--cv-text);
+}
+.fpc__dot--price {
+  fill: var(--cv-surface);
+  stroke: var(--cv-text-muted);
+  stroke-width: 2;
+}
+.fpc__label {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--cv-text);
+}
+.fpc__value {
+  font-size: 12px;
+  fill: var(--cv-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.fpc__axis {
+  font-size: 12px;
+  fill: var(--cv-text-muted);
+}
+.fpc figcaption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}

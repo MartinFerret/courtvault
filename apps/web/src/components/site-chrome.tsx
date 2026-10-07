@@ -58,6 +58,11 @@ export function SiteFooter() {
           <Link href="/legal/privacy">Privacy</Link>
           <Link href="/legal/account-deletion">Account deletion</Link>
         </nav>
+        <nav aria-label="Company">
+          <p className="site-footer__title">Company</p>
+          <Link href={PATHS.method}>How we price cards</Link>
+          <Link href="/waitlist">Waitlist</Link>
+        </nav>
         <div>
           <p className="site-footer__title">Community</p>
           <p className="muted small">

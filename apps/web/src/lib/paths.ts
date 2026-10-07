@@ -5,6 +5,7 @@ export const PATHS = {
   cards: '/cards',
   rookies: '/most-valuable-basketball-rookie-cards',
   movers: '/trending-basketball-cards',
+  method: '/how-we-price-cards',
 } as const;
 
 export const checklistPath = (publicSlug: string) => `${PATHS.checklists}/${publicSlug}`;
