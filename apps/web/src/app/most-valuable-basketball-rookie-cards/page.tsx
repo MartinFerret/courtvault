@@ -12,7 +12,7 @@ import { checklistPublicSlug } from '@courtvault/shared';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: seoTitle('Most Valuable Basketball Rookie Cards', 'ranked by asking price'),
+  title: seoTitle('Most Valuable Basketball Rookie Cards', 'ranked'),
   description:
     '2025-26 Topps basketball rookie cards ranked by median asking price, Base parallel raw, with the 7-day change, from live eBay listings.',
   alternates: { canonical: PATHS.rookies },

@@ -9,9 +9,9 @@ import { PATHS, playerPath } from '@/lib/paths';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'NBA Players and Their Cards: values by set and parallel',
+  title: 'NBA Player Cards: values by set and parallel',
   description:
-    'Every player with a 2025-26 Topps basketball card: rookie cards and base cards, parallels with print runs, median asking prices by grade, recent box scores.',
+    'Every player with a 2025-26 Topps basketball card: rookie and base cards, parallels with print runs, asking prices by grade and the last box scores.',
   alternates: { canonical: PATHS.players },
 };
 
@@ -43,7 +43,7 @@ export default async function PlayersPage() {
         ]}
       />
       <header className="dir__head">
-        <h1>NBA players and their cards</h1>
+        <h1>NBA player cards</h1>
         <p className="lead">
           {players.length} players with at least one 2025-26 Topps card, filed by last name. Each
           page lists every card, parallel and print run, with values once listings are priced, plus

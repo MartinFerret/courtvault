@@ -123,7 +123,13 @@ export function FormPriceChart({ form }: { form: PlayerForm }) {
         ) : null}
         {games.map((g, i) =>
           n <= 6 || i === 0 || i === last || i % Math.ceil(n / 5) === 0 ? (
-            <text key={`${g.day}-${i}`} x={x(i)} y={height - 6} textAnchor="middle" className="fpc__axis">
+            <text
+              key={`${g.day}-${i}`}
+              x={x(i)}
+              y={height - 6}
+              textAnchor="middle"
+              className="fpc__axis"
+            >
               {shortDay(g.day)}
             </text>
           ) : null,

@@ -2,6 +2,7 @@ import { listIndexable } from '@/lib/data';
 import { listLastNightDays } from '@/lib/last-night';
 import { PATHS, cardPath, checklistPath, moversPath, playerPath } from '@/lib/paths';
 import { absoluteUrl } from '@/lib/site';
+import { METHOD_UPDATED } from '@/lib/content-dates';
 
 export const revalidate = 3600;
 
@@ -41,7 +42,7 @@ export async function GET(
         { loc: PATHS.checklists, lastmod: latest },
         { loc: PATHS.players, lastmod: latest },
         { loc: PATHS.rookies, lastmod: latest },
-        { loc: PATHS.method },
+        { loc: PATHS.method, lastmod: METHOD_UPDATED },
       ]);
     case 'checklists':
       return xml(

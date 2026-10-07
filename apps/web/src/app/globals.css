@@ -1943,3 +1943,18 @@ form.stack input {
   align-items: center;
   gap: 14px;
 }
+
+/* FAQ list on the method page. */
+.faq {
+  margin: 8px 0 24px;
+}
+.faq div + div {
+  margin-top: 16px;
+}
+.faq dt {
+  font-weight: 600;
+}
+.faq dd {
+  margin: 4px 0 0;
+  color: var(--cv-text-muted);
+}

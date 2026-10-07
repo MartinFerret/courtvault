@@ -8,9 +8,9 @@ import { checklistPath, PATHS } from '@/lib/paths';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Basketball Card Checklists: every Topps set, cards and values',
+  title: 'Basketball Card Checklists: every Topps set',
   description:
-    'Every 2025-26 Topps basketball checklist in the catalog: base cards, rookie cards, parallels with print runs and median asking prices by grade.',
+    'Every 2025-26 Topps basketball checklist: base cards, rookie cards, parallels with print runs and median asking prices by grade, from the official lists.',
   alternates: { canonical: PATHS.checklists },
 };
 

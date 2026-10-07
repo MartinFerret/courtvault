@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await getLastNight();
   const day = data?.day;
   return {
-    title: day ? lastNightTitle(day) : 'Trending Basketball Cards: movers after each NBA night',
+    title: day ? lastNightTitle(day) : "Trending Basketball Cards: last night's movers",
     description: day
       ? `Biggest basketball card movers and performances of ${formatEasternDay(day)}: how median asking prices moved after the games.`
       : 'How basketball card prices move after each NBA night.',

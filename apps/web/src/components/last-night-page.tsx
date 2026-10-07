@@ -17,7 +17,7 @@ import { PATHS, cardPath, moversPath, playerPath } from '@/lib/paths';
 
 export function lastNightTitle(day: string): string {
   // Keyword of the page (docs/keyword-map.csv): trending basketball cards.
-  return `Trending Basketball Cards: movers after ${formatEasternDay(day)}`;
+  return `Trending Basketball Cards: after ${formatEasternDay(day)}`;
 }
 
 function shortLine(l: StatLine): string {

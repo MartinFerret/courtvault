@@ -37,7 +37,7 @@ export function robotsFor(indexable: boolean): { robots: { index: boolean; follo
 /** Pages with no value of their own for search (R55): never indexed, never in the sitemap. */
 export const NOINDEX_ROBOTS = { robots: { index: false, follow: true } } as const;
 
-/** Title format of R27: `[Keyword]: [promise] | Brand`, about 60 characters. */
+/** Title format of R27: `[Keyword]: [promise] | Brand`, about 60 characters. Long keywords skip the promise. */
 export function seoTitle(keyword: string, promise: string): string {
-  return `${keyword}: ${promise}`;
+  return promise ? `${keyword}: ${promise}` : keyword;
 }

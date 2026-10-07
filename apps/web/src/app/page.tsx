@@ -101,6 +101,7 @@ export default async function HomePage() {
               '@id': absoluteUrl('/#organization'),
               name: SITE_NAME,
               url: absoluteUrl('/'),
+              logo: absoluteUrl('/icon-512.png'),
             },
             {
               '@type': 'WebSite',
@@ -222,7 +223,7 @@ export default async function HomePage() {
         <section className="section">
           <div className="section__head">
             <h2>What moved after last night&apos;s games</h2>
-            <Link href={PATHS.movers}>All movers and box scores</Link>
+            <Link href={PATHS.movers}>All trending basketball cards of the night</Link>
           </div>
           <ul className="movers">
             {movers.map((m) => {
@@ -292,7 +293,7 @@ export default async function HomePage() {
         <section className="section">
           <div className="section__head">
             <h2>Trending rookies</h2>
-            <Link href={PATHS.rookies}>Full rookie rankings</Link>
+            <Link href={PATHS.rookies}>Most valuable basketball rookie cards</Link>
           </div>
           <PriceNote />
           <div className="table-wrap">

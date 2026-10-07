@@ -43,7 +43,7 @@ export async function generateMetadata({
   const sets = new Set(player.cards.map((c) => `${c.set?.season} ${c.set?.name}`));
   return {
     ...robotsFor(status.indexable),
-    title: seoTitle(keyword(player), 'value by set, parallel and grade'),
+    title: seoTitle(keyword(player), 'values by set and grade'),
     description: `${player.name}${player.team ? ` (${player.team})` : ''}: ${player.cards.length} card${player.cards.length > 1 ? 's' : ''} in ${sets.size} Topps set${sets.size > 1 ? 's' : ''}, every parallel with median asking prices by grade, plus recent box scores.`,
     alternates: { canonical: playerPath(player.public_slug ?? player.slug) },
     openGraph: { title: keyword(player), type: 'profile' },
@@ -218,18 +218,18 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
               <tbody>
                 {player.lines.map((l, i) => (
                   <tr key={i}>
-                    <td>{l.game ? formatEasternDay(l.game.game_day) : '—'}</td>
+                    <td>{l.game ? formatEasternDay(l.game.game_day) : '–'}</td>
                     <td>
                       {l.game
                         ? `${l.game.away_team} at ${l.game.home_team}, ${l.game.away_score ?? '-'}–${l.game.home_score ?? '-'}`
-                        : '—'}
+                        : '–'}
                     </td>
-                    <td className="num">{l.minutes ?? '—'}</td>
-                    <td className="num">{l.points ?? '—'}</td>
-                    <td className="num">{l.rebounds ?? '—'}</td>
-                    <td className="num">{l.assists ?? '—'}</td>
-                    <td className="num">{l.steals ?? '—'}</td>
-                    <td className="num">{l.blocks ?? '—'}</td>
+                    <td className="num">{l.minutes ?? '–'}</td>
+                    <td className="num">{l.points ?? '–'}</td>
+                    <td className="num">{l.rebounds ?? '–'}</td>
+                    <td className="num">{l.assists ?? '–'}</td>
+                    <td className="num">{l.steals ?? '–'}</td>
+                    <td className="num">{l.blocks ?? '–'}</td>
                   </tr>
                 ))}
               </tbody>

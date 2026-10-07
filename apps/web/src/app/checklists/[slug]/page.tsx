@@ -51,7 +51,7 @@ export async function generateMetadata({
   const rookies = set.cards.filter((c) => c.is_rookie).length;
   return {
     ...robotsFor(status.indexable),
-    title: seoTitle(keyword(set), `${set.cards.length} cards, parallels, values`),
+    title: seoTitle(keyword(set), `${set.cards.length} cards`),
     description: `Full ${set.season} ${set.name}${/basketball/i.test(set.name) ? '' : ' basketball'} checklist: ${set.cards.length} cards, ${rookies} rookie cards, every parallel with its print run and median asking prices by grade.`,
     alternates: { canonical: checklistPath(set.public_slug ?? set.slug) },
     openGraph: { title: keyword(set), type: 'website' },
@@ -169,7 +169,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
                     </>
                   ) : null}
                 </td>
-                <td className="muted">{c.player?.team ?? '—'}</td>
+                <td className="muted">{c.player?.team ?? '–'}</td>
                 {priced.length > 0 ? (
                   <td className="num">
                     <Price cents={c.base_cents} />

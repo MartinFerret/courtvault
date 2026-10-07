@@ -49,7 +49,8 @@ export async function generateMetadata({
   const description = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: ${card.parallels.length} parallels with print runs, median asking prices raw, PSA 9 and PSA 10${base ? `, Base raw at $${(base.price_cents / 100).toFixed(2)}` : ''}.`;
   return {
     ...robotsFor(status.indexable),
-    title: seoTitle(keyword(card), 'value by grade'),
+    // The keyword alone already fills the title (set, player, card number).
+    title: seoTitle(keyword(card), ''),
     description:
       description.length > 155
         ? `${description.slice(0, 152).replace(/,[^,]*$/, '')}.`
@@ -226,7 +227,7 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
                             eBay listings
                           </a>
                         ) : (
-                          <span className="muted">—</span>
+                          <span className="muted">–</span>
                         )}
                       </td>
                     </>

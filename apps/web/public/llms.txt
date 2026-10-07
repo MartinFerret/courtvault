@@ -1,0 +1,17 @@
+# HoopTicker
+
+> Basketball card values by parallel and grade, from live eBay listings, refreshed every night and shown next to how the players played. NBA basketball, Topps sets from 2025-26 on. Not affiliated with the NBA, the NBPA or Topps.
+
+Values are median asking prices of active eBay listings (asking prices, not sold prices), published only with at least 5 listings above $5. Prices refresh at 5:30 AM Eastern, box scores at 5:00 AM, the morning report at 8:00 AM. We never claim that a game caused a price move.
+
+## Pages
+
+- [How we price cards](https://hoopticker.com/how-we-price-cards): method, nightly schedule, the Hot/Cold form rule, limits, common questions.
+- [Basketball card checklists](https://hoopticker.com/checklists): every 2025-26 Topps set, each card with its parallels and print runs.
+- [NBA player cards](https://hoopticker.com/players): every player with a card, values by set and grade, last box scores.
+- [Most valuable basketball rookie cards](https://hoopticker.com/most-valuable-basketball-rookie-cards): rookie cards ranked by median asking price.
+- [Trending basketball cards](https://hoopticker.com/trending-basketball-cards): what moved after each NBA night, with an archive per date.
+
+## Data sources
+
+- Official Topps checklists (catalog), eBay Browse API active listings (prices), Highlightly (box scores).

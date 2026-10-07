@@ -7,7 +7,7 @@ export function Price({ cents }: { cents: number | null | undefined }) {
 }
 
 export function Delta({ cents }: { cents: number | null | undefined }) {
-  if (cents === null || cents === undefined) return <span className="muted">—</span>;
+  if (cents === null || cents === undefined) return <span className="muted">–</span>;
   const cls = cents > 0 ? 'gain' : cents < 0 ? 'loss' : 'muted';
   return <span className={`mono ${cls}`}>{formatCentsDelta(cents)}</span>;
 }
