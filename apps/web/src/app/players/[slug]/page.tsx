@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
 import { getPlayer, listPlayers } from '@/lib/data';
-import { absoluteUrl } from '@/lib/site';
+import { absoluteUrl, pendingRobots } from '@/lib/site';
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -23,12 +23,17 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const player = await getPlayer(slug);
   if (!player) return { title: 'Player not found' };
   const title = `${player.name} cards and values`;
   return {
+    ...pendingRobots(),
     title,
     description: `${player.name}${player.team ? ` (${player.team})` : ''}: ${player.cards.length} cards with parallels and median asking prices by grade.`,
     alternates: { canonical: `/players/${player.slug}` },
@@ -51,7 +56,13 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
           ...(player.team ? { affiliation: { '@type': 'SportsTeam', name: player.team } } : {}),
         }}
       />
-      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Players', href: '/players' }, { name: player.name, href: `/players/${player.slug}` }]} />
+      <Breadcrumbs
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Players', href: '/players' },
+          { name: player.name, href: `/players/${player.slug}` },
+        ]}
+      />
       <h1>{player.name}</h1>
       <p className="muted">{player.team ?? 'Team to be announced'}</p>
 
@@ -109,7 +120,10 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
                     <td>
                       {l.game ? `${l.game.away_team} @ ${l.game.home_team}` : '—'}
                       {l.game?.home_score !== null && l.game?.away_score !== null ? (
-                        <span className="muted small"> {l.game?.away_score}–{l.game?.home_score}</span>
+                        <span className="muted small">
+                          {' '}
+                          {l.game?.away_score}–{l.game?.home_score}
+                        </span>
                       ) : null}
                     </td>
                     <td className="num">{l.minutes ?? '—'}</td>

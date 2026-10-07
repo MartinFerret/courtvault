@@ -3,14 +3,14 @@ import type { ReactNode } from 'react';
 import '@fontsource-variable/outfit';
 import './globals.css';
 import { SiteFooter, SiteHeader } from '@/components/site-chrome';
-import { APPLE_APP_ID, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteUrl } from '@/lib/site';
+import { APPLE_APP_ID, SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: `${SITE_NAME} – ${SITE_TAGLINE}`,
-    // Search results show the site name on their own line: no brand suffix in titles.
-    template: '%s',
+    default: SITE_NAME,
+    // R27/R28: `[Keyword]: [promise] | Hoopfolio`, short brand suffix on every page.
+    template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,

@@ -20,7 +20,14 @@ export function WaitlistForm({
     <form action={formAction} className="stack">
       <label htmlFor="email">Email</label>
       <input id="email" name="email" type="email" autoComplete="email" required maxLength={254} />
-      <input name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ display: 'none' }} />
+      <input
+        name="website"
+        type="text"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ display: 'none' }}
+      />
       {state.status === 'error' ? (
         <p className="notice error" role="alert">
           {state.message}

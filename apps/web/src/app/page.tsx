@@ -1,16 +1,25 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { formatParallel } from '@courtvault/shared';
+import { BRAND_TAGLINE, PRICING, formatParallel, formatUsd } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { JsonLd } from '@/components/json-ld';
 import { Delta, Price, PriceNote } from '@/components/price';
 import { listSets, rookieRankings } from '@/lib/data';
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, absoluteUrl } from '@/lib/site';
+import {
+  HOME_KEYWORD,
+  HOME_PROMISE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  absoluteUrl,
+  seoTitle,
+} from '@/lib/site';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} – ${SITE_TAGLINE}`,
+  // R24/R27: the commercial keyword lives here only. The root page shares the layout's segment,
+  // so the layout's title template does not apply to it: the suffix is explicit here.
+  title: { absolute: `${seoTitle(HOME_KEYWORD, HOME_PROMISE)} | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   alternates: { canonical: '/' },
 };
@@ -22,24 +31,74 @@ export default async function HomePage() {
       <JsonLd
         data={{
           '@context': 'https://schema.org',
-          '@type': 'WebSite',
-          name: SITE_NAME,
-          url: absoluteUrl('/'),
-          potentialAction: {
-            '@type': 'SearchAction',
-            target: { '@type': 'EntryPoint', urlTemplate: absoluteUrl('/search?q={search_term_string}') },
-            'query-input': 'required name=search_term_string',
-          },
+          '@graph': [
+            {
+              '@type': 'Organization',
+              '@id': absoluteUrl('/#organization'),
+              name: SITE_NAME,
+              url: absoluteUrl('/'),
+            },
+            {
+              '@type': 'WebSite',
+              name: SITE_NAME,
+              url: absoluteUrl('/'),
+              publisher: { '@id': absoluteUrl('/#organization') },
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: absoluteUrl('/search?q={search_term_string}'),
+                },
+                'query-input': 'required name=search_term_string',
+              },
+            },
+            // R86: product markup on the product page only. Prices from the single source of truth (R69, R85).
+            {
+              '@type': 'SoftwareApplication',
+              name: SITE_NAME,
+              applicationCategory: 'LifestyleApplication',
+              operatingSystem: 'iOS, Android, Web',
+              description: SITE_DESCRIPTION,
+              url: absoluteUrl('/'),
+              offers: [
+                { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: PRICING.currency },
+                {
+                  '@type': 'Offer',
+                  name: 'Premium monthly',
+                  price: PRICING.monthlyUsd.toFixed(2),
+                  priceCurrency: PRICING.currency,
+                },
+                {
+                  '@type': 'Offer',
+                  name: 'Premium yearly',
+                  price: PRICING.yearlyUsd.toFixed(2),
+                  priceCurrency: PRICING.currency,
+                },
+              ],
+            },
+          ],
         }}
       />
-      <h1>{SITE_TAGLINE}</h1>
-      <p className="muted">{SITE_DESCRIPTION}</p>
+      <h1>{HOME_KEYWORD}</h1>
+      <p className="muted">
+        {BRAND_TAGLINE} {SITE_DESCRIPTION}
+      </p>
+      <p className="muted small">
+        Free, with Premium at {formatUsd(PRICING.monthlyUsd)}/month or{' '}
+        {formatUsd(PRICING.yearlyUsd)}/year.
+      </p>
 
       <form className="search-form" action="/search" method="get" role="search">
         <label htmlFor="q" className="muted small" style={{ flexBasis: '100%' }}>
           Search a player, a set or a card number
         </label>
-        <input id="q" name="q" type="search" placeholder="Cooper Flagg, Topps Chrome, #3…" required />
+        <input
+          id="q"
+          name="q"
+          type="search"
+          placeholder="Cooper Flagg, Topps Chrome, #3…"
+          required
+        />
         <button className="button" type="submit">
           Search
         </button>

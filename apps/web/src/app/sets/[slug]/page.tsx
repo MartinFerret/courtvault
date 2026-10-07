@@ -5,6 +5,7 @@ import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Price, PriceNote } from '@/components/price';
 import { getSet, listSets } from '@/lib/data';
+import { pendingRobots } from '@/lib/site';
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -20,12 +21,17 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const set = await getSet(slug);
   if (!set) return { title: 'Set not found' };
   const title = `${set.season} ${set.name} checklist and values`;
   return {
+    ...pendingRobots(),
     title,
     description: `${set.season} ${set.name}: ${set.cards.length} cards with parallels and median asking prices by grade.`,
     alternates: { canonical: `/sets/${set.slug}` },
@@ -40,11 +46,17 @@ export default async function SetPage({ params }: { params: Promise<{ slug: stri
   const title = `${set.season} ${set.name}`;
   return (
     <>
-      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Sets', href: '/sets' }, { name: title, href: `/sets/${set.slug}` }]} />
+      <Breadcrumbs
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Sets', href: '/sets' },
+          { name: title, href: `/sets/${set.slug}` },
+        ]}
+      />
       <h1>{title}</h1>
       <p className="muted">
-        {set.cards.length} cards{set.release_date ? ` · released ${set.release_date}` : ''}. Set name shown for
-        identification only.
+        {set.cards.length} cards{set.release_date ? ` · released ${set.release_date}` : ''}. Set
+        name shown for identification only.
       </p>
       <PriceNote />
       <div className="table-wrap">

@@ -5,13 +5,15 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { JsonLd } from '@/components/json-ld';
 import { Delta, Price, PriceNote } from '@/components/price';
 import { rookieRankings } from '@/lib/data';
-import { absoluteUrl } from '@/lib/site';
+import { absoluteUrl, pendingRobots } from '@/lib/site';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
+  ...pendingRobots(),
   title: 'Most valuable rookie cards',
-  description: 'Rookie basketball cards ranked by median asking price (base parallel, raw), updated daily.',
+  description:
+    'Rookie basketball cards ranked by median asking price (base parallel, raw), updated daily.',
   alternates: { canonical: '/rankings/rookies' },
 };
 
@@ -34,7 +36,12 @@ export default async function RookieRankingsPage() {
           })),
         }}
       />
-      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Rookie rankings', href: '/rankings/rookies' }]} />
+      <Breadcrumbs
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Rookie rankings', href: '/rankings/rookies' },
+        ]}
+      />
       <h1>Most valuable rookie cards</h1>
       <PriceNote />
       <div className="table-wrap">

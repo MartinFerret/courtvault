@@ -35,16 +35,19 @@ logo, domain or branding.
 
 ## Two surfaces, one codebase per surface (plan of 2026-10-07)
 
-| Surface | Host | Code | Indexed |
-| --- | --- | --- | --- |
-| Public website (acquisition) | `hoopfolio.app` | `apps/web`, Next.js on Netlify | Yes |
-| Web app (logged-in product) | `vault.hoopfolio.app` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
+| Surface                      | Host                  | Code                                                  | Indexed                         |
+| ---------------------------- | --------------------- | ----------------------------------------------------- | ------------------------------- |
+| Public website (acquisition) | `hoopfolio.app`       | `apps/web`, Next.js on Netlify                        | Yes                             |
+| Web app (logged-in product)  | `vault.hoopfolio.app` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
 
 Same account, data and Premium everywhere. Never a third codebase. The SEO standard is
 `docs/seo-rules.md` (rules R1 to R117, mandatory, referenced by number in commits and PRs;
 copy its checklists into PRs). Keyword map: `docs/keyword-map.csv` (source) and
 `docs/keyword-map.md` (generated). Architecture and slugs: `docs/site-architecture.md`.
-Full plan and decisions: `docs/plan-web-seo.md`.
+Full plan and decisions: `docs/plan-web-seo.md`. Minimal public launch (what Martin provides,
+what gets deployed, indexing policy while slugs are pending): `docs/launch-checklist.md`.
+Slugs are frozen with `NEXT_PUBLIC_SLUGS_FROZEN=true` on Netlify; before that only the homepage
+is indexable and in the sitemap. Push to GitHub at the end of every session.
 
 ## Vocabulary
 
@@ -81,12 +84,12 @@ marketplace, sealed products.
 
 ### Data (100% free for the MVP)
 
-| Data | Source | Notes |
-| --- | --- | --- |
-| Catalog | Official Topps checklists, CSV import (`scripts/src/import-checklist.ts`) | Format in `data/checklists/README.md`. `DEMO-*.csv` are hand-written demo files |
-| Game stats | Highlightly (`https://nba.highlightly.net`, header `x-rapidapi-key`) | Free plan: 100 requests/day, box scores included. One night costs ~16 requests |
-| Prices | eBay Browse API, active listings (OAuth client credentials, `EBAY_US`) | Asking prices, not sold prices. Label them "Median asking price" everywhere (`PRICE_LABEL`) |
-| Buy links | eBay Partner Network via `X-EBAY-C-ENDUSERCTX` | Optional, plain links when no campaign id |
+| Data       | Source                                                                    | Notes                                                                                       |
+| ---------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Catalog    | Official Topps checklists, CSV import (`scripts/src/import-checklist.ts`) | Format in `data/checklists/README.md`. `DEMO-*.csv` are hand-written demo files             |
+| Game stats | Highlightly (`https://nba.highlightly.net`, header `x-rapidapi-key`)      | Free plan: 100 requests/day, box scores included. One night costs ~16 requests              |
+| Prices     | eBay Browse API, active listings (OAuth client credentials, `EBAY_US`)    | Asking prices, not sold prices. Label them "Median asking price" everywhere (`PRICE_LABEL`) |
+| Buy links  | eBay Partner Network via `X-EBAY-C-ENDUSERCTX`                            | Optional, plain links when no campaign id                                                   |
 
 Every external source goes through an interface in `supabase/functions/_shared/providers/`
 with a real and a deterministic mock implementation, selected by `STATS_PROVIDER`,
@@ -95,17 +98,17 @@ price source for a paid sold-price provider touches only `providers/prices.ts`.
 
 ### Monetization
 
-| | Free | Premium |
-| --- | --- | --- |
-| Cards in collection | 300 | Unlimited |
-| Scans | Unlimited | Unlimited |
-| Players followed in "Last night" | 3 | Unlimited |
-| Price alerts | 2 | Unlimited |
-| Followed checklists | 1 | Unlimited |
-| Price history | 30 days | Full |
-| Gains/losses | No | Yes |
-| Collection export | Basic (cards only) | Full with values, 24h/30d change, gains, summary |
-| Card photos (storage budget) | 300 | 1,000 |
+|                                  | Free               | Premium                                          |
+| -------------------------------- | ------------------ | ------------------------------------------------ |
+| Cards in collection              | 300                | Unlimited                                        |
+| Scans                            | Unlimited          | Unlimited                                        |
+| Players followed in "Last night" | 3                  | Unlimited                                        |
+| Price alerts                     | 2                  | Unlimited                                        |
+| Followed checklists              | 1                  | Unlimited                                        |
+| Price history                    | 30 days            | Full                                             |
+| Gains/losses                     | No                 | Yes                                              |
+| Collection export                | Basic (cards only) | Full with values, 24h/30d change, gains, summary |
+| Card photos (storage budget)     | 300                | 1,000                                            |
 
 - Premium: $5.99/month or $49.99/year with a 7-day trial on the annual plan ("save 30%" is
   computed, never typed), plus the Founder's Lifetime at $149 one-time during the launch period
@@ -163,7 +166,7 @@ apps/mobile (user session) ──► tables, RPC, storage, ───────
   `last-night`, pinged by job-prices), never a redeploy for data. Deploy previews disabled.
   Only stable Next.js features.
 - Public "Last night" page (`/last-night`, `/last-night/[date]`): `public_last_night(day,
-  min_sample, min_price_cents)` builds the whole page as JSON from games, stat lines and
+min_sample, min_price_cents)` builds the whole page as JSON from games, stat lines and
   price history (no user data). Movers = cards of players who played, price before tip-off
   (6 PM Eastern) vs after the next morning's update; thresholds default to 5 listings and $5
   (`LAST_NIGHT_MIN_SAMPLE`, `LAST_NIGHT_MIN_PRICE_CENTS`). Off day: latest night with a note.

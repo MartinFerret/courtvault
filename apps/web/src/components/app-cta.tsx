@@ -10,8 +10,8 @@ export function AppCta({ deepLink, context }: { deepLink?: string; context?: str
     <aside className="cta" aria-labelledby="cta-title">
       <h2 id="cta-title">Track {context ?? 'your cards'} in the app</h2>
       <p className="muted">
-        Scan a card, see its value by parallel and grade, and get every morning how last night&apos;s games moved
-        your collection.
+        Scan a card, see its value by parallel and grade, and get every morning how last
+        night&apos;s games moved your collection.
       </p>
       <p style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <Link className="button" href="/waitlist">

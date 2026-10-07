@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
 import { getCard, listCardSlugs } from '@/lib/data';
-import { absoluteUrl } from '@/lib/site';
+import { absoluteUrl, pendingRobots } from '@/lib/site';
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -23,7 +23,11 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const card = await getCard(slug);
   if (!card) return { title: 'Card not found' };
@@ -31,8 +35,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const parallels = card.parallels.map((p) => formatParallel(p.name, p.serial_run)).join(', ');
   const description = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: median asking price by grade for ${parallels}.`;
   return {
+    ...pendingRobots(),
     title,
-    description: description.length > 158 ? `${description.slice(0, 155).replace(/,[^,]*$/, '')}…` : description,
+    description:
+      description.length > 158
+        ? `${description.slice(0, 155).replace(/,[^,]*$/, '')}…`
+        : description,
     alternates: { canonical: `/cards/${card.slug}` },
     openGraph: { title, type: 'website' },
   };
@@ -58,7 +66,10 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
             priceCurrency: 'USD',
             lowPrice: (Math.min(...allPrices) / 100).toFixed(2),
             highPrice: (Math.max(...allPrices) / 100).toFixed(2),
-            offerCount: card.parallels.reduce((n, p) => n + p.prices.reduce((m, pr) => m + pr.sample_size, 0), 0),
+            offerCount: card.parallels.reduce(
+              (n, p) => n + p.prices.reduce((m, pr) => m + pr.sample_size, 0),
+              0,
+            ),
             availability: 'https://schema.org/InStock',
             description: 'Median asking prices from active eBay listings, by parallel and grade.',
           },
@@ -77,7 +88,8 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
         ]}
       />
       <h1>
-        #{card.number} {card.player.name} {card.is_rookie ? <span className="badge">RC</span> : null}
+        #{card.number} {card.player.name}{' '}
+        {card.is_rookie ? <span className="badge">RC</span> : null}
       </h1>
       <p className="muted">
         <Link href={`/sets/${card.set.slug}`}>
@@ -132,11 +144,14 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
         </table>
       </div>
       <p className="muted small">
-        Buy links may be affiliate links. No card images are shown: photos in the app are private and taken by
-        their owners.
+        Buy links may be affiliate links. No card images are shown: photos in the app are private
+        and taken by their owners.
       </p>
 
-      <AppCta context={`your ${card.player.name} #${card.number}`} deepLink={`/cards/${card.slug}`} />
+      <AppCta
+        context={`your ${card.player.name} #${card.number}`}
+        deepLink={`/cards/${card.slug}`}
+      />
     </>
   );
 }

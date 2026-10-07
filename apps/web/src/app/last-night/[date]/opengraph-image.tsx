@@ -17,31 +17,97 @@ export default async function Image({ params }: { params: Promise<{ date: string
   const { date } = await params;
   const data = await getLastNight(date).catch(() => null);
   const top = data?.gainers[0] ?? data?.losers[0] ?? null;
-  const tierColor = !top ? '#d7dbdf' : top.serial_run === 1 ? '#d9433a' : top.serial_run ? '#e0b43a' : top.parallel_name === 'Base' ? '#d7dbdf' : '#9be7ff';
+  const tierColor = !top
+    ? '#d7dbdf'
+    : top.serial_run === 1
+      ? '#d9433a'
+      : top.serial_run
+        ? '#e0b43a'
+        : top.parallel_name === 'Base'
+          ? '#d7dbdf'
+          : '#9be7ff';
   const headline = top ? `${top.player_name} #${top.card_number}` : 'Game night recap';
-  const subline = top ? `${top.season} ${top.set_name} · ${formatParallel(top.parallel_name, top.serial_run)} · ${top.grade}` : '';
+  const subline = top
+    ? `${top.season} ${top.set_name} · ${formatParallel(top.parallel_name, top.serial_run)} · ${top.grade}`
+    : '';
   const move = top ? formatPercent(top.change_pct) : '';
-  const prices = top ? `${formatCents(top.before_cents)} → ${formatCents(top.after_cents)} median asking price` : '';
+  const prices = top
+    ? `${formatCents(top.before_cents)} → ${formatCents(top.after_cents)} median asking price`
+    : '';
   const moveColor = top && top.change_cents > 0 ? '#1f9d55' : '#d9433a';
   return new ImageResponse(
-    (
-      <div style={{ width: '100%', height: '100%', display: 'flex', background: '#edeff1', color: '#121417', fontFamily: 'sans-serif', padding: 56 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', fontSize: 28, color: '#6a7078' }}>{`${formatEasternDay(date)} · Last night in the card market`}</div>
-            <div style={{ display: 'flex', fontSize: 64, fontWeight: 700, marginTop: 12, lineHeight: 1.05 }}>{headline}</div>
-            <div style={{ display: 'flex', fontSize: 30, color: '#6a7078', marginTop: 8 }}>{subline}</div>
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        background: '#edeff1',
+        color: '#121417',
+        fontFamily: 'sans-serif',
+        padding: 56,
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          flex: 1,
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{ display: 'flex', fontSize: 28, color: '#6a7078' }}
+          >{`${formatEasternDay(date)} · Last night in the card market`}</div>
+          <div
+            style={{
+              display: 'flex',
+              fontSize: 64,
+              fontWeight: 700,
+              marginTop: 12,
+              lineHeight: 1.05,
+            }}
+          >
+            {headline}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', fontSize: 88, fontWeight: 700, color: moveColor, lineHeight: 1 }}>{move}</div>
-            <div style={{ display: 'flex', fontSize: 28, color: '#6a7078', marginTop: 8 }}>{prices}</div>
+          <div style={{ display: 'flex', fontSize: 30, color: '#6a7078', marginTop: 8 }}>
+            {subline}
           </div>
         </div>
-        <div style={{ display: 'flex', width: 300, height: 420, borderRadius: 28, background: `linear-gradient(135deg, ${tierColor}, #e9ff5f)`, alignItems: 'center', justifyContent: 'center', fontSize: 44, fontWeight: 700, color: '#121417' }}>
-          {top ? `#${top.card_number}` : 'NBA'}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              display: 'flex',
+              fontSize: 88,
+              fontWeight: 700,
+              color: moveColor,
+              lineHeight: 1,
+            }}
+          >
+            {move}
+          </div>
+          <div style={{ display: 'flex', fontSize: 28, color: '#6a7078', marginTop: 8 }}>
+            {prices}
+          </div>
         </div>
       </div>
-    ),
+      <div
+        style={{
+          display: 'flex',
+          width: 300,
+          height: 420,
+          borderRadius: 28,
+          background: `linear-gradient(135deg, ${tierColor}, #e9ff5f)`,
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 44,
+          fontWeight: 700,
+          color: '#121417',
+        }}
+      >
+        {top ? `#${top.card_number}` : 'NBA'}
+      </div>
+    </div>,
     size,
   );
 }

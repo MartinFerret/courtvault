@@ -3,10 +3,12 @@ import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { listPlayers } from '@/lib/data';
+import { pendingRobots } from '@/lib/site';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
+  ...pendingRobots(),
   title: 'Players',
   description: 'Basketball players in the catalog with their cards and values.',
   alternates: { canonical: '/players' },
@@ -16,7 +18,12 @@ export default async function PlayersPage() {
   const players = await listPlayers();
   return (
     <>
-      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Players', href: '/players' }]} />
+      <Breadcrumbs
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Players', href: '/players' },
+        ]}
+      />
       <h1>Players</h1>
       <div className="grid">
         {players.map((p) => (

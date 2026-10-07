@@ -1,9 +1,20 @@
-import { AFFILIATION_DISCLAIMER, APP_SCHEME as SHARED_APP_SCHEME, BRAND_NAME } from '@courtvault/shared';
+import {
+  AFFILIATION_DISCLAIMER,
+  APP_SCHEME as SHARED_APP_SCHEME,
+  BRAND_NAME,
+} from '@courtvault/shared';
 
 export const SITE_NAME = BRAND_NAME;
 export const SITE_TAGLINE = 'Basketball card values by parallel and grade';
+/**
+ * Homepage commercial keyword (R5, R24). Provisional until the Keyword Planner volumes are in:
+ * "basketball card collection tracker" has the most accessible top 3 (docs/keyword-map.md).
+ * A title change costs nothing; the URL (/) never changes.
+ */
+export const HOME_KEYWORD = 'Basketball card collection tracker';
+export const HOME_PROMISE = 'live values';
 export const SITE_DESCRIPTION =
-  'Track the value of your basketball trading cards by parallel and grade, and see every morning how last night’s games moved your collection.';
+  'Basketball card values by parallel and grade, updated nightly from live listings, plus a morning report of what last night’s games did to your cards.';
 export const DISCLAIMER = AFFILIATION_DISCLAIMER;
 
 export function siteUrl(): string {
@@ -17,3 +28,23 @@ export function absoluteUrl(path: string): string {
 export const APPLE_APP_ID = process.env['NEXT_PUBLIC_APPLE_APP_ID'] ?? '';
 /** Deep link scheme handled by the app (Universal Links / App Links use the same paths). */
 export const APP_SCHEME = SHARED_APP_SCHEME;
+
+/**
+ * Slugs are frozen only once the keyword volumes are in (R25). Until then every page except the
+ * homepage and the legal pages is `noindex, follow` and stays out of the sitemap, so a later
+ * rename costs nothing. Flip NEXT_PUBLIC_SLUGS_FROZEN=true at freeze time.
+ */
+export const SLUGS_FROZEN = process.env['NEXT_PUBLIC_SLUGS_FROZEN'] === 'true';
+
+/** Spread into a page's metadata: `noindex` while its slug is still pending. */
+export function pendingRobots(): { robots?: { index: boolean; follow: boolean } } {
+  return SLUGS_FROZEN ? {} : { robots: { index: false, follow: true } };
+}
+
+/** Pages with no value of their own for search (R55): never indexed, never in the sitemap. */
+export const NOINDEX_ROBOTS = { robots: { index: false, follow: true } } as const;
+
+/** Title format of R27: `[Keyword]: [promise] | Brand`, about 60 characters. */
+export function seoTitle(keyword: string, promise: string): string {
+  return `${keyword}: ${promise}`;
+}

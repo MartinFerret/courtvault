@@ -1,5 +1,11 @@
 import Link from 'next/link';
-import { formatCents, formatCentsDelta, formatEasternDay, formatPercent, PRICE_LABEL } from '@courtvault/shared';
+import {
+  formatCents,
+  formatCentsDelta,
+  formatEasternDay,
+  formatPercent,
+  PRICE_LABEL,
+} from '@courtvault/shared';
 import { AppCta } from './app-cta';
 import { FoilCard } from './foil-card';
 import { JsonLd } from './json-ld';
@@ -60,7 +66,9 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
       <header className="ln__hero">
         <p className="ln__eyebrow">
           <Link href="/last-night">Last night</Link> · {formatEasternDay(day)}
-          {data.is_off_day && !data.requested_day ? <span className="muted"> · no games last night, latest game night shown</span> : null}
+          {data.is_off_day && !data.requested_day ? (
+            <span className="muted"> · no games last night, latest game night shown</span>
+          ) : null}
         </p>
         <h1 className="ln__title">
           {data.games.length} game{data.games.length > 1 ? 's' : ''}.
@@ -86,7 +94,9 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
         <div className="ln__movers">
           <div>
             <h2 className="ln__h2 gain">Up</h2>
-            {data.gainers.length === 0 ? <p className="muted">Nothing moved up enough to list.</p> : null}
+            {data.gainers.length === 0 ? (
+              <p className="muted">Nothing moved up enough to list.</p>
+            ) : null}
             <ol className="ln__list">
               {data.gainers.map((m) => (
                 <MoverCard key={`${m.card_slug}-${m.parallel_name}-${m.grade}`} m={m} />
@@ -95,7 +105,9 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
           </div>
           <div>
             <h2 className="ln__h2 loss">Down</h2>
-            {data.losers.length === 0 ? <p className="muted">Nothing moved down enough to list.</p> : null}
+            {data.losers.length === 0 ? (
+              <p className="muted">Nothing moved down enough to list.</p>
+            ) : null}
             <ol className="ln__list">
               {data.losers.map((m) => (
                 <MoverCard key={`${m.card_slug}-${m.parallel_name}-${m.grade}`} m={m} />
@@ -146,7 +158,12 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
                         footer={
                           <>
                             <span className="mono">{formatCents(c.after_cents)}</span>
-                            {c.change_cents ? <span className={`mono ${c.change_cents > 0 ? 'gain' : 'loss'}`}> {formatCentsDelta(c.change_cents)}</span> : null}
+                            {c.change_cents ? (
+                              <span className={`mono ${c.change_cents > 0 ? 'gain' : 'loss'}`}>
+                                {' '}
+                                {formatCentsDelta(c.change_cents)}
+                              </span>
+                            ) : null}
                           </>
                         }
                       />
@@ -162,9 +179,11 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
       <AppCta context="what last night did to YOUR collection" deepLink="/last-night" />
 
       <p className="ln__footnote">
-        {PRICE_LABEL} from active eBay listings, not sold prices. Prices compared before tip-off and after the next morning&apos;s
-        update, for cards of players who played, with at least {data.thresholds.min_sample_size} listings and a price above{' '}
-        {formatCents(data.thresholds.min_price_cents)}. Prices move for many reasons: this page reports what moved, not why.
+        {PRICE_LABEL} from active eBay listings, not sold prices. Prices compared before tip-off and
+        after the next morning&apos;s update, for cards of players who played, with at least{' '}
+        {data.thresholds.min_sample_size} listings and a price above{' '}
+        {formatCents(data.thresholds.min_price_cents)}. Prices move for many reasons: this page
+        reports what moved, not why.
       </p>
     </article>
   );

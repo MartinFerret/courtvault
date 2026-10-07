@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { LastNightView, lastNightTitle } from '@/components/last-night-page';
 import { getLastNight, listLastNightDays } from '@/lib/last-night';
+import { pendingRobots } from '@/lib/site';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -19,10 +20,15 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ date: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ date: string }>;
+}): Promise<Metadata> {
   const { date } = await params;
   if (!DAY.test(date)) return { title: 'Not found' };
   return {
+    ...pendingRobots(),
     title: lastNightTitle(date),
     description: `Biggest basketball card movers and performances of ${formatEasternDay(date)}: how median asking prices moved after the games.`,
     alternates: { canonical: `/last-night/${date}` },
@@ -30,7 +36,11 @@ export async function generateMetadata({ params }: { params: Promise<{ date: str
   };
 }
 
-export default async function LastNightArchivePage({ params }: { params: Promise<{ date: string }> }) {
+export default async function LastNightArchivePage({
+  params,
+}: {
+  params: Promise<{ date: string }>;
+}) {
   const { date } = await params;
   if (!DAY.test(date)) notFound();
   const data = await getLastNight(date);

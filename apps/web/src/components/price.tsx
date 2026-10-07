@@ -11,5 +11,9 @@ export function Delta({ cents }: { cents: number | null | undefined }) {
 }
 
 export function PriceNote() {
-  return <p className="price-note">{PRICE_LABEL} from active eBay listings (asking prices, not sold prices).</p>;
+  return (
+    <p className="price-note">
+      {PRICE_LABEL} from active eBay listings (asking prices, not sold prices).
+    </p>
+  );
 }
