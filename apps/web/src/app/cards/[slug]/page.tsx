@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { GRADE_LABELS, formatParallel } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
@@ -63,6 +63,7 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const card = await getCard(slug);
   if (!card) notFound();
+  if (card.public_slug !== slug) permanentRedirect(cardPath(card.public_slug));
   const name = `${card.set.season} ${card.set.name} #${card.number} ${card.player.name}`;
   const allPrices = card.parallels.flatMap((p) => p.prices.map((pr) => pr.price_cents));
   const priced = card.parallels.filter((p) => p.prices.length > 0);
@@ -155,22 +156,26 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
             )} at <Price cents={top.max} />.
           </>
         ) : null}
-        {priced.length === 0
-          ? ' No listing has been priced yet; values appear after the next nightly update.'
-          : ''}
+        {priced.length === 0 ? ' Values appear once listings have been priced.' : ''}
       </p>
 
-      <h2>Value by parallel and grade</h2>
-      <PriceNote />
+      <h2>{priced.length > 0 ? 'Value by parallel and grade' : 'Parallels and print runs'}</h2>
+      {priced.length > 0 ? <PriceNote /> : null}
       <div className="table-wrap">
         <table>
           <thead>
             <tr>
               <th>Parallel</th>
-              <th className="num">{GRADE_LABELS.RAW}</th>
-              <th className="num">{GRADE_LABELS.PSA9}</th>
-              <th className="num">{GRADE_LABELS.PSA10}</th>
-              <th>Buy</th>
+              {priced.length > 0 ? (
+                <>
+                  <th className="num">{GRADE_LABELS.RAW}</th>
+                  <th className="num">{GRADE_LABELS.PSA9}</th>
+                  <th className="num">{GRADE_LABELS.PSA10}</th>
+                  <th>Buy</th>
+                </>
+              ) : (
+                <th className="num">Print run</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -188,24 +193,36 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
                     />
                     {formatParallel(p.name, p.serial_run)}
                   </td>
-                  <td className="num">
-                    <Price cents={byGrade.get('RAW')?.price_cents} />
-                  </td>
-                  <td className="num">
-                    <Price cents={byGrade.get('PSA9')?.price_cents} />
-                  </td>
-                  <td className="num">
-                    <Price cents={byGrade.get('PSA10')?.price_cents} />
-                  </td>
-                  <td>
-                    {buy ? (
-                      <a href={buy} rel="sponsored nofollow noopener" target="_blank">
-                        eBay listings
-                      </a>
-                    ) : (
-                      <span className="muted">—</span>
-                    )}
-                  </td>
+                  {priced.length > 0 ? (
+                    <>
+                      <td className="num">
+                        <Price cents={byGrade.get('RAW')?.price_cents} />
+                      </td>
+                      <td className="num">
+                        <Price cents={byGrade.get('PSA9')?.price_cents} />
+                      </td>
+                      <td className="num">
+                        <Price cents={byGrade.get('PSA10')?.price_cents} />
+                      </td>
+                      <td>
+                        {buy ? (
+                          <a href={buy} rel="sponsored nofollow noopener" target="_blank">
+                            eBay listings
+                          </a>
+                        ) : (
+                          <span className="muted">—</span>
+                        )}
+                      </td>
+                    </>
+                  ) : (
+                    <td className="num mono">
+                      {p.serial_run === null
+                        ? 'Unnumbered'
+                        : p.serial_run === 1
+                          ? '1 of 1'
+                          : `/${p.serial_run}`}
+                    </td>
+                  )}
                 </tr>
               );
             })}
@@ -213,14 +230,11 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
         </table>
       </div>
       <p className="muted small">
-        Buy links may be affiliate links. No card images are shown: photos in the app are private
-        and taken by their owners.
+        {priced.length > 0 ? 'Buy links may be affiliate links. ' : ''}No card images are shown:
+        photos in the app are private and taken by their owners.
       </p>
 
-      <AppCta
-        context={`your ${card.player.name} #${card.number}`}
-        deepLink={cardPath(card.public_slug)}
-      />
+      <AppCta context={`your ${card.player.name} #${card.number}`} />
     </>
   );
 }

@@ -224,9 +224,13 @@ only when the config lives there and the deploy runs from the root with `--filte
 4. Function secrets `WEB_REVALIDATE_URL=https://hoopticker.com/api/revalidate` and
    `WEB_REVALIDATE_SECRET` (same value as `REVALIDATE_SECRET`) so job-prices refreshes pages.
 5. Custom domain: add `hoopticker.com` and `www.hoopticker.com` in Netlify > Domain
-   management, point the registrar's DNS to Netlify (apex ALIAS/A to the Netlify load
-   balancer, `www` CNAME to `hoopticker.netlify.app`), HTTPS is issued automatically. Then
-   Search Console: verify the domain (DNS TXT) and submit `https://hoopticker.com/sitemap.xml`.
+   management and make `hoopticker.com` the primary domain, point the registrar's DNS to
+   Netlify (apex ALIAS/A to the Netlify load balancer, `www` CNAME to
+   `hoopticker.netlify.app`), HTTPS is issued automatically. Netlify then redirects
+   `hoopticker.netlify.app` and `www` to the primary domain (301). Until then, and for deploy
+   URLs, `apps/web/src/proxy.ts` answers every host other than `NEXT_PUBLIC_SITE_URL` with
+   `X-Robots-Tag: noindex, nofollow`; canonical tags already point to the primary domain.
+   Then Search Console: verify the domain (DNS TXT) and submit `https://hoopticker.com/sitemap.xml`.
 
 ### 2b. Cloudflare Pages (web app, vault.hoopticker.com)
 

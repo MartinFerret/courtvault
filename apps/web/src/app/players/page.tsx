@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { ListFilter } from '@/components/list-filter';
 import { listPlayers } from '@/lib/data';
 import { PATHS, playerPath } from '@/lib/paths';
 
@@ -25,9 +26,21 @@ export default async function PlayersPage() {
         ]}
       />
       <h1>NBA players and their cards</h1>
-      <div className="grid">
+      <ListFilter
+        target="players"
+        label="Filter players"
+        placeholder="Filter by player or team"
+        total={players.length}
+        noun="players"
+      />
+      <div className="grid" id="players">
         {players.map((p) => (
-          <Link key={p.id} href={playerPath(p.public_slug ?? p.slug)} className="card">
+          <Link
+            key={p.id}
+            href={playerPath(p.public_slug ?? p.slug)}
+            className="card"
+            data-filter={`${p.name} ${p.team ?? ''}`.toLowerCase()}
+          >
             <strong>{p.name}</strong>
             <br />
             <span className="muted small">{p.team ?? 'Team to be announced'}</span>

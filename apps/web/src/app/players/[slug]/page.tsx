@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
@@ -52,6 +52,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
   const player = await getPlayer(slug);
   if (!player) notFound();
   const publicSlug = player.public_slug ?? player.slug;
+  if (publicSlug !== slug) permanentRedirect(playerPath(publicSlug));
   const rookie = player.cards.some((c) => c.is_rookie);
   const priced = player.cards.filter((c) => c.base_cents !== null);
   const top = [...priced].sort((a, b) => (b.base_cents ?? 0) - (a.base_cents ?? 0))[0];
@@ -101,15 +102,15 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
         ) : null}
       </p>
 
-      <h2>Cards and values</h2>
-      <PriceNote />
+      <h2>{priced.length > 0 ? 'Cards and values' : 'Cards'}</h2>
+      {priced.length > 0 ? <PriceNote /> : null}
       <div className="table-wrap">
         <table>
           <thead>
             <tr>
               <th>Set</th>
               <th>#</th>
-              <th className="num">Base, raw</th>
+              {priced.length > 0 ? <th className="num">Base, raw</th> : null}
             </tr>
           </thead>
           <tbody>
@@ -127,9 +128,11 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
                   ) : null}
                 </td>
                 <td className="mono">{c.number}</td>
-                <td className="num">
-                  <Price cents={c.base_cents} />
-                </td>
+                {priced.length > 0 ? (
+                  <td className="num">
+                    <Price cents={c.base_cents} />
+                  </td>
+                ) : null}
               </tr>
             ))}
           </tbody>

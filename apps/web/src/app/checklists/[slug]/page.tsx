@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { JsonLd } from '@/components/json-ld';
+import { ListFilter } from '@/components/list-filter';
 import { Price, PriceNote } from '@/components/price';
 import { getSet, indexStatus, listSets } from '@/lib/data';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
@@ -51,6 +52,8 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const set = await getSet(slug);
   if (!set) notFound();
+  // Old or internal slug: one canonical URL per page (R22).
+  if (set.public_slug !== slug) permanentRedirect(checklistPath(set.public_slug));
   const rookies = set.cards.filter((c) => c.is_rookie);
   const priced = set.cards.filter((c) => c.base_cents !== null);
   const top = [...priced].sort((a, b) => (b.base_cents ?? 0) - (a.base_cents ?? 0))[0];
@@ -98,20 +101,32 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
         )}{' '}
         Every parallel and print run is listed on each card page.
       </p>
-      <PriceNote />
+      {priced.length > 0 ? <PriceNote /> : null}
+      <ListFilter
+        target="checklist"
+        label="Filter cards"
+        placeholder="Filter by player, team or number"
+        total={set.cards.length}
+        noun="cards"
+        toggle={{ label: 'Rookies only', attr: 'data-rookie' }}
+      />
       <div className="table-wrap">
-        <table>
+        <table id="checklist">
           <thead>
             <tr>
               <th>#</th>
               <th>Player</th>
               <th>Team</th>
-              <th className="num">Base, raw</th>
+              {priced.length > 0 ? <th className="num">Base, raw</th> : null}
             </tr>
           </thead>
           <tbody>
             {set.cards.map((c) => (
-              <tr key={c.id}>
+              <tr
+                key={c.id}
+                data-filter={`${c.number} ${c.player?.name ?? ''} ${c.player?.team ?? ''}`.toLowerCase()}
+                data-rookie={c.is_rookie ? '' : undefined}
+              >
                 <td className="mono">{c.number}</td>
                 <td>
                   <Link href={cardPath(c.public_slug)}>{c.player?.name}</Link>{' '}
@@ -126,9 +141,11 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
                   ) : null}
                 </td>
                 <td className="muted">{c.player?.team ?? '—'}</td>
-                <td className="num">
-                  <Price cents={c.base_cents} />
-                </td>
+                {priced.length > 0 ? (
+                  <td className="num">
+                    <Price cents={c.base_cents} />
+                  </td>
+                ) : null}
               </tr>
             ))}
           </tbody>

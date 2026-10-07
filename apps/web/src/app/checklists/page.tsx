@@ -38,7 +38,7 @@ export default async function SetsPage() {
           </Link>
         ))}
       </div>
-      <AppCta context="your sets" deepLink="/sets" />
+      <AppCta context="your sets" />
     </>
   );
 }

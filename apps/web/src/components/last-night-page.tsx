@@ -99,7 +99,7 @@ export function LastNightView({
         </ul>
       </header>
 
-      <AppCta context="what last night did to YOUR collection" deepLink={PATHS.movers} />
+      <AppCta context="what last night did to YOUR collection" />
 
       <section className="ln__section">
         <div className="ln__movers">
@@ -198,7 +198,7 @@ export function LastNightView({
         </ol>
       </section>
 
-      <AppCta context="what last night did to YOUR collection" deepLink={PATHS.movers} />
+      <AppCta context="what last night did to YOUR collection" />
 
       <p className="ln__footnote">
         {PRICE_LABEL} from active eBay listings, not sold prices. Prices compared before tip-off and

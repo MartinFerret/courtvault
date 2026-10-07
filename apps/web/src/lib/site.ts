@@ -14,7 +14,7 @@ export const SITE_TAGLINE = 'Basketball card values by parallel and grade';
 export const HOME_KEYWORD = 'Basketball card collection tracker';
 export const HOME_PROMISE = 'live values';
 export const SITE_DESCRIPTION =
-  'Basketball card values by parallel and grade, updated nightly from live listings, plus a morning report of what last night’s games did to your cards.';
+  'Basketball card values by parallel and grade from live eBay listings, plus a morning report of what last night’s games did to your cards.';
 export const DISCLAIMER = AFFILIATION_DISCLAIMER;
 
 export function siteUrl(): string {

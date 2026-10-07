@@ -1020,3 +1020,46 @@ form.stack input {
   flex-direction: column;
   gap: 4px;
 }
+
+/* Client-side filter above long lists (players, checklists). */
+.list-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+}
+.list-filter input[type='search'] {
+  flex: 1 1 260px;
+  min-width: 0;
+  background: var(--cv-surface);
+  border: 0;
+  border-radius: var(--cv-radius-sm);
+  color: var(--cv-text);
+  padding: 12px 18px;
+  font-size: 1rem;
+  font-family: var(--cv-font);
+}
+.list-filter__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--cv-radius-sm);
+  background: var(--cv-surface);
+  cursor: pointer;
+  user-select: none;
+}
+.list-filter__toggle input {
+  accent-color: var(--cv-accent);
+  width: 18px;
+  height: 18px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

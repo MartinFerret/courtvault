@@ -19,7 +19,15 @@ export function WaitlistForm({
   return (
     <form action={formAction} className="stack">
       <label htmlFor="email">Email</label>
-      <input id="email" name="email" type="email" autoComplete="email" required maxLength={254} />
+      <input
+        id="email"
+        name="email"
+        type="email"
+        autoComplete="email"
+        placeholder="you@example.com"
+        required
+        maxLength={254}
+      />
       <input
         name="website"
         type="text"

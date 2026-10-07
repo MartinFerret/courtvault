@@ -1,6 +1,36 @@
 import 'server-only';
 import { supabase } from './supabase';
 
+/** Page size under PostgREST's max_rows (1,000): lists above that size were silently truncated. */
+const PAGE = 500;
+
+/** Reads every row of a query that would otherwise stop at max_rows. */
+async function fetchAll<T>(
+  query: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: unknown }>,
+): Promise<T[]> {
+  const rows: T[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await query(from, from + PAGE - 1);
+    if (error) throw error;
+    rows.push(...(data ?? []));
+    if (!data || data.length < PAGE) return rows;
+  }
+}
+
+const SLUG = /^[a-z0-9-]{1,120}$/;
+
+/** PostgREST `or` filter matching the public slug or the internal one (old links, search results). */
+function eitherSlug(slug: string): string | null {
+  return SLUG.test(slug) ? `public_slug.eq.${slug},slug.eq.${slug}` : null;
+}
+
+/** True once at least one price has been recorded: pages show price columns only then. */
+export async function pricesAvailable(): Promise<boolean> {
+  const { data, error } = await supabase().from('current_prices').select('parallel_id').limit(1);
+  if (error) throw error;
+  return (data ?? []).length > 0;
+}
+
 export interface SetSummary {
   id: string;
   slug: string;
@@ -30,12 +60,15 @@ export async function listSets(): Promise<SetSummary[]> {
 }
 
 export async function getSet(slug: string) {
+  const filter = eitherSlug(slug);
+  if (!filter) return null;
   const { data, error } = await supabase()
     .from('card_sets')
     .select(
       'id, slug, public_slug, name, season, release_date, cards(id, slug, public_slug, number, is_rookie, players(name, slug, public_slug, team))',
     )
-    .eq('public_slug', slug)
+    .or(filter)
+    .limit(1)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
@@ -64,21 +97,25 @@ export async function getSet(slug: string) {
 }
 
 export async function listPlayers() {
-  const { data, error } = await supabase()
-    .from('players')
-    .select('id, slug, public_slug, name, team')
-    .order('name');
-  if (error) throw error;
-  return data ?? [];
+  return fetchAll((from, to) =>
+    supabase()
+      .from('players')
+      .select('id, slug, public_slug, name, team')
+      .order('name')
+      .range(from, to),
+  );
 }
 
 export async function getPlayer(slug: string) {
+  const filter = eitherSlug(slug);
+  if (!filter) return null;
   const { data, error } = await supabase()
     .from('players')
     .select(
       'id, slug, public_slug, name, team, cards(id, slug, public_slug, number, is_rookie, card_sets(name, slug, public_slug, season))',
     )
-    .eq('public_slug', slug)
+    .or(filter)
+    .limit(1)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
@@ -108,25 +145,28 @@ export async function getPlayer(slug: string) {
 }
 
 export async function listCardSlugs(): Promise<{ slug: string; updated: string | null }[]> {
-  const { data, error } = await supabase().from('cards').select('public_slug, created_at');
-  if (error) throw error;
-  return (data ?? [])
+  const rows = await fetchAll((from, to) =>
+    supabase().from('cards').select('public_slug, created_at').order('id').range(from, to),
+  );
+  return rows
     .map((c) => ({ slug: c.public_slug ?? '', updated: c.created_at }))
     .filter((c) => c.slug);
 }
 
 /** Internal card slug -> public slug, for lists that only carry the internal one (movers, rankings). */
 export async function cardPublicSlugMap(): Promise<Map<string, string>> {
-  const { data, error } = await supabase().from('cards').select('slug, public_slug');
-  if (error) throw error;
-  return new Map((data ?? []).map((c) => [c.slug, c.public_slug ?? c.slug]));
+  const rows = await fetchAll((from, to) =>
+    supabase().from('cards').select('slug, public_slug').order('id').range(from, to),
+  );
+  return new Map(rows.map((c) => [c.slug, c.public_slug ?? c.slug]));
 }
 
 /** Internal player slug -> public slug. */
 export async function playerPublicSlugMap(): Promise<Map<string, string>> {
-  const { data, error } = await supabase().from('players').select('slug, public_slug');
-  if (error) throw error;
-  return new Map((data ?? []).map((p) => [p.slug, p.public_slug ?? p.slug]));
+  const rows = await fetchAll((from, to) =>
+    supabase().from('players').select('slug, public_slug').order('id').range(from, to),
+  );
+  return new Map(rows.map((p) => [p.slug, p.public_slug ?? p.slug]));
 }
 
 export type PageKind = 'checklist' | 'player' | 'card';
@@ -149,13 +189,16 @@ export async function indexStatus(
 export async function listIndexable(
   kind: PageKind,
 ): Promise<{ slug: string; lastmod: string | null }[]> {
-  const { data, error } = await supabase()
-    .from('page_index_status')
-    .select('public_slug, lastmod')
-    .eq('kind', kind)
-    .eq('indexable', true);
-  if (error) throw error;
-  return (data ?? [])
+  const rows = await fetchAll((from, to) =>
+    supabase()
+      .from('page_index_status')
+      .select('public_slug, lastmod')
+      .eq('kind', kind)
+      .eq('indexable', true)
+      .order('public_slug')
+      .range(from, to),
+  );
+  return rows
     .filter((r) => r.public_slug)
     .map((r) => ({ slug: r.public_slug as string, lastmod: r.lastmod }));
 }
@@ -183,13 +226,16 @@ export interface CardPage {
 }
 
 export async function getCard(slug: string): Promise<CardPage | null> {
+  const filter = eitherSlug(slug);
+  if (!filter) return null;
   const client = supabase();
   const { data, error } = await client
     .from('cards')
     .select(
       'id, slug, public_slug, number, is_rookie, players(id, name, slug, public_slug, team), card_sets(id, name, slug, public_slug, season), parallels(id, name, serial_run)',
     )
-    .eq('public_slug', slug)
+    .or(filter)
+    .limit(1)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;

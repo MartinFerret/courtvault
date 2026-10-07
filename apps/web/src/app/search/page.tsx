@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
-import { searchCatalog } from '@/lib/data';
+import { cardPublicSlugMap, playerPublicSlugMap, searchCatalog } from '@/lib/data';
 import { cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { checklistPublicSlug } from '@courtvault/shared';
 import { NOINDEX_ROBOTS } from '@/lib/site';
@@ -13,13 +13,6 @@ export const metadata: Metadata = {
   title: 'Search',
 };
 
-const HREF: Record<string, (slug: string) => string> = {
-  // search_catalog returns internal slugs; players and cards resolve both, sets need the public form.
-  player: (slug) => playerPath(slug),
-  set: (slug) => checklistPath(checklistPublicSlug(slug)),
-  card: (slug) => cardPath(slug),
-};
-
 export default async function SearchPage({
   searchParams,
 }: {
@@ -28,6 +21,16 @@ export default async function SearchPage({
   const { q = '' } = await searchParams;
   const query = q.trim().slice(0, 80);
   const results = query ? await searchCatalog(query) : [];
+  // search_catalog returns internal slugs; links carry the public ones (R22).
+  const [cards, players] = results.length
+    ? await Promise.all([cardPublicSlugMap(), playerPublicSlugMap()])
+    : [new Map<string, string>(), new Map<string, string>()];
+  const href = (kind: string, slug: string) =>
+    kind === 'player'
+      ? playerPath(players.get(slug) ?? slug)
+      : kind === 'set'
+        ? checklistPath(checklistPublicSlug(slug))
+        : cardPath(cards.get(slug) ?? slug);
   return (
     <>
       <h1>Search</h1>
@@ -52,9 +55,7 @@ export default async function SearchPage({
           <ul style={{ marginTop: 16, paddingLeft: 20 }}>
             {results.map((r) => (
               <li key={`${r.kind}-${r.id}`}>
-                <Link href={(HREF[r.kind ?? 'card'] ?? HREF['card']!)(r.slug ?? '')}>
-                  {r.title}
-                </Link>{' '}
+                <Link href={href(r.kind ?? 'card', r.slug ?? '')}>{r.title}</Link>{' '}
                 <span className="muted small">
                   {r.kind} · {r.subtitle}
                 </span>

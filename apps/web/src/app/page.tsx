@@ -14,7 +14,7 @@ import { AppCta } from '@/components/app-cta';
 import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
 import { Delta, Price, PriceNote } from '@/components/price';
-import { cardPublicSlugMap, listSets, rookieRankings } from '@/lib/data';
+import { cardPublicSlugMap, listSets, pricesAvailable, rookieRankings } from '@/lib/data';
 import { PATHS, cardPath, checklistPath } from '@/lib/paths';
 import { getLastNight } from '@/lib/last-night';
 import {
@@ -59,16 +59,19 @@ const NOT_DOING = [
 ];
 
 export default async function HomePage() {
-  const [rookies, sets, night, slugs] = await Promise.all([
+  const [ranked, sets, night, slugs, priced] = await Promise.all([
     rookieRankings(6),
     listSets(),
     getLastNight().catch(() => null),
     cardPublicSlugMap(),
+    pricesAvailable(),
   ]);
+  // Unpriced rookies come back in alphabetical order: nothing to show until prices exist.
+  const rookies = ranked.filter((r) => r.price_cents !== null);
   const card = (internal: string) => cardPath(slugs.get(internal) ?? internal);
   const cardCount = sets.reduce((n, s) => n + s.card_count, 0);
   const movers = night ? [...night.gainers.slice(0, 3), ...night.losers.slice(0, 2)] : [];
-  const heroCards = rookies.slice(0, 3);
+  const heroCards = rookies.slice(0, 2);
 
   return (
     <>
@@ -149,37 +152,39 @@ export default async function HomePage() {
             </Link>
           </div>
           <p className="hero__meta">
-            {cardCount.toLocaleString('en-US')} cards from {sets.length} Topps sets, priced every
-            night. Free, Premium at {formatUsd(PRICING.monthlyUsd)}/month or{' '}
-            {formatUsd(PRICING.yearlyUsd)}/year.
+            {cardCount.toLocaleString('en-US')} cards from {sets.length} Topps sets
+            {priced ? ', priced every night' : ''}. Free, Premium at {formatUsd(PRICING.monthlyUsd)}
+            /month or {formatUsd(PRICING.yearlyUsd)}/year.
           </p>
         </div>
-        <ul
-          className="hero__tiles"
-          aria-label="Trending rookie cards and their current asking prices"
-        >
-          {heroCards.slice(0, 2).map((r, i) => {
-            const foil = foilProps(i === 0 ? 'Refractor' : 'Base', null);
-            return (
-              <li key={r.card_id} className={`vault-tile ${foil.className}`} style={foil.style}>
-                <Link href={card(r.card_slug)} className="vault-tile__link">
-                  <span className="vault-tile__name">
-                    #{r.card_number} {r.player_name} <span className="badge">RC</span>
-                  </span>
-                  <span className="muted small">
-                    {r.season} {r.set_name}
-                  </span>
-                  <span className="vault-tile__price">
-                    <Price cents={r.price_cents} />
-                  </span>
-                  <span className="small">
-                    <Delta cents={r.change_7d_cents} /> <span className="muted">7 days</span>
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        {heroCards.length > 0 ? (
+          <ul
+            className="hero__tiles"
+            aria-label="Trending rookie cards and their current asking prices"
+          >
+            {heroCards.map((r, i) => {
+              const foil = foilProps(i === 0 ? 'Refractor' : 'Base', null);
+              return (
+                <li key={r.card_id} className={`vault-tile ${foil.className}`} style={foil.style}>
+                  <Link href={card(r.card_slug)} className="vault-tile__link">
+                    <span className="vault-tile__name">
+                      #{r.card_number} {r.player_name} <span className="badge">RC</span>
+                    </span>
+                    <span className="muted small">
+                      {r.season} {r.set_name}
+                    </span>
+                    <span className="vault-tile__price">
+                      <Price cents={r.price_cents} />
+                    </span>
+                    <span className="small">
+                      <Delta cents={r.change_7d_cents} /> <span className="muted">7 days</span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
         <span className="hero__word" aria-hidden="true">
           Hoop
           <br />
@@ -245,48 +250,50 @@ export default async function HomePage() {
         </ol>
       </section>
 
-      <section className="section">
-        <div className="section__head">
-          <h2>Trending rookies</h2>
-          <Link href={PATHS.rookies}>Full rookie rankings</Link>
-        </div>
-        <PriceNote />
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Card</th>
-                <th>Set</th>
-                <th className="num">Base, raw</th>
-                <th className="num">7 days</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rookies.map((r) => (
-                <tr key={r.card_id}>
-                  <td>
-                    <Link href={card(r.card_slug)}>
-                      #{r.card_number} {r.player_name}
-                    </Link>{' '}
-                    <span className="badge">RC</span>
-                  </td>
-                  <td>
-                    <Link href={checklistPath(checklistPublicSlug(r.set_slug))}>
-                      {r.season} {r.set_name}
-                    </Link>
-                  </td>
-                  <td className="num">
-                    <Price cents={r.price_cents} />
-                  </td>
-                  <td className="num">
-                    <Delta cents={r.change_7d_cents} />
-                  </td>
+      {rookies.length > 0 ? (
+        <section className="section">
+          <div className="section__head">
+            <h2>Trending rookies</h2>
+            <Link href={PATHS.rookies}>Full rookie rankings</Link>
+          </div>
+          <PriceNote />
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Card</th>
+                  <th>Set</th>
+                  <th className="num">Base, raw</th>
+                  <th className="num">7 days</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+              </thead>
+              <tbody>
+                {rookies.map((r) => (
+                  <tr key={r.card_id}>
+                    <td>
+                      <Link href={card(r.card_slug)}>
+                        #{r.card_number} {r.player_name}
+                      </Link>{' '}
+                      <span className="badge">RC</span>
+                    </td>
+                    <td>
+                      <Link href={checklistPath(checklistPublicSlug(r.set_slug))}>
+                        {r.season} {r.set_name}
+                      </Link>
+                    </td>
+                    <td className="num">
+                      <Price cents={r.price_cents} />
+                    </td>
+                    <td className="num">
+                      <Delta cents={r.change_7d_cents} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section section--split">
         <div>

@@ -14,12 +14,33 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: seoTitle('Most Valuable Basketball Rookie Cards', 'ranked by asking price'),
   description:
-    '2025-26 Topps basketball rookie cards ranked by median asking price, Base parallel raw, with the 7-day change. Refreshed every night from live listings.',
+    '2025-26 Topps basketball rookie cards ranked by median asking price, Base parallel raw, with the 7-day change, from live eBay listings.',
   alternates: { canonical: PATHS.rookies },
 };
 
 export default async function RookieRankingsPage() {
-  const [rookies, slugs] = await Promise.all([rookieRankings(50), cardPublicSlugMap()]);
+  const [ranked, slugs] = await Promise.all([rookieRankings(50), cardPublicSlugMap()]);
+  // Only priced cards can be ranked: the fallback order of the RPC is alphabetical.
+  const rookies = ranked.filter((r) => r.price_cents !== null);
+  if (rookies.length === 0) {
+    return (
+      <>
+        <Breadcrumbs
+          items={[
+            { name: 'Home', href: '/' },
+            { name: 'Most valuable rookie cards', href: PATHS.rookies },
+          ]}
+        />
+        <h1>Most valuable basketball rookie cards</h1>
+        <p className="lead">
+          The ranking appears once rookie cards have a median asking price from live eBay
+          listings. Until then, browse the <Link href={PATHS.checklists}>checklists</Link> and
+          the <Link href={PATHS.players}>players</Link>.
+        </p>
+        <AppCta context="your rookies" />
+      </>
+    );
+  }
   return (
     <>
       <JsonLd
@@ -81,7 +102,7 @@ export default async function RookieRankingsPage() {
           </tbody>
         </table>
       </div>
-      <AppCta context="your rookies" deepLink="/rankings/rookies" />
+      <AppCta context="your rookies" />
     </>
   );
 }
