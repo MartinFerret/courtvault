@@ -42,6 +42,9 @@ export function ListFilter({
       row.hidden = !hit;
       if (hit) n += 1;
     }
+    for (const group of root.querySelectorAll<HTMLElement>('[data-group]')) {
+      group.hidden = !group.querySelector('[data-filter]:not([hidden])');
+    }
     setShown(n);
   };
 

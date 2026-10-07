@@ -112,16 +112,39 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
         ) : null}
       </p>
 
+      {form && form.season.games > 0 ? (
+        <dl className="facts facts--lime">
+          <div>
+            <dd>{form.season.games}</dd>
+            <dt>games this season</dt>
+          </div>
+          <div>
+            <dd>{form.season.pra_avg ?? '–'}</dd>
+            <dt>pts + reb + ast per game</dt>
+          </div>
+          {form.last5.games === 5 ? (
+            <div>
+              <dd>{form.last5.pra_avg ?? '–'}</dd>
+              <dt>last 5 games</dt>
+            </div>
+          ) : null}
+          {form.price ? (
+            <div>
+              <dd>
+                <Price cents={form.price.current_cents} />
+              </dd>
+              <dt>
+                {form.price.set_name} #{form.price.card_number}, Base raw
+              </dt>
+            </div>
+          ) : null}
+        </dl>
+      ) : null}
+
       {chartable && form ? (
         <section className="fp">
           <div className="section__head">
             <h2>Form and price, same dates</h2>
-            {form.season.pra_avg !== null ? (
-              <span className="muted small">
-                {form.season.games} games this season, {form.season.pra_avg} points + rebounds +
-                assists per game
-              </span>
-            ) : null}
           </div>
           <FormPriceChart form={form} />
           <p className="muted small">

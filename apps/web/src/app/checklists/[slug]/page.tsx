@@ -23,6 +23,16 @@ export async function generateStaticParams() {
   }
 }
 
+/** "Feb 11, 2026" for the fact strip. */
+function releaseLabel(day: string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(`${day}T12:00:00Z`));
+}
+
 /** Keyword of the page: "<season> <set> basketball checklist" (docs/keyword-map.csv). */
 function keyword(set: { season: string; name: string }): string {
   // "Topps Basketball" already carries the word; "Topps Chrome" needs it.
@@ -85,6 +95,28 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
         {name}
         {/basketball/i.test(set.name) ? '' : ' basketball'} checklist
       </h1>
+      <dl className="facts">
+        <div>
+          <dd>{set.cards.length}</dd>
+          <dt>base cards</dt>
+        </div>
+        <div>
+          <dd>{rookies.length}</dd>
+          <dt>rookie cards</dt>
+        </div>
+        {set.release_date ? (
+          <div>
+            <dd className="facts__date">{releaseLabel(set.release_date)}</dd>
+            <dt>released</dt>
+          </div>
+        ) : null}
+        {priced.length > 0 ? (
+          <div>
+            <dd>{priced.length}</dd>
+            <dt>cards with a value</dt>
+          </div>
+        ) : null}
+      </dl>
       <p className="lead">
         {name} has {set.cards.length} base cards
         {rookies.length > 0 ? `, ${rookies.length} of them rookie cards` : ''}
@@ -108,7 +140,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
         toggle={{ label: 'Rookies only', attr: 'data-rookie' }}
       />
       <div className="table-wrap">
-        <table id="checklist">
+        <table id="checklist" className="table--striped">
           <thead>
             <tr>
               <th>#</th>

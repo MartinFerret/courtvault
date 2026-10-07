@@ -31,7 +31,14 @@ export function LastNightModule({
 }) {
   const pick = pickPerformance(night.performances);
   if (!pick || !night.day) return null;
-  const card = pick.top_cards.find((c) => c.change_cents !== null) ?? pick.top_cards[0] ?? null;
+  // The everyday reference first (Base, raw), then whatever moved, then the most valuable card.
+  const card =
+    pick.top_cards.find(
+      (c) => c.parallel_name === 'Base' && c.grade === 'RAW' && c.change_cents !== null,
+    ) ??
+    pick.top_cards.find((c) => c.change_cents !== null) ??
+    pick.top_cards[0] ??
+    null;
   const updated = freshness?.prices_updated_at
     ? formatEasternTime(freshness.prices_updated_at)
     : null;
@@ -115,11 +122,13 @@ export function LastNightModule({
           <Link href={moversPath(night.day)}>Every mover and box score of the night</Link>
         </p>
       </div>
-      <FreshnessLine data={freshness} className="lnm__fresh" />
-      <p className="lnm__foot">
-        Box score and asking prices, side by side, every morning.{' '}
-        <Link href={PATHS.method}>How we price cards</Link>
-      </p>
+      <div className="lnm__foot">
+        <FreshnessLine data={freshness} />
+        <p>
+          Box score and asking prices, side by side, every morning.{' '}
+          <Link href={PATHS.method}>How we price cards</Link>
+        </p>
+      </div>
     </section>
   );
 }

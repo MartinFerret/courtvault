@@ -66,8 +66,8 @@ export default async function RookieRankingsPage() {
       />
       <h1>Most valuable basketball rookie cards</h1>
       <PriceNote />
-      <div className="table-wrap">
-        <table>
+      <div className="table-wrap table-wrap--podium">
+        <table className="table--podium">
           <thead>
             <tr>
               <th className="num">#</th>

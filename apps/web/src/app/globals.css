@@ -1206,21 +1206,6 @@ form.stack input {
   color: inherit;
   text-decoration-color: rgba(18, 20, 23, 0.3);
 }
-.lnm__fresh,
-.lnm__foot {
-  grid-column: 1 / -1;
-  margin: 0;
-  padding: 12px 40px;
-  background: var(--cv-surface);
-  color: var(--cv-text-muted);
-  font-size: 0.9rem;
-}
-.lnm__fresh {
-  padding-bottom: 0;
-}
-.lnm__fresh + .lnm__foot {
-  padding-top: 4px;
-}
 .freshness {
   margin: 0 0 12px;
   color: var(--cv-text-muted);
@@ -1237,7 +1222,6 @@ form.stack input {
   .lnm__morning {
     padding: 24px 20px;
   }
-  .lnm__fresh,
   .lnm__foot {
     padding-left: 20px;
     padding-right: 20px;
@@ -1414,4 +1398,532 @@ form.stack input {
   height: 1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
+}
+
+/* ---------------------------------------------------------------------------------------
+   One structure per page type, so the site never reads as the same grey card repeated. */
+
+/* Band footer: facts on the left, the method link on the right. */
+.lnm__foot {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 40px;
+  background: var(--cv-surface);
+  color: var(--cv-text-muted);
+  font-size: 0.9rem;
+}
+.lnm__foot p,
+.lnm__foot .freshness {
+  margin: 0;
+}
+
+/* Players: a directory filed by last name, big letters in the margin. */
+.dir__head .lead {
+  max-width: 60ch;
+}
+.dir {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dir__group {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 0 24px;
+  padding: 18px 0;
+  border-top: 2px solid var(--cv-surface-2);
+}
+.dir__letter {
+  margin: 0;
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--cv-text);
+  position: sticky;
+  top: 84px;
+  align-self: start;
+}
+.dir__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 3;
+  column-gap: 24px;
+}
+.dir__list li {
+  break-inside: avoid;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0;
+}
+.dir__list a {
+  font-weight: 500;
+  text-decoration: none;
+}
+.dir__list a:hover {
+  text-decoration: underline;
+}
+.dir__team {
+  color: var(--cv-text-muted);
+  font-size: 0.85rem;
+}
+@media (max-width: 860px) {
+  .dir__group {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+  .dir__letter {
+    font-size: 2.2rem;
+    top: 72px;
+  }
+  .dir__list {
+    columns: 1;
+  }
+}
+
+/* Checklists: a shelf of ink tiles, the newest set in lime. */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+.shelf__tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 190px;
+  padding: 22px 24px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+  text-decoration: none;
+  transition: transform 150ms ease;
+}
+.shelf__tile:hover,
+.shelf__tile:focus-visible {
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+.shelf__tile--latest {
+  background: var(--cv-primary);
+  color: var(--cv-primary-contrast);
+}
+.shelf__count {
+  font-size: 3.4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.shelf__count::after {
+  content: ' cards';
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  opacity: 0.7;
+}
+.shelf__name {
+  margin-top: auto;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.shelf__meta {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+@media (max-width: 860px) {
+  .shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .shelf__tile {
+    min-height: 150px;
+    padding: 18px;
+  }
+  .shelf__count {
+    font-size: 2.6rem;
+  }
+}
+@media (max-width: 480px) {
+  .shelf {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Fact strips: big figures, one row (checklist in bright surface, player in lime). */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 8px 0 20px;
+}
+.facts div {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-surface-high);
+}
+.facts dd {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.facts dt {
+  margin-top: 6px;
+  color: var(--cv-text-muted);
+  font-size: 0.85rem;
+}
+.facts--lime div {
+  background: var(--cv-primary);
+  color: var(--cv-primary-contrast);
+}
+.facts--lime dt {
+  color: inherit;
+  opacity: 0.7;
+}
+.table--striped tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Card: a plaque framed with the foil of its rarest parallel, parallels as a ladder of chips. */
+.plaque {
+  position: relative;
+  padding: 28px 32px 24px;
+  margin: 8px 0 20px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface-high);
+}
+.plaque__number {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--cv-radius-sm);
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+  margin-bottom: 12px;
+}
+.plaque__title {
+  margin: 0;
+  max-width: 24ch;
+}
+.plaque__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 12px 0 0;
+}
+.ladder {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ladder__chip {
+  position: relative;
+  padding: 7px 14px;
+  border-radius: var(--cv-radius-sm);
+  background: var(--cv-surface);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+@media (max-width: 860px) {
+  .plaque {
+    padding: 20px 18px;
+  }
+}
+
+/* Rookie rankings: the top three on ink. */
+.table--podium tbody tr:nth-child(-n + 3) td {
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+  border-bottom-color: rgba(247, 248, 249, 0.12);
+}
+.table--podium tbody tr:nth-child(-n + 3) a {
+  color: inherit;
+}
+.table--podium tbody tr:nth-child(-n + 3) td.num.muted {
+  color: var(--cv-primary);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.table-wrap--podium {
+  padding: 0;
+  overflow: hidden;
+}
+.table-wrap--podium th {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.table-wrap--podium td {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Method page: in-page nav on the left, prose on the right. */
+.method {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+  margin-top: 8px;
+}
+.method__nav {
+  position: sticky;
+  top: 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-surface);
+}
+.method__nav a {
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: var(--cv-radius-sm);
+  font-size: 0.95rem;
+}
+.method__nav a:hover,
+.method__nav a:focus-visible {
+  background: var(--cv-surface-2);
+  text-decoration: none;
+}
+.method__body {
+  max-width: 68ch;
+}
+.method__body h2:first-of-type {
+  margin-top: 1.5rem;
+}
+@media (max-width: 860px) {
+  .method {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .method__nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------
+   Chrome: ink bar on top, ink footer at the bottom. The lime pill is the one action. */
+.site-header {
+  background: var(--cv-text);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.site-header .brand {
+  color: var(--cv-surface-high);
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+.site-header .nav a {
+  color: rgba(247, 248, 249, 0.72);
+}
+.site-header .nav a:hover,
+.site-header .nav a:focus-visible {
+  background: rgba(247, 248, 249, 0.1);
+  color: var(--cv-surface-high);
+}
+.site-header .nav a[aria-current='page'] {
+  color: var(--cv-primary);
+}
+.site-header :focus-visible {
+  outline-color: var(--cv-primary);
+}
+
+.site-footer {
+  margin-top: 64px;
+  padding: 48px 0 40px;
+  background: var(--cv-text);
+  color: rgba(247, 248, 249, 0.72);
+}
+.site-footer .container {
+  gap: 10px;
+}
+.site-footer__grid {
+  grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr;
+  padding-top: 0;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(247, 248, 249, 0.14);
+  margin-bottom: 20px;
+}
+.site-footer__brand {
+  margin: 0 0 8px;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--cv-surface-high);
+}
+.site-footer__pitch {
+  margin: 0 0 12px;
+  color: var(--cv-primary);
+  font-weight: 500;
+  max-width: 30ch;
+}
+.site-footer .muted {
+  color: rgba(247, 248, 249, 0.55);
+}
+.site-footer__title {
+  color: var(--cv-surface-high);
+}
+.site-footer__grid nav a {
+  color: rgba(247, 248, 249, 0.72);
+}
+.site-footer__grid nav a:hover,
+.site-footer__grid nav a:focus-visible {
+  color: var(--cv-primary);
+}
+.site-footer :focus-visible {
+  outline-color: var(--cv-primary);
+}
+@media (max-width: 900px) {
+  .site-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .site-footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Fixes after the first screenshots. */
+.site-header .nav a {
+  background: transparent;
+  color: rgba(247, 248, 249, 0.78);
+}
+.site-header .nav a:hover,
+.site-header .nav a:focus-visible {
+  background: rgba(247, 248, 249, 0.12);
+  color: var(--cv-surface-high);
+}
+.plaque.cv-foil::after {
+  padding: 3px;
+}
+.timeline {
+  margin-bottom: 24px;
+}
+.fpc__value--first {
+  text-anchor: start;
+}
+
+/* ---------------------------------------------------------------------------------------
+   Floating navbar: a rounded ink bar that stays on top, the lime pill as the one action. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: transparent;
+  padding: 12px 0 4px;
+  pointer-events: none;
+}
+.site-header .container.site-header__row {
+  pointer-events: auto;
+  background: var(--cv-text);
+  border-radius: 999px;
+  min-height: 76px;
+  padding: 0 12px 0 28px;
+  gap: 24px;
+  box-shadow: 0 14px 36px rgba(18, 20, 23, 0.22);
+}
+.site-header .brand {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--cv-surface-high);
+}
+.site-header .nav {
+  gap: 2px;
+  justify-content: center;
+}
+.site-header .nav a {
+  padding: 10px 18px;
+  min-height: 44px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(247, 248, 249, 0.72);
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+.site-header .nav a:hover,
+.site-header .nav a:focus-visible {
+  background: rgba(247, 248, 249, 0.1);
+  color: var(--cv-surface-high);
+}
+.site-header .nav a[aria-current='page'] {
+  background: rgba(233, 255, 95, 0.14);
+  color: var(--cv-primary);
+}
+.site-header__cta {
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(233, 255, 95, 0.25);
+}
+.site-header__cta:hover,
+.site-header__cta:focus-visible {
+  background: var(--cv-surface-high);
+}
+@media (max-width: 720px) {
+  .site-header {
+    padding: 8px 0 0;
+  }
+  .site-header .container.site-header__row {
+    border-radius: 28px;
+    min-height: 0;
+    padding: 10px 10px 8px 18px;
+    row-gap: 4px;
+  }
+  .site-header .brand {
+    font-size: 1.3rem;
+  }
+  .site-header .nav {
+    margin: 0 -4px 0;
+    padding: 0 2px 2px;
+    justify-content: flex-start;
+  }
+  .site-header .nav a {
+    padding: 8px 14px;
+    min-height: 40px;
+    font-size: 0.95rem;
+  }
+  .site-header__cta {
+    padding: 11px 18px;
+    font-size: 0.95rem;
+  }
+}
+.facts__date {
+  font-size: 1.5rem;
+  padding-top: 6px;
+}
+.site-footer .container.site-footer__grid {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .site-footer .container.site-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .site-footer .container.site-footer__grid {
+    grid-template-columns: 1fr;
+  }
 }

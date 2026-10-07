@@ -68,7 +68,7 @@ export function FormPriceChart({ form }: { form: PlayerForm }) {
         </text>
         <path d={ptsPath} className="fpc__line fpc__line--points" />
         {games.map((g, i) => (
-          <g key={g.day}>
+          <g key={`${g.day}-${i}`}>
             <circle
               cx={x(i)}
               cy={yPts(g.points ?? 0)}
@@ -77,9 +77,9 @@ export function FormPriceChart({ form }: { form: PlayerForm }) {
             />
             {i === maxIdx || i === last || i === 0 ? (
               <text
-                x={x(i)}
-                y={yPts(g.points ?? 0) - 10}
-                textAnchor="middle"
+                x={i === last ? x(i) - 10 : x(i)}
+                y={yPts(g.points ?? 0) - (i === last ? 2 : 10)}
+                textAnchor={i === last ? 'end' : 'middle'}
                 className="fpc__value"
               >
                 {g.points ?? 0}
@@ -99,7 +99,7 @@ export function FormPriceChart({ form }: { form: PlayerForm }) {
             <path d={pricePath} className="fpc__line fpc__line--price" />
             {price.series.map((p, i) =>
               p.cents === null ? null : (
-                <g key={p.day}>
+                <g key={`${p.day}-${i}`}>
                   <circle
                     cx={x(i)}
                     cy={yPrice(p.cents)}
@@ -108,9 +108,9 @@ export function FormPriceChart({ form }: { form: PlayerForm }) {
                   />
                   {i === 0 || i === last ? (
                     <text
-                      x={x(i)}
-                      y={yPrice(p.cents) - 10}
-                      textAnchor="middle"
+                      x={i === last ? x(i) - 10 : x(i)}
+                      y={yPrice(p.cents) - (i === last ? 2 : 10)}
+                      textAnchor={i === last ? 'end' : 'middle'}
                       className="fpc__value"
                     >
                       {formatCents(p.cents)}
@@ -123,7 +123,7 @@ export function FormPriceChart({ form }: { form: PlayerForm }) {
         ) : null}
         {games.map((g, i) =>
           n <= 6 || i === 0 || i === last || i % Math.ceil(n / 5) === 0 ? (
-            <text key={g.day} x={x(i)} y={height - 6} textAnchor="middle" className="fpc__axis">
+            <text key={`${g.day}-${i}`} x={x(i)} y={height - 6} textAnchor="middle" className="fpc__axis">
               {shortDay(g.day)}
             </text>
           ) : null,

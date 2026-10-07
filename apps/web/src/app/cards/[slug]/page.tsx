@@ -72,6 +72,10 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
     .map((p) => ({ p, max: Math.max(...p.prices.map((pr) => pr.price_cents)) }))
     .sort((a, b) => b.max - a.max)[0];
   const base = card.parallels.find((p) => p.name === 'Base');
+  const rarestParallel = [...card.parallels].sort(
+    (a, b) => (a.serial_run ?? Number.MAX_SAFE_INTEGER) - (b.serial_run ?? Number.MAX_SAFE_INTEGER),
+  )[0];
+  const rarest = foilProps(rarestParallel?.name ?? 'Base', rarestParallel?.serial_run ?? null);
   const baseRaw = base?.prices.find((pr) => pr.grade === 'RAW');
   const basePsa10 = base?.prices.find((pr) => pr.grade === 'PSA10');
   const product = {
@@ -112,20 +116,32 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
           { name: `#${card.number} ${card.player.name}`, href: cardPath(card.public_slug) },
         ]}
       />
-      <h1>
-        {card.set.season} {card.set.name} {card.player.name}{' '}
-        {card.is_rookie ? 'rookie card' : 'card'} #{card.number}
-      </h1>
-      <p className="muted">
-        <Link href={checklistPath(card.set.public_slug)}>
-          {card.set.season} {card.set.name} checklist
-        </Link>{' '}
-        ·{' '}
-        <Link href={playerPath(card.player.public_slug)}>
-          {card.player.name} {card.is_rookie ? 'rookie cards' : 'cards'}
-        </Link>
-        {card.player.team ? ` · ${card.player.team}` : ''}
-      </p>
+      <header className={`plaque ${rarest.className}`} style={rarest.style}>
+        <span className="plaque__number">#{card.number}</span>
+        <h1 className="plaque__title">
+          {card.set.season} {card.set.name} {card.player.name}{' '}
+          {card.is_rookie ? 'rookie card' : 'card'} #{card.number}
+        </h1>
+        <p className="plaque__links">
+          <Link href={checklistPath(card.set.public_slug)}>
+            {card.set.season} {card.set.name} checklist
+          </Link>
+          <Link href={playerPath(card.player.public_slug)}>
+            {card.player.name} {card.is_rookie ? 'rookie cards' : 'cards'}
+          </Link>
+          {card.player.team ? <span className="muted">{card.player.team}</span> : null}
+        </p>
+        <ul className="ladder" aria-label="Parallels of this card">
+          {card.parallels.map((p) => {
+            const foil = foilProps(p.name, p.serial_run);
+            return (
+              <li key={p.id} className={`ladder__chip ${foil.className}`} style={foil.style}>
+                {formatParallel(p.name, p.serial_run)}
+              </li>
+            );
+          })}
+        </ul>
+      </header>
       <p className="lead">
         {card.player.name}&apos;s {card.set.season} {card.set.name}{' '}
         {card.is_rookie ? 'rookie card' : 'card'} #{card.number} has {card.parallels.length}{' '}

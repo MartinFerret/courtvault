@@ -16,6 +16,11 @@ export const metadata: Metadata = {
 
 export default async function SetsPage() {
   const sets = await listSets();
+  const latest = sets.reduce(
+    (best, s, i) =>
+      s.release_date && (best < 0 || s.release_date > (sets[best]?.release_date ?? '')) ? i : best,
+    -1,
+  );
   return (
     <>
       <Breadcrumbs
@@ -25,15 +30,24 @@ export default async function SetsPage() {
         ]}
       />
       <h1>Basketball card checklists</h1>
-      <div className="grid">
-        {sets.map((s) => (
-          <Link key={s.id} href={checklistPath(s.public_slug)} className="card">
-            <strong>
-              {s.season} {s.name}
-            </strong>
-            <br />
-            <span className="muted small">
-              {s.card_count} cards{s.release_date ? ` · ${s.release_date}` : ''}
+      <p className="lead">
+        {sets.length} Topps sets,{' '}
+        {sets.reduce((n, s) => n + s.card_count, 0).toLocaleString('en-US')} base cards, straight
+        from the official checklists. Open a set for every card, its parallels and print runs.
+      </p>
+      <div className="shelf">
+        {sets.map((s, i) => (
+          <Link
+            key={s.id}
+            href={checklistPath(s.public_slug)}
+            className={`shelf__tile${i === latest ? ' shelf__tile--latest' : ''}`}
+          >
+            <span className="shelf__count">{s.card_count}</span>
+            <span className="shelf__name">{s.name}</span>
+            <span className="shelf__meta">
+              {s.season}
+              {s.release_date ? `, released ${s.release_date}` : ''}
+              {i === latest ? ', newest set' : ''}
             </span>
           </Link>
         ))}
