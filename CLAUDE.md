@@ -19,10 +19,10 @@ A catalog website + mobile app for basketball trading card collectors in the Uni
   off-white canvas, tonal surfaces without borders or shadows, one lime accent for the primary
   action and selected states, geometric sans (Outfit, self-hosted), 28px card radius, pill
   buttons and chips, big stat tiles, a faded lime watermark word behind hero areas. Onboarding
-  hero: a full-bleed painted basketball artwork in a rounded panel with the lime word straddling
-  its bottom edge (`apps/mobile/public/art-hero.webp`). The chosen artwork is Adobe Stock
-  #579672811: the committed file must be the licensed, watermark-free version (the preview is
-  kept out of git). `public/art-dunk.svg` (public domain silhouette) is used on the first-scan
+  hero: a full-bleed photograph in the hero panel, shown in grayscale with a lime tint and the
+  brand word HOOP / FOLIO on top (`apps/mobile/public/art-hero.webp`). The photo is a
+  royalty-free image supplied by Martin on 2026-10-07 (original kept in `docs/img_3.png`,
+  cropped to remove the source mark); Martin confirmed the license. `public/art-dunk.svg` (public domain silhouette) is used on the first-scan
   screen. Never a photo or likeness of a real NBA player (legal). Theming goes through tokens only (`apps/mobile/src/theme/tokens.scss`,
   `apps/web/src/app/globals.css`); templates carry the layout, services never change for design.
 
