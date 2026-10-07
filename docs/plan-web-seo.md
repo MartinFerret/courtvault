@@ -6,8 +6,9 @@ Written 2026-10-07, decisions recorded the same day. Rules are referenced by num
 
 ## Decisions (2026-10-07)
 
-1. Visual direction: **dark neon, sports video game aesthetic, foil frames by rarity**.
-   Replaces the light lime direction of 2026-10-06 in CLAUDE.md. Tokens and templates only.
+1. Visual direction: dark neon was tried on 2026-10-07 and reverted the same day by Martin.
+   The app keeps the **light cool off-white canvas, lime accent and Outfit** direction of
+   2026-10-06 (CLAUDE.md). Foil frames by rarity stay, toned for the light canvas.
 2. Keyword volumes: Martin sends a Google Keyword Planner export. Volumes stay `TBD` until
    then.
 3. Slugs: proposals accepted as pending; frozen only after the volumes are in.

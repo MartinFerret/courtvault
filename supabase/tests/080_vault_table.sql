@@ -1,10 +1,11 @@
 begin;
-select plan(3);
+select plan(4);
 
 -- Free user: 24h change is visible, gains are hidden by the view itself.
 select tests.authenticate_as('00000000-0000-0000-0000-000000000002');
 select ok((select count(*) from public.collection_items_detailed) = 1, 'other user sees their item');
 select is((select gain_cents from public.collection_items_detailed limit 1), null, 'free user gets no gain');
+select lives_ok($$select change_24h_cents from public.collection_items_detailed$$, 'a user can read the 24h change (price_at stays private)');
 select tests.clear_auth();
 update public.profiles set is_premium = true where id = '00000000-0000-0000-0000-000000000002';
 select tests.authenticate_as('00000000-0000-0000-0000-000000000002');

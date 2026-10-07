@@ -723,6 +723,10 @@ export type Database = {
       };
     };
     Functions: {
+      change_24h_cents: {
+        Args: { p_grade: Database['public']['Enums']['grade']; p_parallel_id: string };
+        Returns: number;
+      };
       collection_export: {
         Args: Record<PropertyKey, never>;
         Returns: {

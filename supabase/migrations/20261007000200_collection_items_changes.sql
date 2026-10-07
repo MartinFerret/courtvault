@@ -2,6 +2,21 @@
 -- the view keeps its contract. Gains stay a Premium feature: null for free users, decided
 -- here and not in clients.
 
+-- price_at() is service-role only (it would expose the full history to free users). This
+-- wrapper answers one fixed question, the change over the last 24 hours, and may run as a user.
+create or replace function public.change_24h_cents(p_parallel_id uuid, p_grade public.grade)
+returns integer
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select (cp.price_cents - public.price_at(p_parallel_id, p_grade, now() - interval '24 hours'))::integer
+  from public.current_prices cp
+  where cp.parallel_id = p_parallel_id and cp.grade = p_grade;
+$$;
+grant execute on function public.change_24h_cents(uuid, public.grade) to authenticated;
+
 create or replace view public.collection_items_detailed
 with (security_invoker = true) as
 select
@@ -30,7 +45,7 @@ select
   cp.price_cents as current_cents,
   cp.captured_at as price_captured_at,
   cp.buy_url,
-  (cp.price_cents - public.price_at(ci.parallel_id, ci.grade, now() - interval '24 hours'))::integer as change_24h_cents,
+  public.change_24h_cents(ci.parallel_id, ci.grade) as change_24h_cents,
   case
     when public.is_premium() and ci.purchase_cents is not null and cp.price_cents is not null
     then (cp.price_cents - ci.purchase_cents)::integer
