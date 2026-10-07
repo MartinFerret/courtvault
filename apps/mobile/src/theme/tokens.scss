@@ -8,22 +8,22 @@
  */
 :root {
   /* Canvas and surfaces */
-  --cv-bg: #edeff1;
-  --cv-surface: #e2e5e8; /* cards, tiles, inputs */
-  --cv-surface-2: #d7dbdf; /* pressed / nested */
+  --cv-bg: #e4e7ea;
+  --cv-surface: #d8dce0; /* cards, tiles, inputs */
+  --cv-surface-2: #cbd0d5; /* pressed / nested */
   --cv-surface-high: #f7f8f9; /* floating bars, selected chip background */
   --cv-text: #121417;
   --cv-text-muted: #6a7078;
   --cv-text-faint: #9aa0a6;
 
   /* Accent */
-  --cv-accent: #e9ff5f;
-  --cv-accent-strong: #d9f53a;
-  --cv-accent-soft: rgba(233, 255, 95, 0.55);
+  --cv-accent: #e3fb4a;
+  --cv-accent-strong: #d2ef26;
+  --cv-accent-soft: rgba(227, 251, 74, 0.55);
   --cv-on-accent: #121417;
 
   --cv-line: rgba(18, 20, 23, 0.08); /* hairline when a table needs one */
-  --cv-ice-soft: rgba(233, 255, 95, 0.35); /* selected row tint */
+  --cv-ice-soft: rgba(227, 251, 74, 0.4); /* selected row tint */
 
   /* Semantic */
   --cv-color-gain: #1f9d55;
@@ -71,12 +71,12 @@
   --cv-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   /* Ionic palette mapped on the tokens */
-  --ion-color-primary: #e9ff5f;
-  --ion-color-primary-rgb: 233, 255, 95;
+  --ion-color-primary: #e3fb4a;
+  --ion-color-primary-rgb: 227, 251, 74;
   --ion-color-primary-contrast: #121417;
   --ion-color-primary-contrast-rgb: 18, 20, 23;
-  --ion-color-primary-shade: #d9f53a;
-  --ion-color-primary-tint: #eeff7a;
+  --ion-color-primary-shade: #d2ef26;
+  --ion-color-primary-tint: #e9fc6b;
 
   --ion-color-secondary: #121417;
   --ion-color-secondary-rgb: 18, 20, 23;
@@ -85,12 +85,12 @@
   --ion-color-secondary-shade: #0c0e10;
   --ion-color-secondary-tint: #2a2d31;
 
-  --ion-color-tertiary: #e2e5e8;
-  --ion-color-tertiary-rgb: 226, 229, 232;
+  --ion-color-tertiary: #d8dce0;
+  --ion-color-tertiary-rgb: 216, 220, 224;
   --ion-color-tertiary-contrast: #121417;
   --ion-color-tertiary-contrast-rgb: 18, 20, 23;
-  --ion-color-tertiary-shade: #d7dbdf;
-  --ion-color-tertiary-tint: #e8ebed;
+  --ion-color-tertiary-shade: #cbd0d5;
+  --ion-color-tertiary-tint: #dde1e4;
 
   --ion-color-success: #1f9d55;
   --ion-color-success-rgb: 31, 157, 85;
@@ -99,12 +99,12 @@
   --ion-color-success-shade: #1b8a4b;
   --ion-color-success-tint: #35a766;
 
-  --ion-color-warning: #e9ff5f;
-  --ion-color-warning-rgb: 233, 255, 95;
+  --ion-color-warning: #e3fb4a;
+  --ion-color-warning-rgb: 227, 251, 74;
   --ion-color-warning-contrast: #121417;
   --ion-color-warning-contrast-rgb: 18, 20, 23;
-  --ion-color-warning-shade: #d9f53a;
-  --ion-color-warning-tint: #eeff7a;
+  --ion-color-warning-shade: #d2ef26;
+  --ion-color-warning-tint: #e9fc6b;
 
   --ion-color-danger: #d9433a;
   --ion-color-danger-rgb: 217, 67, 58;
@@ -134,8 +134,8 @@
   --ion-color-dark-shade: #101214;
   --ion-color-dark-tint: #2a2c2e;
 
-  --ion-background-color: #edeff1;
-  --ion-background-color-rgb: 237, 239, 241;
+  --ion-background-color: #e4e7ea;
+  --ion-background-color-rgb: 228, 231, 234;
   --ion-text-color: #121417;
   --ion-text-color-rgb: 18, 20, 23;
   --ion-toolbar-background: transparent;
@@ -143,7 +143,7 @@
   --ion-tab-bar-background: transparent;
   --ion-item-background: transparent;
   --ion-item-border-color: transparent;
-  --ion-card-background: #e2e5e8;
+  --ion-card-background: #d8dce0;
   --ion-border-color: transparent;
   --ion-font-family: var(--cv-font);
   --ion-safe-area-bottom: env(safe-area-inset-bottom);
@@ -283,7 +283,10 @@ ion-button {
     margin: 0;
   }
   &[disabled] {
-    opacity: 0.4;
+    opacity: 1;
+    --background: var(--cv-surface-2);
+    --color: var(--cv-text-faint);
+    --box-shadow: none;
   }
 }
 
@@ -643,7 +646,7 @@ ion-footer.cv-footer {
     justify-content: space-between;
     gap: 12px;
     padding: 12px var(--cv-gutter) calc(16px + var(--ion-safe-area-bottom, 0px));
-    background: linear-gradient(to bottom, rgba(237, 239, 241, 0), var(--cv-bg) 28%);
+    background: linear-gradient(to bottom, rgba(228, 231, 234, 0), var(--cv-bg) 28%);
     ion-button[size='large'] {
       flex: 1 1 auto;
     }
