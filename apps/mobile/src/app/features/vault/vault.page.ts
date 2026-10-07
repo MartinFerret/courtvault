@@ -8,6 +8,8 @@ import { PRICE_LABEL, type Grade } from '@courtvault/shared';
 import { CollectionService } from '../../core/collection/collection.service';
 import { PlanService } from '../../core/plan/plan.service';
 import { PaywallService } from '../../core/billing/paywall.service';
+import { LayoutService } from '../../core/layout/layout.service';
+import { VaultTableComponent } from './vault-table.component';
 import { CentsPipe, DeltaPipe, FoilClassPipe, FoilHuePipe, FoilSatPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
 
 type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
@@ -17,14 +19,16 @@ type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
   imports: [
     RouterLink, IonButton, IonContent, IonList, IonItem, IonItemSliding, IonItemOptions,
     IonItemOption, IonLabel, IonNote, IonIcon, IonSearchbar, IonSegment, IonSegmentButton, IonRefresher, IonRefresherContent,
-    CentsPipe, DeltaPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe,
+    CentsPipe, DeltaPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe, VaultTableComponent,
   ],
   templateUrl: './vault.page.html',
 })
 export class VaultPage {
   readonly collection = inject(CollectionService);
   readonly plan = inject(PlanService);
+  readonly layout = inject(LayoutService);
   private readonly paywall = inject(PaywallService);
+  readonly message = signal<string | null>(null);
   readonly priceLabel = PRICE_LABEL;
 
   readonly filter = signal<Filter>('all');
@@ -59,6 +63,32 @@ export class VaultPage {
 
   remove(id: string): void {
     void this.collection.remove(id);
+  }
+
+  async removeMany(ids: string[]): Promise<void> {
+    await this.collection.removeMany(ids);
+    this.message.set(`${ids.length} card${ids.length > 1 ? 's' : ''} removed.`);
+  }
+
+  async changeGrade(change: { ids: string[]; grade: Grade }): Promise<void> {
+    await this.collection.updateGrade(change.ids, change.grade);
+    this.message.set(`Grade updated on ${change.ids.length} card${change.ids.length > 1 ? 's' : ''}.`);
+  }
+
+  async exportCsv(): Promise<void> {
+    const mode = this.plan.isPremium() ? 'full' : 'basic';
+    try {
+      const blob = await this.collection.exportCsv(mode);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hoopfolio-vault-${mode}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      this.message.set('Export downloaded.');
+    } catch (err) {
+      this.message.set(err instanceof Error ? err.message : 'Export failed.');
+    }
   }
 
   onFilter(value: string | number | undefined): void {

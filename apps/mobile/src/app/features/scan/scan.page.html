@@ -1,7 +1,7 @@
 <ion-content>
   <div class="cv-page-head">
     <div>
-      <h1>Scan</h1>
+      <h1>{{ scan.isNative ? 'Scan' : 'Add a card' }}</h1>
     </div>
     @if (sessionCount() > 0) {
       <div class="cv-page-head__actions">
@@ -26,20 +26,11 @@
 
   @switch (step()) {
     @case ('idle') {
-      <div class="cv-scan-grid">
-        <button type="button" class="cv-scan-tile cv-scan-tile--accent" (click)="start()">
-          <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
-          <span>{{ sessionCount() > 0 ? 'Scan next card' : 'Scan a card' }}</span>
-        </button>
-        <div class="cv-scan-tile" aria-hidden="true" style="cursor: default">
-          <ion-icon name="scan-outline"></ion-icon>
-          <span class="cv-muted">@if (scan.isNative) { Card back, good light. } @else { Browser: scan is simulated. }</span>
-        </div>
-      </div>
-
-      <section class="cv-section">
-        <h2>Or search manually</h2>
-        <ion-searchbar placeholder="Player, set or card number" debounce="300" (ionInput)="manualSearch($any($event).detail.value ?? '')"></ion-searchbar>
+      <div class="cv-cols cv-cols--main">
+      <section [class.cv-section]="scan.isNative" [style.order]="scan.isNative ? 2 : 1">
+        <h2>{{ scan.isNative ? 'Or search manually' : 'Search the catalog' }}</h2>
+        <p class="cv-caption" style="margin: 6px 0 12px">Player, set or card number. Pick the parallel and grade next.</p>
+        <ion-searchbar placeholder="Cooper Flagg, Topps Chrome, 251…" debounce="300" data-shortcut="search" (ionInput)="manualSearch($any($event).detail.value ?? '')"></ion-searchbar>
         @if (manualBusy()) { <ion-spinner style="margin-top: 12px"></ion-spinner> }
         <ion-list style="margin-top: 12px">
           @for (r of manualResults(); track r.id) {
@@ -52,6 +43,33 @@
           }
         </ion-list>
       </section>
+
+      <div [style.order]="scan.isNative ? 1 : 2">
+        @if (scan.isNative) {
+          <div class="cv-scan-grid">
+            <button type="button" class="cv-scan-tile cv-scan-tile--accent" (click)="start()">
+              <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
+              <span>{{ sessionCount() > 0 ? 'Scan next card' : 'Scan a card' }}</span>
+            </button>
+            <div class="cv-scan-tile" aria-hidden="true" style="cursor: default">
+              <ion-icon name="scan-outline"></ion-icon>
+              <span class="cv-muted">Card back, good light.</span>
+            </div>
+          </div>
+        } @else {
+          <div class="cv-scan-grid">
+            <button type="button" class="cv-scan-tile" (click)="start()">
+              <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
+              <span>Scan with your webcam<br /><span class="cv-caption">Card back, in focus. Optional.</span></span>
+            </button>
+            <button type="button" class="cv-scan-tile" routerLink="/import">
+              <ion-icon name="cloud-upload-outline" aria-hidden="true"></ion-icon>
+              <span>Import a spreadsheet<br /><span class="cv-caption">CSV from Excel or Google Sheets.</span></span>
+            </button>
+          </div>
+        }
+      </div>
+      </div>
     }
     @case ('scanning') {
       <div class="cv-empty">

@@ -646,8 +646,10 @@ export type Database = {
           card_id: string | null;
           card_number: string | null;
           card_slug: string | null;
+          change_24h_cents: number | null;
           created_at: string | null;
           current_cents: number | null;
+          gain_cents: number | null;
           grade: Database['public']['Enums']['grade'] | null;
           id: string | null;
           is_rookie: boolean | null;

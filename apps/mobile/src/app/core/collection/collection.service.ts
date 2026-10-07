@@ -4,7 +4,8 @@ import { environment } from '../../../environments/environment';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export type CollectionItem = Database['public']['Views']['collection_items_detailed']['Row'];
-export type CollectionSummary = Database['public']['Functions']['collection_summary']['Returns'][number];
+export type CollectionSummary =
+  Database['public']['Functions']['collection_summary']['Returns'][number];
 
 export interface AddItemInput {
   parallelId: string;
@@ -30,7 +31,10 @@ export class CollectionService {
     this.loading.set(true);
     try {
       const [{ data: items, error }, { data: summary, error: summaryError }] = await Promise.all([
-        this.supabase.client.from('collection_items_detailed').select('*').order('created_at', { ascending: false }),
+        this.supabase.client
+          .from('collection_items_detailed')
+          .select('*')
+          .order('created_at', { ascending: false }),
         this.supabase.client.rpc('collection_summary'),
       ]);
       if (error) throw error;
@@ -57,13 +61,39 @@ export class CollectionService {
 
     if (input.photo) {
       const path = await this.uploadPhoto(data.id, input.photo);
-      await this.supabase.client.from('collection_items').update({ photo_path: path }).eq('id', data.id);
+      await this.supabase.client
+        .from('collection_items')
+        .update({ photo_path: path })
+        .eq('id', data.id);
     }
 
     await this.refresh();
     const item = this.items().find((i) => i.id === data.id);
     if (!item) throw new Error('Item not found after insert');
     return item;
+  }
+
+  /** Bulk grade change (desktop table). The price shown follows the new grade. */
+  async updateGrade(ids: string[], grade: Grade): Promise<void> {
+    if (ids.length === 0) return;
+    const { error } = await this.supabase.client
+      .from('collection_items')
+      .update({ grade })
+      .in('id', ids);
+    if (error) throw error;
+    await this.refresh();
+  }
+
+  /** Bulk delete (desktop table). Photos are removed first, like `remove()`. */
+  async removeMany(ids: string[]): Promise<void> {
+    if (ids.length === 0) return;
+    const paths = this.items()
+      .filter((i) => ids.includes(i.id ?? '') && i.photo_path)
+      .map((i) => i.photo_path as string);
+    if (paths.length > 0) await this.supabase.client.storage.from('card-photos').remove(paths);
+    const { error } = await this.supabase.client.from('collection_items').delete().in('id', ids);
+    if (error) throw error;
+    await this.refresh();
   }
 
   async remove(id: string): Promise<void> {
@@ -77,7 +107,9 @@ export class CollectionService {
   }
 
   async photoUrl(path: string): Promise<string | null> {
-    const { data, error } = await this.supabase.client.storage.from('card-photos').createSignedUrl(path, 3600);
+    const { data, error } = await this.supabase.client.storage
+      .from('card-photos')
+      .createSignedUrl(path, 3600);
     if (error) return null;
     return data.signedUrl;
   }
@@ -88,7 +120,10 @@ export class CollectionService {
     if (!session) throw new Error('Not signed in');
     const res = await fetch(`${environment.supabaseUrl}/functions/v1/export-csv`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${session.access_token}`, 'Content-Type': 'application/json' },
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ mode }),
     });
     if (!res.ok) {

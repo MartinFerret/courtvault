@@ -1179,6 +1179,339 @@ ion-checkbox.cv-consent {
   background: var(--foil-gradient, var(--cv-surface-2));
 }
 
+/* ------------------------------------------------------------------------- */
+/* Layout: phone first, tablet from 768px, desktop (sidebar) from 1024px         */
+/* ------------------------------------------------------------------------- */
+
+/* Desktop sidebar (ion-menu inside the split pane). Hidden on phones by the pane itself. */
+ion-menu.cv-menu {
+  --width: var(--cv-sidebar-width);
+  --background: var(--cv-bg);
+  border-right: 1px solid var(--cv-line);
+  &::part(container) {
+    background: var(--cv-bg);
+  }
+}
+.cv-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px 16px 20px;
+  gap: 20px;
+  background: var(--cv-bg);
+  .cv-sidebar__brand {
+    font: 800 30px/1 var(--cv-font-display);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--cv-text);
+    text-decoration: none;
+    padding: 0 10px;
+  }
+  .cv-sidebar__add {
+    margin: 0;
+  }
+  .cv-sidebar__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      border-radius: var(--cv-radius-tile);
+      color: var(--cv-text-muted);
+      text-decoration: none;
+      font: 500 15px/1 var(--cv-font);
+      transition: background var(--cv-motion-fast) var(--cv-ease), color var(--cv-motion-fast);
+      ion-icon {
+        font-size: 20px;
+      }
+      &:hover {
+        background: var(--cv-surface);
+        color: var(--cv-text);
+      }
+      &.is-active {
+        background: var(--cv-surface-high);
+        color: var(--cv-text);
+        ion-icon {
+          color: var(--cv-accent);
+        }
+      }
+      &:focus-visible {
+        outline: 2px solid var(--cv-accent);
+        outline-offset: 2px;
+      }
+    }
+  }
+  .cv-sidebar__foot {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cv-sidebar__plan,
+  .cv-sidebar__help {
+    background: var(--cv-surface);
+    color: var(--cv-text);
+    border: 0;
+    border-radius: var(--cv-radius-tile);
+    padding: 10px 12px;
+    font: var(--cv-text-small);
+    text-align: left;
+    cursor: pointer;
+    margin: 0;
+    kbd {
+      float: right;
+      font: 600 12px/1 var(--cv-font);
+      background: var(--cv-surface-high);
+      border-radius: 6px;
+      padding: 3px 6px;
+    }
+  }
+  .cv-sidebar__plan--premium {
+    color: var(--cv-color-premium);
+  }
+}
+
+/* Two-column page bodies on tablet and desktop; stat row stretches on desktop. */
+.cv-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  > * {
+    min-width: 0;
+  }
+}
+.cv-stat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cv-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cv-desktop-only {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .cv-cols--2 {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .cv-cols--main {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+  .cv-filters {
+    flex-direction: row;
+    align-items: center;
+    ion-searchbar {
+      flex: 1 1 320px;
+      max-width: 420px;
+    }
+  }
+  .cv-scan-grid {
+    grid-template-columns: 1fr 1fr;
+    .cv-scan-tile {
+      aspect-ratio: auto;
+      min-height: 140px;
+    }
+  }
+  .cv-hero .cv-hero__art--figure {
+    min-height: 360px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --cv-gutter: 32px;
+  }
+  /* Content column: centered, capped; no floating tab bar underneath. */
+  ion-content {
+    --padding-start: max(var(--cv-gutter), calc((100% - var(--cv-content-max)) / 2));
+    --padding-end: max(var(--cv-gutter), calc((100% - var(--cv-content-max)) / 2));
+    --padding-top: 8px;
+    --padding-bottom: 48px;
+  }
+  ion-tab-bar.cv-tab-bar {
+    display: none;
+  }
+  ion-header.cv-header ion-toolbar {
+    --padding-start: max(var(--cv-gutter), calc((100% - var(--cv-content-max)) / 2));
+    --padding-end: max(var(--cv-gutter), calc((100% - var(--cv-content-max)) / 2));
+  }
+  .cv-page-head h1 {
+    font-size: 52px;
+  }
+  .cv-stat-row {
+    flex-direction: row;
+    > .cv-card {
+      flex: 1 1 42%;
+    }
+    > .cv-stat-grid {
+      flex: 1 1 58%;
+      margin-top: 0;
+    }
+  }
+  .cv-desktop-only {
+    display: revert !important;
+  }
+  .cv-phone-only {
+    display: none !important;
+  }
+  /* Onboarding: one centered column instead of a stretched phone screen. */
+  .cv-hero {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-top: 24px;
+    .cv-hero__art--figure {
+      min-height: 380px;
+    }
+  }
+  ion-modal.cv-sheet {
+    --width: 520px;
+    --border-radius: 24px;
+    align-items: center;
+    &::part(content) {
+      border-radius: 24px;
+    }
+  }
+}
+
+/* Data table (desktop Vault) */
+.cv-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--cv-radius-card);
+  background: var(--cv-surface);
+}
+.cv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--cv-text-small);
+  th,
+  td {
+    padding: 12px 14px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--cv-line);
+    vertical-align: middle;
+  }
+  th {
+    font: var(--cv-text-caption);
+    color: var(--cv-text-muted);
+    position: sticky;
+    top: 0;
+    background: var(--cv-surface);
+    z-index: 1;
+  }
+  tbody tr {
+    cursor: pointer;
+    transition: background var(--cv-motion-fast) var(--cv-ease);
+    &:hover {
+      background: var(--cv-surface-2);
+    }
+    &.is-selected {
+      background: var(--cv-ice-soft);
+    }
+    &.is-active {
+      box-shadow: inset 3px 0 0 var(--cv-accent);
+      background: var(--cv-surface-2);
+    }
+    &:last-child td {
+      border-bottom: 0;
+    }
+  }
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .cv-table__check {
+    width: 36px;
+    padding-right: 0;
+    input {
+      accent-color: var(--cv-accent);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+  .cv-table__sort {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    &:hover {
+      color: var(--cv-text);
+    }
+  }
+  .cv-table__player {
+    color: var(--cv-text);
+    font-weight: 500;
+  }
+  .cv-table__value {
+    font: 700 18px/1 var(--cv-font-display);
+    color: var(--cv-text);
+  }
+}
+.cv-bulk {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: var(--cv-radius-tile);
+  background: var(--cv-surface-high);
+  font: var(--cv-text-small);
+  .cv-bulk__group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+  }
+  ion-button {
+    min-height: 36px;
+    font-size: 13px;
+  }
+}
+/* Locked Premium value: blurred figure plus a lock, opens the paywall. */
+.cv-locked {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--cv-text-muted);
+  font: inherit;
+  .cv-locked__blur {
+    filter: blur(5px);
+    user-select: none;
+    color: var(--cv-color-gain);
+  }
+  ion-icon {
+    font-size: 14px;
+    color: var(--cv-color-premium);
+  }
+}
+ion-alert.cv-shortcuts .alert-message {
+  white-space: pre-line;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * {

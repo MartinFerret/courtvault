@@ -8,6 +8,8 @@
   @if (error(); as message) { <ion-note class="cv-error" role="alert">{{ message }}</ion-note> }
 
   @if (card(); as c) {
+    <div class="cv-cols cv-cols--main">
+    <div>
     <div class="cv-card" style="margin-top: 8px" [class]="'cv-card ' + (parallel()?.name | foilClass: parallel()?.serial_run)" [style.--foil-hue]="parallel()?.name | foilHue: parallel()?.serial_run" [style.--foil-sat]="parallel()?.name | foilSat: parallel()?.serial_run">
       <span class="cv-watermark" aria-hidden="true">#{{ c.number }}</span>
       <p class="cv-caption">{{ c.set.season }} {{ c.set.name }}@if (c.player.team) { · {{ c.player.team }} }</p>
@@ -45,6 +47,8 @@
       </div>
     </section>
 
+    </div>
+    <div>
     @if (history().length > 1) {
       <section class="cv-section">
         <h2>History <span class="cv-caption">{{ history().length }} points, {{ historyDelta() | delta }}</span></h2>
@@ -102,5 +106,7 @@
         <p class="cv-caption" style="margin-top: 8px">Affiliate link. Listings are asking prices.</p>
       </section>
     }
+    </div>
+    </div>
   }
 </ion-content>

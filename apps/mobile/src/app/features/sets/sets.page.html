@@ -7,6 +7,8 @@
   </div>
   @if (error(); as message) { <ion-note class="cv-error" role="alert">{{ message }}</ion-note> }
 
+  <div class="cv-cols cv-cols--2">
+  <div>
   @if (followed().length === 0) {
     <div class="cv-card">
       <h2>Follow a set</h2>
@@ -25,8 +27,9 @@
       </ion-item>
     }
   </ion-list>
+  </div>
 
-  <section class="cv-section">
+  <section class="cv-section" style="margin-top: 0">
     <h2>All sets</h2>
     <ion-list>
       @for (s of others(); track s.set_id) {
@@ -40,4 +43,5 @@
       }
     </ion-list>
   </section>
+  </div>
 </ion-content>

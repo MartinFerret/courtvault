@@ -1,0 +1,125 @@
+@if (selected().size > 0) {
+  <div class="cv-bulk" role="toolbar" aria-label="Selected cards">
+    <strong>{{ selected().size }} selected</strong>
+    <span class="cv-bulk__group">
+      <span class="cv-caption">Set grade</span>
+      @for (g of grades; track g) {
+        <ion-button size="small" fill="outline" (click)="onChangeGrade(g)">{{
+          g | grade
+        }}</ion-button>
+      }
+    </span>
+    <ion-button size="small" fill="outline" (click)="exportCsv.emit()"
+      ><ion-icon slot="start" name="download-outline" aria-hidden="true"></ion-icon>Export
+      CSV</ion-button
+    >
+    <ion-button size="small" fill="clear" color="danger" (click)="onRemove()"
+      ><ion-icon slot="start" name="trash-outline" aria-hidden="true"></ion-icon>Delete</ion-button
+    >
+    <ion-button size="small" fill="clear" (click)="clearSelection()">Clear</ion-button>
+  </div>
+}
+
+<div class="cv-table-wrap">
+  <table class="cv-table">
+    <thead>
+      <tr>
+        <th class="cv-table__check">
+          <input
+            type="checkbox"
+            aria-label="Select all"
+            [checked]="allSelected()"
+            (change)="toggleAll(isChecked($event))"
+          />
+        </th>
+        @for (col of columns; track col.key) {
+          <th
+            [class.num]="col.numeric"
+            [attr.aria-sort]="
+              sortKey() === col.key ? (sortDir() === 'asc' ? 'ascending' : 'descending') : 'none'
+            "
+          >
+            <button type="button" class="cv-table__sort" (click)="sortBy(col.key)">
+              {{ col.label }}
+              @if (sortKey() === col.key) {
+                <ion-icon
+                  [name]="sortDir() === 'asc' ? 'chevron-up-outline' : 'chevron-down-outline'"
+                  aria-hidden="true"
+                ></ion-icon>
+              }
+            </button>
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of sorted(); track item.id; let i = $index) {
+        <tr
+          [class.is-active]="activeRow() === i"
+          [class.is-selected]="selected().has(item.id ?? '')"
+          (click)="open(item)"
+        >
+          <td class="cv-table__check" (click)="$event.stopPropagation()">
+            <input
+              type="checkbox"
+              [attr.aria-label]="'Select ' + item.player_name"
+              [checked]="selected().has(item.id ?? '')"
+              (change)="toggle(item.id, isChecked($event))"
+            />
+          </td>
+          <td>
+            <span class="cv-table__player">#{{ item.card_number }} {{ item.player_name }}</span>
+            @if (item.is_rookie) {
+              <span class="cv-badge">RC</span>
+            }
+          </td>
+          <td class="cv-muted">{{ item.season }} {{ item.set_name }}</td>
+          <td>
+            <span
+              class="cv-foil-chip"
+              [class]="'cv-foil-chip ' + (item.parallel_name | foilClass: item.serial_run)"
+              [style.--foil-hue]="item.parallel_name | foilHue: item.serial_run"
+              [style.--foil-sat]="item.parallel_name | foilSat: item.serial_run"
+              aria-hidden="true"
+            ></span>
+            {{ item.parallel_name ?? '' | parallel: item.serial_run }}
+            @if (item.serial_number) {
+              <span class="cv-muted">{{ item.serial_number }}/{{ item.serial_run }}</span>
+            }
+          </td>
+          <td>{{ item.grade ?? 'RAW' | grade }}</td>
+          <td class="num cv-table__value">{{ item.current_cents | cents }}</td>
+          <td
+            class="num"
+            [class.cv-gain]="(item.change_24h_cents ?? 0) > 0"
+            [class.cv-loss]="(item.change_24h_cents ?? 0) < 0"
+          >
+            {{ item.change_24h_cents | delta }}
+          </td>
+          <td class="num" (click)="$event.stopPropagation()">
+            @if (isPremium()) {
+              <span
+                [class.cv-gain]="(item.gain_cents ?? 0) > 0"
+                [class.cv-loss]="(item.gain_cents ?? 0) < 0"
+                >{{ item.purchase_cents === null ? '—' : (item.gain_cents | delta) }}</span
+              >
+            } @else {
+              <button
+                type="button"
+                class="cv-locked"
+                (click)="unlockGains.emit()"
+                aria-label="Gains and losses are a Premium feature"
+              >
+                <span class="cv-locked__blur" aria-hidden="true">+$12.34</span>
+                <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<p class="cv-caption" style="margin-top: 10px">
+  {{ priceLabel }}. Click a column to sort, check rows for bulk actions, j / k / Enter to move.
+</p>

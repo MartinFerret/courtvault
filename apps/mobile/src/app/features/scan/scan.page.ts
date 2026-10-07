@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList,
   IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner,
@@ -22,7 +22,7 @@ type Step = 'idle' | 'scanning' | 'pick-card' | 'pick-parallel' | 'no-match';
 @Component({
   selector: 'cv-scan',
   imports: [
-    FormsModule, IonButton, IonContent, IonIcon, IonList, IonItem, IonLabel,
+    FormsModule, RouterLink, IonButton, IonContent, IonIcon, IonList, IonItem, IonLabel,
     IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner, IonInput, CentsPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe,
   ],
   templateUrl: './scan.page.html',

@@ -11,6 +11,8 @@
     </div>
   </div>
 
+  <div class="cv-cols cv-cols--main">
+  <div>
   <div class="cv-card cv-card--accent">
     <span class="cv-watermark" aria-hidden="true">Tonight</span>
     <div class="cv-stat" style="min-height: 0; gap: 12px">
@@ -19,6 +21,9 @@
       <span class="cv-stat__note" style="color: var(--cv-on-accent)">{{ morning.rows().length }} of your players played</span>
     </div>
   </div>
+  <p class="cv-caption cv-desktop-only" style="margin-top: 12px">Values compare the price before tip-off with this morning's update. Lines are box score stats from last night's games.</p>
+  </div>
+  <div>
 
   @if (!morning.loading() && morning.rows().length === 0) {
     <div class="cv-empty">
@@ -27,7 +32,7 @@
     </div>
   }
 
-  <ion-list style="margin-top: 16px">
+  <ion-list>
     @for (r of morning.rows(); track r.player_id) {
       <ion-item [routerLink]="['/players', r.player_slug]" [detail]="!r.locked">
         <ion-label>
@@ -55,4 +60,6 @@
   @if (lockedCount() > 0) {
     <ion-button expand="block" size="large" style="margin-top: 20px" (click)="unlock()">Unlock {{ lockedCount() }} more player{{ lockedCount() > 1 ? 's' : '' }}</ion-button>
   }
+  </div>
+  </div>
 </ion-content>
