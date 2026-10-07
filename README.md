@@ -180,9 +180,14 @@ no-op), far below the 500k/month free quota. App traffic (scan-match, export, de
    select vault.create_secret('<long random string>', 'job_secret');
    ```
 5. Auth: Dashboard > Authentication. Email provider on, "Confirm email" off, Magic Link
-   template = `supabase/templates/magic_link.html` with subject "Your sign-in code". Add the
-   Apple and Google providers when their keys exist. Redirect URLs: the website origin and
-   `hoopfolio://auth/callback`.
+   template = `supabase/templates/magic_link.html` with subject "Your sign-in code".
+   **Custom SMTP is mandatory in production**: Supabase's built-in sender allows a few emails
+   per hour. Use Brevo (free plan 300 emails/day, shared with the digest): host
+   `smtp-relay.brevo.com`, port 587, the SMTP login and key from Brevo, sender
+   `hello@hoopfolio.app` on a verified domain. Add the Google provider (web client id, also
+   set as `GOOGLE_WEB_CLIENT_ID` in the app) and the Apple provider (Services ID, team id,
+   key id, private key; then `APPLE_SIGN_IN_ENABLED=true` in the app). Redirect URLs:
+   `https://vault.hoopfolio.app/auth/callback`, the website origin and `hoopfolio://auth/callback`.
 6. Functions: `supabase functions deploy`, then
    `supabase secrets set --env-file supabase/functions/.env` with the production values.
    `JOB_SECRET` must equal the Vault `job_secret`.

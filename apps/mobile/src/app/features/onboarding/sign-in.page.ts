@@ -1,30 +1,71 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { IonButton, IonContent, IonIcon, IonInput, IonItem, IonText } from '@ionic/angular';
-import { AFFILIATION_DISCLAIMER } from '@courtvault/shared';
-import { AuthService } from '../../core/auth/auth.service';
+import { Router, RouterLink } from '@angular/router';
+import {
+  IonButton,
+  IonCheckbox,
+  IonContent,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonText,
+} from '@ionic/angular';
+import { AFFILIATION_DISCLAIMER, BRAND_NAME, BRAND_TAGLINE } from '@courtvault/shared';
+import { AuthService, type SocialProvider } from '../../core/auth/auth.service';
 
+type Mode = 'sign-up' | 'sign-in';
+
+/**
+ * One screen for sign-up and sign-in: the methods are the same (Google, Apple, email code),
+ * only the wording and the optional marketing checkbox change. No passwords, no mandatory
+ * terms checkbox: continuing means accepting the terms (link under the buttons).
+ */
 @Component({
   selector: 'cv-sign-in',
-  imports: [FormsModule, IonContent, IonItem, IonInput, IonButton, IonText, IonIcon],
+  imports: [
+    FormsModule,
+    RouterLink,
+    IonContent,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonText,
+    IonIcon,
+    IonCheckbox,
+  ],
   templateUrl: './sign-in.page.html',
 })
 export class SignInPage {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   readonly disclaimer = AFFILIATION_DISCLAIMER;
+  readonly brand = BRAND_NAME;
+  readonly tagline = BRAND_TAGLINE;
 
   email = '';
   code = '';
+  marketingConsent = false;
+  readonly mode = signal<Mode>('sign-up');
   readonly step = signal<'email' | 'code'>('email');
   readonly busy = signal(false);
   readonly error = signal<string | null>(null);
+
+  toggleMode(): void {
+    this.mode.set(this.mode() === 'sign-up' ? 'sign-in' : 'sign-up');
+    this.error.set(null);
+  }
+
+  labelFor(provider: SocialProvider): string {
+    return provider === 'apple' ? 'Continue with Apple' : 'Continue with Google';
+  }
 
   async sendCode(): Promise<void> {
     this.error.set(null);
     this.busy.set(true);
     try {
+      await this.auth.setPendingMarketingConsent(
+        this.mode() === 'sign-up' && this.marketingConsent,
+      );
       await this.auth.requestEmailCode(this.email.trim());
       this.step.set('code');
     } catch (err) {
@@ -47,10 +88,13 @@ export class SignInPage {
     }
   }
 
-  async social(provider: 'apple' | 'google'): Promise<void> {
+  async social(provider: SocialProvider): Promise<void> {
     this.error.set(null);
     try {
-      await (provider === 'apple' ? this.auth.signInWithApple() : this.auth.signInWithGoogle());
+      await this.auth.setPendingMarketingConsent(
+        this.mode() === 'sign-up' && this.marketingConsent,
+      );
+      await this.auth.signInWith(provider);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Sign-in failed.');
     }

@@ -203,8 +203,11 @@ begin
         if day_offset = 0 then
           price := price * last_bump;
         end if;
-        -- captured at 5:30 AM New York time, the price job's slot
-        captured := ((current_date - day_offset)::timestamp + interval '5 hours 30 minutes') at time zone 'America/New_York';
+        -- captured at 5:30 AM New York time, the price job's slot. Today's capture never sits
+        -- in the future (tests run at any hour): it is clamped to a minute ago.
+        captured := least(
+          ((current_date - day_offset)::timestamp + interval '5 hours 30 minutes') at time zone 'America/New_York',
+          now() - interval '1 minute');
         -- round to whole dollars above $20 so unchanged days happen and history stays compact
         perform public.record_price(
           p.parallel_id, g, 'mock',

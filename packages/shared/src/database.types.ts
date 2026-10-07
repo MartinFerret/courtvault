@@ -581,27 +581,39 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string;
+          digest_frequency: string;
           email: string | null;
           id: string;
           is_premium: boolean;
+          marketing_consent_at: string | null;
+          marketing_consent_source: string | null;
           premium_until: string | null;
           push_token: string | null;
+          unsubscribe_token: string;
         };
         Insert: {
           created_at?: string;
+          digest_frequency?: string;
           email?: string | null;
           id: string;
           is_premium?: boolean;
+          marketing_consent_at?: string | null;
+          marketing_consent_source?: string | null;
           premium_until?: string | null;
           push_token?: string | null;
+          unsubscribe_token?: string;
         };
         Update: {
           created_at?: string;
+          digest_frequency?: string;
           email?: string | null;
           id?: string;
           is_premium?: boolean;
+          marketing_consent_at?: string | null;
+          marketing_consent_source?: string | null;
           premium_until?: string | null;
           push_token?: string | null;
+          unsubscribe_token?: string;
         };
         Relationships: [];
       };
@@ -925,6 +937,7 @@ export type Database = {
           score: number;
         }[];
       };
+      unsubscribe_by_token: { Args: { p_scope?: string; p_token: string }; Returns: boolean };
       usage_report: {
         Args: Record<PropertyKey, never>;
         Returns: {

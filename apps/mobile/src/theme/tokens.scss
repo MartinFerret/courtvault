@@ -833,6 +833,56 @@ ion-alert {
   }
 }
 
+/* Sign-up / sign-in: social buttons of equal weight, a thin divider, consent and legal lines. */
+.cv-auth-methods {
+  margin-top: 8px;
+}
+.cv-auth-social ion-icon {
+  font-size: 20px;
+  margin-inline-end: 10px;
+}
+.cv-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--cv-text-faint);
+  font: var(--cv-text-caption);
+  &::before,
+  &::after {
+    content: '';
+    flex: 1 1 auto;
+    height: 1px;
+    background: var(--cv-surface-2);
+  }
+}
+ion-checkbox.cv-consent {
+  --size: 22px;
+  --checkbox-background: var(--cv-surface);
+  --checkbox-background-checked: var(--cv-lime);
+  --border-color: var(--cv-text-faint);
+  --border-color-checked: var(--cv-lime);
+  --checkmark-color: var(--cv-on-lime);
+  --border-radius: 7px;
+  font: var(--cv-text-small);
+  color: var(--cv-text-muted);
+  margin-top: 4px;
+  &::part(label) {
+    white-space: normal;
+    margin-inline-start: 12px;
+  }
+}
+.cv-auth-legal,
+.cv-auth-switch {
+  a {
+    color: var(--cv-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+.cv-auth-switch {
+  color: var(--cv-text-muted);
+}
+
 /* Scan */
 .cv-scan-grid {
   display: grid;

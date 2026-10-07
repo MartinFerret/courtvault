@@ -1,36 +1,107 @@
 <ion-content>
   <div class="cv-hero">
     <div class="cv-hero__art cv-hero__art--figure" aria-hidden="true">
-      <div class="cv-hero__word"><span class="cv-hero__word-l">BIG</span><span class="cv-hero__word-r">GAME</span></div>
+      <div class="cv-hero__word">
+        <span class="cv-hero__word-l">BIG</span><span class="cv-hero__word-r">GAME</span>
+      </div>
       <img class="cv-hero__figure" src="art-hero.webp" alt="" />
     </div>
 
-    @if (step() === 'email') {
-      <h1>Know what<br />every card<br />is worth.</h1>
-      <p class="cv-hero__lead">Scan a card, see its value by parallel and grade, and get every morning how last night's games moved your collection.</p>
-      <ion-item class="cv-field" lines="none">
-        <ion-input label="Email" labelPlacement="stacked" type="email" autocomplete="email" inputmode="email" [(ngModel)]="email" placeholder="you@example.com"></ion-input>
-      </ion-item>
-      <ion-button expand="block" size="large" [disabled]="busy() || !email" (click)="sendCode()">Send me a code</ion-button>
+    @if (step() === 'email') { @if (mode() === 'sign-up') {
+    <h1>Turn your cards<br />into a portfolio.</h1>
+    <p class="cv-hero__lead">
+      See what every card is worth by parallel and grade, and what last night's games did to your
+      collection.
+    </p>
     } @else {
-      <h1>Check<br />your inbox.</h1>
-      <p class="cv-hero__lead">We sent a 6-digit code to <strong>{{ email }}</strong>.</p>
+    <h1>Welcome<br />back.</h1>
+    <p class="cv-hero__lead">Sign in to open your Vault.</p>
+    }
+
+    <div class="cv-stack cv-auth-methods">
+      @for (provider of auth.socialProviders; track provider) {
+      <ion-button
+        expand="block"
+        size="large"
+        fill="outline"
+        class="cv-auth-social"
+        [attr.data-provider]="provider"
+        (click)="social(provider)"
+      >
+        <ion-icon
+          slot="start"
+          [name]="provider === 'apple' ? 'logo-apple' : 'logo-google'"
+          aria-hidden="true"
+        ></ion-icon>
+        {{ labelFor(provider) }}
+      </ion-button>
+      } @if (auth.socialProviders.length > 0) {
+      <p class="cv-auth-divider" aria-hidden="true"><span>or</span></p>
+      }
       <ion-item class="cv-field" lines="none">
-        <ion-input label="Code" labelPlacement="stacked" inputmode="numeric" autocomplete="one-time-code" maxlength="6" [(ngModel)]="code"></ion-input>
+        <ion-input
+          label="Email"
+          labelPlacement="stacked"
+          type="email"
+          autocomplete="email"
+          inputmode="email"
+          [(ngModel)]="email"
+          placeholder="you@example.com"
+          (keyup.enter)="sendCode()"
+        ></ion-input>
       </ion-item>
-      <ion-button expand="block" size="large" [disabled]="busy() || code.length < 6" (click)="verify()">Sign in</ion-button>
-      <ion-button expand="block" fill="clear" (click)="step.set('email')">Use another email</ion-button>
+      <ion-button expand="block" size="large" [disabled]="busy() || !email" (click)="sendCode()"
+        >Continue with email</ion-button
+      >
+    </div>
+
+    @if (mode() === 'sign-up') {
+    <ion-checkbox
+      class="cv-consent"
+      labelPlacement="end"
+      justify="start"
+      [(ngModel)]="marketingConsent"
+    >
+      Send me product news and offers by email. Unsubscribe anytime.
+    </ion-checkbox>
     }
 
-    @if (auth.appleEnabled) {
-      <ion-button expand="block" fill="outline" (click)="social('apple')">Continue with Apple</ion-button>
-    }
-    @if (auth.googleEnabled) {
-      <ion-button expand="block" fill="outline" (click)="social('google')">Continue with Google</ion-button>
-    }
-
-    @if (error(); as message) {
-      <ion-text class="cv-error" role="alert">{{ message }}</ion-text>
+    <p class="cv-caption cv-auth-legal">
+      By continuing, you agree to our <a routerLink="/legal/terms">Terms</a> and
+      <a routerLink="/legal/privacy">Privacy Policy</a>.
+    </p>
+    <p class="cv-small cv-auth-switch">
+      @if (mode() === 'sign-up') { Already have an account?
+      <a href="" (click)="$event.preventDefault(); toggleMode()">Sign in</a> } @else { New to {{
+      brand }}? <a href="" (click)="$event.preventDefault(); toggleMode()">Create an account</a>
+      }
+    </p>
+    } @else {
+    <h1>Check<br />your inbox.</h1>
+    <p class="cv-hero__lead">We sent a 6-digit code to <strong>{{ email }}</strong>.</p>
+    <ion-item class="cv-field" lines="none">
+      <ion-input
+        label="Code"
+        labelPlacement="stacked"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        [(ngModel)]="code"
+        (keyup.enter)="verify()"
+      ></ion-input>
+    </ion-item>
+    <ion-button
+      expand="block"
+      size="large"
+      [disabled]="busy() || code.length < 6"
+      (click)="verify()"
+      >{{ mode() === 'sign-up' ? 'Create my account' : 'Sign in' }}</ion-button
+    >
+    <ion-button expand="block" fill="clear" (click)="step.set('email')"
+      >Use another email</ion-button
+    >
+    } @if (error(); as message) {
+    <ion-text class="cv-error" role="alert">{{ message }}</ion-text>
     }
 
     <p class="cv-caption">{{ disclaimer }}</p>
