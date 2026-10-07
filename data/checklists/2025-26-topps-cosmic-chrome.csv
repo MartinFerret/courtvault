@@ -1,0 +1,200 @@
+season,set_slug,set_name,card_number,player_name,team,is_rookie,parallels
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,1,Jaren Jackson Jr.,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,2,RJ Barrett,Toronto Raptors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,3,Quentin Grimes,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,4,Jaden McDaniels,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,5,Buddy Hield,Golden State Warriors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,6,Jaime Jaquez Jr.,Miami Heat,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,7,Cedric Coward,Memphis Grizzlies,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,8,Jalen Brunson,New York Knicks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,9,Ivica Zubac,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,10,Dereck Lively II,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,11,Shai Gilgeous-Alexander,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,12,Cooper Flagg,Dallas Mavericks,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,13,Ryan Kalkbrenner,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,14,Christian Braun,Denver Nuggets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,15,Trae Young,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,16,Kris Murray,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,17,Khaman Maluach,Phoenix Suns,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,18,Stephen Curry,Golden State Warriors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,19,Lonzo Ball,Chicago Bulls,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,20,Anthony Black,Orlando Magic,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,21,Jaden Ivey,Detroit Pistons,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,22,Klay Thompson,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,23,Keegan Murray,Sacramento Kings,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,24,Bennedict Mathurin,Indiana Pacers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,25,Jeremy Sochan,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,26,Alex Sarr,Washington Wizards,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,27,Jonathan Kuminga,Golden State Warriors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,28,Joel Embiid,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,29,Jalen Johnson,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,30,Stephon Castle,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,31,Kam Jones,Indiana Pacers,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,32,Jamal Murray,Denver Nuggets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,33,Jalen Green,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,34,Grant Williams,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,35,VJ Edgecombe,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,36,OG Anunoby,New York Knicks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,37,Dyson Daniels,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,38,Jayson Tatum,Boston Celtics,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,39,Egor Dëmin,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,40,Adou Thiero,Los Angeles Lakers,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,41,DeMar DeRozan,Sacramento Kings,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,42,Franz Wagner,Orlando Magic,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,43,Russell Westbrook,Denver Nuggets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,44,Alperun Sengun,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,45,Dejounte Murray,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,46,Pascal Siakam,Indiana Pacers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,47,Paolo Banchero,Orlando Magic,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,49,Jeremiah Fears,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,50,Mark Williams,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,51,Scotty Pippen Jr.,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,52,Zaccharie Risacher,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,53,Thomas Sorber,Oklahoma City Thunder,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,54,Naz Reid,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,55,Matas Buzelis,Chicago Bulls,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,56,Gary Trent Jr.,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,57,Tyrese Maxey,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,58,Tyler Herro,Miami Heat,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,59,Andrew Nembhard,Indiana Pacers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,60,Michael Porter Jr.,Denver Nuggets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,61,Drake Powell,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,62,DaRon Holmes II,Denver Nuggets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,63,Aaron Gordon,Denver Nuggets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,64,Trey Murphy III,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,65,Max Christie,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,66,Luka Dončić,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,67,Ryan Dunn,Phoenix Suns,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,68,Payton Pritchard,Boston Celtics,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,69,Bradley Beal,Phoenix Suns,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,70,Noa Essengue,Chicago Bulls,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,71,Deni Avdija,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,72,Brandon Miller,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,73,Yang Hansen,Portland Trail Blazers,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,74,Evan Mobley,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,75,Alijah Martin,Toronto Raptors,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,76,Cole Anthony,Orlando Magic,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,77,Rui Hachimura,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,78,James Harden,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,79,Josh Hart,New York Knicks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,80,Mikal Bridges,New York Knicks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,81,Domantas Sabonis,Sacramento Kings,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,82,Ben Saraf,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,83,Kawhi Leonard,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,84,Donte DiVincenzo,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,85,Jared McCain,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,86,Zach Collins,Chicago Bulls,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,87,Asa Newell,Atlanta Hawks,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,88,Malik Monk,Sacramento Kings,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,89,Zach Lavine,Sacramento Kings,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,90,Tyrese Haliburton,Indiana Pacers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,91,Jakob Poeltl,Toronto Raptors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,92,Derik Queen,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,93,Gradey Dick,Toronto Raptors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,94,Jaxson Hayes,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,95,Nikola Jokić,Denver Nuggets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,96,Myles Turner,Indiana Pacers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,97,Kasparas Jakučionis,Miami Heat,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,98,Kyshawn George,Washington Wizards,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,99,Nique Clifford,Sacramento Kings,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,100,Collin Murray-Boyles,Toronto Raptors,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,101,Darius Garland,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,102,Donovan Mitchell,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,103,Alex Caruso,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,104,Walter Clayton Jr.,Utah Jazz,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,105,Derrick White,Boston Celtics,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,106,Tobias Harris,Detroit Pistons,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,107,Khris Middleton,Washington Wizards,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,108,Kyle Kuzma,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,109,Paul George,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,110,Danny Wolf,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,111,Draymond Green,Golden State Warriors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,112,Jaylen Brown,Boston Celtics,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,113,Terrence Shannon Jr.,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,114,Jabari Smith Jr.,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,115,Tre Johnson III,Washington Wizards,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,116,Yanic Konan-Niederhäuser,Los Angeles Clippers,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,117,Andrew Wiggins,Miami Heat,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,118,Josh Giddey,Chicago Bulls,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,119,Will Riley,Washington Wizards,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,120,Walker Kessler,Utah Jazz,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,121,John Tonje,Utah Jazz,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,122,Naji Marshall,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,123,De'Aaron Fox,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,124,LaMelo Ball,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,125,Johni Broome,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,126,Chet Holmgren,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,127,Micah Peavy,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,128,Jamir Watkins,Washington Wizards,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,129,Damian Lillard,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,130,Jalen Williams,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,131,Ja Morant,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,132,Bam Adebayo,Miami Heat,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,133,Maxime Raynaud,Sacramento Kings,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,134,Ausar Thompson,Detroit Pistons,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,135,Ayo Dosunmu,Chicago Bulls,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,136,Fred VanVleet,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,137,Cade Cunningham,Detroit Pistons,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,138,Max Strus,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,139,Carter Bryant,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,140,Tyrese Proctor,Cleveland Cavaliers,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,141,Coby White,Chicago Bulls,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,142,Al Horford,Boston Celtics,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,143,Kristaps Porzingis,Boston Celtics,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,144,Jase Richardson,Orlando Magic,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,145,Anthony Davis,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,146,Chris Paul,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,147,Koby Brea,Phoenix Suns,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,148,Julius Randle,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,149,Victor Wembanyama,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,150,Cam Thomas,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,151,Anfernee Simons,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,152,Brooks Barnhizer,Oklahoma City Thunder,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,153,Liam McNeeley,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,154,Brandin Podziemski,Golden State Warriors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,155,Bobby Portis,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,156,Sion James,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,157,Lebron James,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,158,Kyrie Irving,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,159,Austin Reaves,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,160,Steven Adams,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,161,Jaylen Wells,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,162,Joan Beringer,Minnesota Timberwolves,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,163,Brandon Ingram,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,164,Keyonte George,Utah Jazz,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,165,Anthony Edwards,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,166,Desmond Bane,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,167,Karl-Anthony Towns,New York Knicks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,168,Shaedon Sharpe,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,169,Johnny Furphy,Indiana Pacers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,170,Yves Missi,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,171,Ace Bailey,Utah Jazz,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,172,Hugo González,Boston Celtics,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,173,Zach Edey,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,174,Kevin Durant,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,175,Tristan Da Silva,Orlando Magic,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,176,Jarrett Allen,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,177,Amen Thompson,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,178,Herbert Jones,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,179,Scottie Barnes,Toronto Raptors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,180,Jimmy Butler III,Golden State Warriors,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,181,Kel'El Ware,Miami Heat,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,182,Noah Penda,Orlando Magic,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,183,T.J. McConnell,Indiana Pacers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,184,Devin Booker,Phoenix Suns,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,185,Scoot Henderson,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,186,Dylan Harper,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,187,Nolan Traore,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,188,Rasheer Fleming,Phoenix Suns,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,189,Jalen Duren,Detroit Pistons,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,190,Giannis Antetokounmpo,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,191,Donovan Clingan,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,192,Reed Sheppard,Houston Rockets,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,193,Luguentz Dort,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,194,Bub Carrington,Washington Wizards,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,195,Dalton Knecht,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,196,Miles McBride,New York Knicks,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,197,Kon Knueppel,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,198,Lauri Markkanen,Utah Jazz,false,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,199,Chaz Lanier,Detroit Pistons,true,Base
+2025-26,2025-26-topps-cosmic-chrome,Topps Cosmic Chrome,200,Ronald Holland II,Detroit Pistons,false,Base

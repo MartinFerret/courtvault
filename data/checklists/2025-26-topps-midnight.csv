@@ -1,0 +1,101 @@
+season,set_slug,set_name,card_number,player_name,team,is_rookie,parallels
+2025-26,2025-26-topps-midnight,Topps Midnight,1,Jayson Tatum,Boston Celtics,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,2,Jaylen Brown,Boston Celtics,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,3,Cam Thomas,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,4,Cameron Johnson,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,5,Scottie Barnes,Toronto Raptors,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,6,Gradey Dick,Toronto Raptors,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,7,Joel Embiid,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,8,Tyrese Maxey,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,9,Karl-Anthony Towns,New York Knicks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,10,Jalen Brunson,New York Knicks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,11,Josh Giddey,Chicago Bulls,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,12,Lonzo Ball,Chicago Bulls,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,13,Damian Lillard,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,14,Giannis Antetokounmpo,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,15,Tyrese Haliburton,Indiana Pacers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,16,Pascal Siakam,Indiana Pacers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,17,Cade Cunningham,Detroit Pistons,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,18,Ausar Thompson,Detroit Pistons,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,19,Donovan Mitchell,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,20,Evan Mobley,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,21,Trae Young,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,22,Zaccharie Risacher,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,23,Kawhi Leonard,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,24,James Harden,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,25,Jordan Poole,Washington Wizards,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,26,Alex Sarr,Washington Wizards,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,27,LaMelo Ball,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,28,Brandon Miller,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,29,Jimmy Butler III,Golden State Warriors,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,30,Stephen Curry,Golden State Warriors,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,31,Tyler Herro,Miami Heat,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,32,Kel'El Ware,Miami Heat,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,33,Franz Wagner,Orlando Magic,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,34,Paolo Banchero,Orlando Magic,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,35,Kevin Durant,Phoenix Suns,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,36,Devin Booker,Phoenix Suns,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,37,Zach Lavine,Sacramento Kings,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,38,Domantas Sabonis,Sacramento Kings,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,39,Austin Reaves,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,40,LeBron James,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,41,Victor Wembanyama,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,42,Stephon Castle,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,43,Ja Morant,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,44,Desmond Bane,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,45,Jalen Green,Houston Rockets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,46,Amen Thompson,Houston Rockets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,47,Anthony Davis,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,48,Kyrie Irving,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,49,Dejounte Murray,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,50,CJ McCollum,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,51,Walker Kessler,Utah Jazz,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,52,Collin Sexton,Utah Jazz,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,53,Scoot Henderson,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,54,Anfernee Simons,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,55,Chet Holmgren,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,56,Shai Gilgeous-Alexander,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,57,Julius Randle,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,58,Anthony Edwards,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,59,Jamal Murray,Denver Nuggets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,60,Nikola Jokić,Denver Nuggets,false,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,61,Cooper Flagg,Dallas Mavericks,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,62,Dylan Harper,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,63,VJ Edgecombe,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,64,Kon Knueppel,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,65,Ace Bailey,Utah Jazz,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,66,Tre Johnson III,Washington Wizards,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,67,Jeremiah Fears,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,68,Egor Dëmin,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,69,Collin Murray-Boyles,Toronto Raptors,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,70,Khaman Maluach,Phoenix Suns,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,71,Cedric Coward,Memphis Grizzlies,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,72,Noa Essengue,Chicago Bulls,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,73,Derik Queen,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,74,Carter Bryant,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,75,Thomas Sorber,Oklahoma City Thunder,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,76,Yang Hansen,Portland Trail Blazers,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,77,Joan Beringer,Minnesota Timberwolves,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,78,Walter Clayton Jr.,Utah Jazz,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,79,Nolan Traore,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,80,Kasparas Jakučionis,Miami Heat,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,81,Will Riley,Washington Wizards,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,82,Drake Powell,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,83,Asa Newell,Atlanta Hawks,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,84,Nique Clifford,Sacramento Kings,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,85,Jase Richardson,Orlando Magic,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,86,Ben Saraf,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,87,Danny Wolf,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,88,Hugo González,Boston Celtics,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,89,Liam McNeeley,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,90,Yanic Konan-Niederhäuser,Los Angeles Clippers,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,91,Rasheer Fleming,Phoenix Suns,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,92,Adou Thiero,Los Angeles Lakers,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,93,Noah Penda,Orlando Magic,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,94,Ryan Kalkbrenner,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,95,Johni Broome,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,96,Alijah Martin,Toronto Raptors,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,97,Maxime Raynaud,Sacramento Kings,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,98,Tyrese Proctor,Cleveland Cavaliers,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,99,Kam Jones,Indiana Pacers,true,Base
+2025-26,2025-26-topps-midnight,Topps Midnight,100,Chaz Lanier,Detroit Pistons,true,Base

@@ -32,7 +32,8 @@ export interface Anomaly {
     | 'team_mismatch'
     | 'name_variant'
     | 'variation_without_base'
-    | 'suspicious_name';
+    | 'suspicious_name'
+    | 'rookies_inferred';
   number?: string;
   section?: string;
   line?: number;
@@ -58,17 +59,57 @@ export const GROUP_HEADERS = new Set(['BASE', 'INSERT', 'AUTOGRAPH', 'RELIC', 'A
 
 /** Current NBA teams plus legacy names that appear on retro cards. */
 export const KNOWN_TEAMS = [
-  'Atlanta Hawks', 'Boston Celtics', 'Brooklyn Nets', 'Charlotte Hornets', 'Chicago Bulls',
-  'Cleveland Cavaliers', 'Dallas Mavericks', 'Denver Nuggets', 'Detroit Pistons', 'Golden State Warriors',
-  'Houston Rockets', 'Indiana Pacers', 'Los Angeles Clippers', 'Los Angeles Lakers', 'Memphis Grizzlies',
-  'Miami Heat', 'Milwaukee Bucks', 'Minnesota Timberwolves', 'New Orleans Pelicans', 'New York Knicks',
-  'Oklahoma City Thunder', 'Orlando Magic', 'Philadelphia 76ers', 'Phoenix Suns', 'Portland Trail Blazers',
-  'Sacramento Kings', 'San Antonio Spurs', 'Toronto Raptors', 'Utah Jazz', 'Washington Wizards',
+  'Atlanta Hawks',
+  'Boston Celtics',
+  'Brooklyn Nets',
+  'Charlotte Hornets',
+  'Chicago Bulls',
+  'Cleveland Cavaliers',
+  'Dallas Mavericks',
+  'Denver Nuggets',
+  'Detroit Pistons',
+  'Golden State Warriors',
+  'Houston Rockets',
+  'Indiana Pacers',
+  'Los Angeles Clippers',
+  'Los Angeles Lakers',
+  'Memphis Grizzlies',
+  'Miami Heat',
+  'Milwaukee Bucks',
+  'Minnesota Timberwolves',
+  'New Orleans Pelicans',
+  'New York Knicks',
+  'Oklahoma City Thunder',
+  'Orlando Magic',
+  'Philadelphia 76ers',
+  'Phoenix Suns',
+  'Portland Trail Blazers',
+  'Sacramento Kings',
+  'San Antonio Spurs',
+  'Toronto Raptors',
+  'Utah Jazz',
+  'Washington Wizards',
   // legacy
-  'Seattle Supersonics', 'Seattle SuperSonics', 'New Jersey Nets', 'Vancouver Grizzlies', 'Washington Bullets',
-  'Charlotte Bobcats', 'New Orleans Hornets', 'Kansas City Kings', 'San Diego Clippers', 'Buffalo Braves',
-  'Philadelphia Warriors', 'Minneapolis Lakers', 'St. Louis Hawks', 'Cincinnati Royals', 'Syracuse Nationals',
-  'Baltimore Bullets', 'Capital Bullets', 'Rochester Royals', 'Fort Wayne Pistons', 'Chicago Zephyrs',
+  'Seattle Supersonics',
+  'Seattle SuperSonics',
+  'New Jersey Nets',
+  'Vancouver Grizzlies',
+  'Washington Bullets',
+  'Charlotte Bobcats',
+  'New Orleans Hornets',
+  'Kansas City Kings',
+  'San Diego Clippers',
+  'Buffalo Braves',
+  'Philadelphia Warriors',
+  'Minneapolis Lakers',
+  'St. Louis Hawks',
+  'Cincinnati Royals',
+  'Syracuse Nationals',
+  'Baltimore Bullets',
+  'Capital Bullets',
+  'Rochester Royals',
+  'Fort Wayne Pistons',
+  'Chicago Zephyrs',
 ];
 const TEAM_SET = new Set(KNOWN_TEAMS.map((t) => t.toLowerCase()));
 
@@ -151,10 +192,15 @@ export function variationNameOf(section: string): string | null {
     .join(' ');
 }
 
-/** A section is in MVP scope when it lists base cards or their variations. */
+/**
+ * A section is in MVP scope when it lists base cards or their variations. Inside the BASE
+ * group every plainly numbered subset is part of the base set: Topps names them "BASE CARDS",
+ * "BASE COMMON" / "BASE RARE" (Finest tiers) or by theme ("HIGHLIGHTS", "ALL STARS" in Hoops).
+ * Insert groups are never base.
+ */
 export function isBaseScope(group: string, section: string): boolean {
-  if (group === 'AUTOGRAPH' || group === 'RELIC' || group === 'AUTOGRAPH RELIC') return false;
-  return /^BASE CARDS?\b/.test(section) || /^COMBO CARDS\b/.test(section) || /^BASE\s+\w+.*VARIATION/.test(section);
+  if (group !== 'BASE') return false;
+  return true;
 }
 
 // Numbers: 1, 201, 12a, DD-1, TC-AB, C25-9, 8B-9, FRO-Rk
@@ -162,7 +208,11 @@ const ROW_RE = /^\s*([A-Z0-9]{1,6}-[A-Za-z0-9]{1,6}|\d{1,4}[A-Za-z]?)\s+(.+?)\s*
 const SECTION_RE = /^\s*([A-Z][A-Z0-9 &/()'.-]{3,})\s*$/;
 
 /** Parses pdftotext -layout output into rows, keeping group and section context. */
-export function parseChecklistText(text: string): { rows: ParsedRow[]; anomalies: Anomaly[]; sections: { group: string; section: string; rows: number }[] } {
+export function parseChecklistText(text: string): {
+  rows: ParsedRow[];
+  anomalies: Anomaly[];
+  sections: { group: string; section: string; rows: number }[];
+} {
   const rows: ParsedRow[] = [];
   const anomalies: Anomaly[] = [];
   const sections: { group: string; section: string; rows: number }[] = [];
@@ -172,7 +222,10 @@ export function parseChecklistText(text: string): { rows: ParsedRow[]; anomalies
 
   text.split(/\r?\n/).forEach((rawLine, index) => {
     // pdftotext emits form feeds and non-breaking spaces; treat both as plain whitespace.
-    const line = rawLine.replace(/\f/g, '').replace(/[\u00a0\u1680\u2000-\u200b\u202f\u205f\u3000\t]/g, ' ').trimEnd();
+    const line = rawLine
+      .replace(/\f/g, '')
+      .replace(/[\u00a0\u1680\u2000-\u200b\u202f\u205f\u3000\t]/g, ' ')
+      .trimEnd();
     if (!line.trim()) return;
     const lineNo = index + 1;
 
@@ -195,7 +248,16 @@ export function parseChecklistText(text: string): { rows: ParsedRow[]; anomalies
     }
     const m = ROW_RE.exec(line);
     if (!m) {
-      anomalies.push({ type: 'unparsable_row', section, line: lineNo, message: `Cannot parse: "${trimmed}"` });
+      // Only base-group rows matter: insert and autograph rows are out of scope, and the
+      // disclaimer lines before the first section are not rows at all. Keep the report short.
+      if (group === 'BASE' && section) {
+        anomalies.push({
+          type: 'unparsable_row',
+          section,
+          line: lineNo,
+          message: `Cannot parse: "${trimmed}"`,
+        });
+      }
       return;
     }
     const number = m[1]!;
@@ -207,7 +269,10 @@ export function parseChecklistText(text: string): { rows: ParsedRow[]; anomalies
     }
     let player: string;
     let team: string | null = null;
-    const cols = rest.split(/\s{2,}/).map((c) => c.trim()).filter(Boolean);
+    const cols = rest
+      .split(/\s{2,}/)
+      .map((c) => c.trim())
+      .filter(Boolean);
     if (cols.length >= 2) {
       player = cols[0]!;
       team = cols.slice(1).join(' ');
@@ -241,9 +306,27 @@ export function buildCards(parsed: ReturnType<typeof parseChecklistText>): Conve
   const inScope = parsed.sections.filter((s) => isBaseScope(s.group, s.section));
   for (const s of parsed.sections) if (!inScope.includes(s)) skipped.push(s);
 
-  // Pass 1: base sections (no variation name)
-  const baseOrder = inScope.filter((s) => variationNameOf(s.section) === null);
-  const variationOrder = inScope.filter((s) => variationNameOf(s.section) !== null);
+  // Pass 1: base sections. "BASE CARDS" is always base. Any other BASE-group subset whose
+  // numbers are all new (Hoops "HIGHLIGHTS" 261-300, Finest "BASE RARE" 201-300) is base too;
+  // a subset that repeats numbers already listed is a variation (Chrome "IMAGE VARIATION").
+  const rowsOf = (s: { group: string; section: string }) =>
+    parsed.rows.filter((r) => r.group === s.group && r.section === s.section);
+  const seenNumbers = new Set<string>();
+  const baseOrder: typeof inScope = [];
+  const variationOrder: typeof inScope = [];
+  for (const s of inScope) {
+    const numbers = rowsOf(s).map((r) => r.number);
+    const explicitVariation = /VARIATION/i.test(s.section);
+    const isBase =
+      variationNameOf(s.section) === null ||
+      (!explicitVariation && numbers.length > 0 && numbers.every((n) => !seenNumbers.has(n)));
+    if (isBase) {
+      baseOrder.push(s);
+      numbers.forEach((n) => seenNumbers.add(n));
+    } else {
+      variationOrder.push(s);
+    }
+  }
   baseSections = baseOrder.length;
   variationSections = variationOrder.length;
 
@@ -256,21 +339,56 @@ export function buildCards(parsed: ReturnType<typeof parseChecklistText>): Conve
 
   const checkRow = (r: ParsedRow): boolean => {
     const name = normalizePlayerName(r.player);
-    if (!/[a-z]/.test(name) || name.split(' ').length < 2 || /\d/.test(name) || /^[A-Z ]+$/.test(r.player.trim()) && r.player.trim().split(' ').length >= 3) {
-      anomalies.push({ type: 'non_player_row', number: r.number, section: r.section, line: r.line, message: `Not a player row, skipped for the MVP (team cards are not modeled): "${r.player}" (${r.team ?? 'no team'})` });
+    if (
+      !/[a-z]/.test(name) ||
+      name.split(' ').length < 2 ||
+      /\d/.test(name) ||
+      (/^[A-Z ]+$/.test(r.player.trim()) && r.player.trim().split(' ').length >= 3)
+    ) {
+      anomalies.push({
+        type: 'non_player_row',
+        number: r.number,
+        section: r.section,
+        line: r.line,
+        message: `Not a player row, skipped for the MVP (team cards are not modeled): "${r.player}" (${r.team ?? 'no team'})`,
+      });
       return false;
     }
     if (!r.team) {
-      anomalies.push({ type: 'unknown_team', number: r.number, section: r.section, line: r.line, message: `No team found for "${r.player}"` });
+      anomalies.push({
+        type: 'unknown_team',
+        number: r.number,
+        section: r.section,
+        line: r.line,
+        message: `No team found for "${r.player}"`,
+      });
     } else if (TEAM_ALIASES[r.team.toLowerCase()]) {
       const canonical = TEAM_ALIASES[r.team.toLowerCase()]!;
-      anomalies.push({ type: 'team_alias', number: r.number, section: r.section, line: r.line, message: `Team "${r.team}" normalized to "${canonical}" for "${r.player}"` });
+      anomalies.push({
+        type: 'team_alias',
+        number: r.number,
+        section: r.section,
+        line: r.line,
+        message: `Team "${r.team}" normalized to "${canonical}" for "${r.player}"`,
+      });
       r.team = canonical;
     } else if (!TEAM_SET.has(r.team.toLowerCase())) {
-      anomalies.push({ type: 'unknown_team', number: r.number, section: r.section, line: r.line, message: `Unknown team "${r.team}" for "${r.player}"` });
+      anomalies.push({
+        type: 'unknown_team',
+        number: r.number,
+        section: r.section,
+        line: r.line,
+        message: `Unknown team "${r.team}" for "${r.player}"`,
+      });
     }
     if (/[A-Z]{3,}/.test(stripSuffix(r.player)) && !/^[A-Z]{2}\b/.test(r.player)) {
-      anomalies.push({ type: 'suspicious_name', number: r.number, section: r.section, line: r.line, message: `Odd casing "${r.player}" normalized to "${name}"` });
+      anomalies.push({
+        type: 'suspicious_name',
+        number: r.number,
+        section: r.section,
+        line: r.line,
+        message: `Odd casing "${r.player}" normalized to "${name}"`,
+      });
     }
     return true;
   };
@@ -281,21 +399,45 @@ export function buildCards(parsed: ReturnType<typeof parseChecklistText>): Conve
       if (!checkRow(r)) continue;
       const player = normalizePlayerName(r.player);
       if (seen.has(r.number)) {
-        anomalies.push({ type: 'duplicate_in_section', number: r.number, section: r.section, line: r.line, message: `Number ${r.number} listed twice in ${r.section}` });
+        anomalies.push({
+          type: 'duplicate_in_section',
+          number: r.number,
+          section: r.section,
+          line: r.line,
+          message: `Number ${r.number} listed twice in ${r.section}`,
+        });
         continue;
       }
       seen.add(r.number);
       const existing = cards.get(r.number);
       if (existing) {
         if (slugify(existing.player) !== slugify(player)) {
-          anomalies.push({ type: 'player_mismatch', number: r.number, section: r.section, line: r.line, message: `#${r.number}: "${existing.player}" (first seen) vs "${player}" in ${r.section}` });
+          anomalies.push({
+            type: 'player_mismatch',
+            number: r.number,
+            section: r.section,
+            line: r.line,
+            message: `#${r.number}: "${existing.player}" (first seen) vs "${player}" in ${r.section}`,
+          });
         } else if ((existing.team ?? '') !== (r.team ?? '')) {
-          anomalies.push({ type: 'team_mismatch', number: r.number, section: r.section, line: r.line, message: `#${r.number} ${player}: "${existing.team}" vs "${r.team}" in ${r.section}` });
+          anomalies.push({
+            type: 'team_mismatch',
+            number: r.number,
+            section: r.section,
+            line: r.line,
+            message: `#${r.number} ${player}: "${existing.team}" vs "${r.team}" in ${r.section}`,
+          });
         }
         existing.rookie = existing.rookie || r.rookie;
         continue;
       }
-      cards.set(r.number, { number: r.number, player, team: r.team, rookie: r.rookie, parallels: ['Base'] });
+      cards.set(r.number, {
+        number: r.number,
+        player,
+        team: r.team,
+        rookie: r.rookie,
+        parallels: ['Base'],
+      });
       const key = slugify(stripSuffix(player));
       if (!seenNames.has(key)) seenNames.set(key, new Set());
       seenNames.get(key)!.add(player);
@@ -310,25 +452,56 @@ export function buildCards(parsed: ReturnType<typeof parseChecklistText>): Conve
       const player = normalizePlayerName(r.player);
       const card = cards.get(r.number);
       if (!card) {
-        anomalies.push({ type: 'variation_without_base', number: r.number, section: r.section, line: r.line, message: `#${r.number} ${player} appears in "${s.section}" but not in a base section` });
+        anomalies.push({
+          type: 'variation_without_base',
+          number: r.number,
+          section: r.section,
+          line: r.line,
+          message: `#${r.number} ${player} appears in "${s.section}" but not in a base section`,
+        });
         continue;
       }
       if (slugify(stripSuffix(card.player)) !== slugify(stripSuffix(player))) {
-        anomalies.push({ type: 'player_mismatch', number: r.number, section: r.section, line: r.line, message: `#${r.number}: base "${card.player}" vs "${player}" in ${s.section}` });
+        anomalies.push({
+          type: 'player_mismatch',
+          number: r.number,
+          section: r.section,
+          line: r.line,
+          message: `#${r.number}: base "${card.player}" vs "${player}" in ${s.section}`,
+        });
         continue;
       }
       if (slugify(card.player) !== slugify(player)) {
-        anomalies.push({ type: 'name_variant', number: r.number, section: r.section, line: r.line, message: `#${r.number}: "${card.player}" vs "${player}" in ${s.section} (kept the base spelling)` });
+        anomalies.push({
+          type: 'name_variant',
+          number: r.number,
+          section: r.section,
+          line: r.line,
+          message: `#${r.number}: "${card.player}" vs "${player}" in ${s.section} (kept the base spelling)`,
+        });
       }
       if (card.team && r.team && card.team.toLowerCase() !== r.team.toLowerCase()) {
-        anomalies.push({ type: 'team_mismatch', number: r.number, section: r.section, line: r.line, message: `#${r.number} ${card.player}: base "${card.team}" vs "${r.team}" in ${s.section} (kept the base team)` });
+        anomalies.push({
+          type: 'team_mismatch',
+          number: r.number,
+          section: r.section,
+          line: r.line,
+          message: `#${r.number} ${card.player}: base "${card.team}" vs "${r.team}" in ${s.section} (kept the base team)`,
+        });
       }
       if (!card.parallels.includes(variation)) card.parallels.push(variation);
     }
   }
 
-  const sorted = [...cards.values()].sort((a, b) => numberKey(a.number) - numberKey(b.number) || a.number.localeCompare(b.number));
-  return { cards: sorted, anomalies, skippedSections: skipped, stats: { baseSections, variationSections, rows: parsed.rows.length } };
+  const sorted = [...cards.values()].sort(
+    (a, b) => numberKey(a.number) - numberKey(b.number) || a.number.localeCompare(b.number),
+  );
+  return {
+    cards: sorted,
+    anomalies,
+    skippedSections: skipped,
+    stats: { baseSections, variationSections, rows: parsed.rows.length },
+  };
 }
 
 function numberKey(n: string): number {
@@ -348,7 +521,16 @@ export function toCsv(cards: CardOut[], opts: CsvOptions): string {
   const header = 'season,set_slug,set_name,card_number,player_name,team,is_rookie,parallels';
   const lines = cards.map((c) => {
     const parallels = [...c.parallels, ...(opts.numberedParallels ?? [])];
-    return [opts.season, opts.setSlug, opts.setName, c.number, c.player, c.team ?? '', String(c.rookie), parallels.join('|')]
+    return [
+      opts.season,
+      opts.setSlug,
+      opts.setName,
+      c.number,
+      c.player,
+      c.team ?? '',
+      String(c.rookie),
+      parallels.join('|'),
+    ]
       .map(csvCell)
       .join(',');
   });

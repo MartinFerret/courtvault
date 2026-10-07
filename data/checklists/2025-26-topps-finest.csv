@@ -1,0 +1,301 @@
+season,set_slug,set_name,card_number,player_name,team,is_rookie,parallels
+2025-26,2025-26-topps-finest,Topps Finest,1,Cooper Flagg,Dallas Mavericks,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,2,Dylan Harper,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,3,VJ Edgecombe,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,4,Kon Knueppel,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,5,Ace Bailey,Utah Jazz,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,6,Tre Johnson III,Washington Wizards,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,7,Jeremiah Fears,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,8,Egor Dëmin,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,9,Collin Murray-Boyles,Toronto Raptors,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,10,Khaman Maluach,Phoenix Suns,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,11,Cedric Coward,Memphis Grizzlies,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,12,Noa Essengue,Chicago Bulls,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,13,Derik Queen,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,14,Carter Bryant,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,15,Thomas Sorber,Oklahoma City Thunder,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,16,Yang Hansen,Portland Trail Blazers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,17,Joan Beringer,Minnesota Timberwolves,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,18,Walter Clayton Jr.,Utah Jazz,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,19,Nolan Traore,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,20,Kasparas Jakučionis,Miami Heat,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,21,Jayson Tatum,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,22,Jaylen Brown,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,23,Derrick White,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,24,Nic Claxton,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,25,Cam Thomas,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,26,Jalen Brunson,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,27,OG Anunoby,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,28,Josh Hart,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,29,Tyrese Maxey,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,30,Joel Embiid,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,31,Scottie Barnes,Toronto Raptors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,32,Immanuel Quickley,Toronto Raptors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,33,RJ Barrett,Toronto Raptors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,34,Josh Giddey,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,35,Nikola Vučević,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,36,Matas Buzelis,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,37,Cade Cunningham,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,38,Jalen Duren,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,39,Ausar Thompson,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,40,Tyrese Haliburton,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,41,Pascal Siakam,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,42,Andrew Nembhard,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,43,Giannis Antetokounmpo,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,44,Damian Lillard,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,45,Trae Young,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,46,Zaccharie Risacher,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,47,LaMelo Ball,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,48,Brandon Miller,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,49,Mark Williams,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,50,Tyler Herro,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,51,Kel'El Ware,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,52,Bam Adebayo,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,53,Donovan Mitchell,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,54,Darius Garland,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,55,Evan Mobley,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,56,Paolo Banchero,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,57,Franz Wagner,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,58,Bilal Coulibaly,Washington Wizards,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,59,Alex Sarr,Washington Wizards,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,60,Nikola Jokić,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,61,Jamal Murray,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,62,Russell Westbrook,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,63,Anthony Edwards,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,64,Naz Reid,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,65,Julius Randle,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,66,Shai Gilgeous-Alexander,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,67,Jalen Williams,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,68,Chet Holmgren,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,69,Scoot Henderson,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,70,Shaedon Sharpe,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,71,Lauri Markkanen,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,72,Kyle Filipowski,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,73,Jordan Clarkson,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,74,Stephen Curry,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,75,Jimmy Butler III,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,76,Draymond Green,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,77,Kawhi Leonard,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,78,James Harden,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,79,LeBron James,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,80,Austin Reaves,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,81,Luka Dončić,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,82,Devin Booker,Phoenix Suns,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,83,Kevin Durant,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,84,Bradley Beal,Phoenix Suns,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,85,DeMar DeRozan,Sacramento Kings,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,86,Zach Lavine,Sacramento Kings,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,87,Kyrie Irving,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,88,Anthony Davis,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,89,Klay Thompson,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,90,Jalen Green,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,91,Amen Thompson,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,92,Alperen Sengun,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,93,Ja Morant,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,94,Jaren Jackson Jr.,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,95,Desmond Bane,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,96,Trey Murphy III,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,97,Dejounte Murray,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,98,Victor Wembanyama,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,99,De'Aaron Fox,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,100,Stephon Castle,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,101,Cooper Flagg,Dallas Mavericks,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,102,Dylan Harper,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,103,VJ Edgecombe,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,104,Kon Knueppel,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,105,Ace Bailey,Utah Jazz,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,106,Tre Johnson III,Washington Wizards,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,107,Jeremiah Fears,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,108,Egor Dëmin,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,109,Collin Murray-Boyles,Toronto Raptors,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,110,Will Riley,Washington Wizards,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,111,Drake Powell,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,112,Asa Newell,Atlanta Hawks,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,113,Nique Clifford,Sacramento Kings,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,114,Jase Richardson,Orlando Magic,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,115,Ben Saraf,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,116,Danny Wolf,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,117,Hugo González,Boston Celtics,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,118,Liam McNeeley,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,119,Yanic Konan-Niederhäuser,Los Angeles Clippers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,120,Rasheer Fleming,Phoenix Suns,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,121,Noah Penda,Orlando Magic,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,122,Sion James,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,123,Ryan Kalkbrenner,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,124,Johni Broome,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,125,Adou Thiero,Los Angeles Lakers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,126,Buddy Hield,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,127,Chaz Lanier,Detroit Pistons,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,128,Kam Jones,Indiana Pacers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,129,Alijah Martin,Toronto Raptors,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,130,Micah Peavy,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,131,Koby Brea,Phoenix Suns,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,132,Maxime Raynaud,Sacramento Kings,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,133,Jamir Watkins,Washington Wizards,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,134,Brooks Barnhizer,Oklahoma City Thunder,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,135,Tyrese Proctor,Cleveland Cavaliers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,136,Jayson Tatum,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,137,Payton Pritchard,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,138,Cam Thomas,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,139,Karl-Anthony Towns,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,140,Jalen Brunson,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,141,Paul George,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,142,Gradey Dick,Toronto Raptors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,143,Coby White,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,144,Jaden Ivey,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,145,Cade Cunnigham,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,146,Bennedict Mathurin,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,147,Tyrese Haliburton,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,148,Giannis Antetokounmpo,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,149,Dyson Daniels,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,150,LaMelo Ball,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,151,Brandon Miller,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,152,Tyler Herro,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,153,Evan Mobley,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,154,Paolo Banchero,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,155,Jalen Suggs,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,156,Bub Carrington,Washington Wizards,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,157,Nikola Jokić,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,158,Anthony Edwards,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,159,Terrence Shannon Jr.,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,160,Shai Gilgeous-Alexander,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,161,Luguentz Dort,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,162,Isaiah Collier,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,163,Stephen Curry,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,164,Jonathan Kuminga,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,165,LeBron James,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,166,Bronny James Jr.,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,167,Devin Booker,Phoenix Suns,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,168,Bradley Beal,Phoenix Suns,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,169,Zach Lavine,Sacramento Kings,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,170,Malik Monk,Sacramento Kings,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,171,Kyrie Irving,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,172,Anthony Davis,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,173,Alperen Sengun,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,174,Reed Sheppard,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,175,Ja Morant,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,176,Jaren Jackson Jr.,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,177,Trey Murphy III,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,178,Dejounte Murray,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,179,Victor Wembanyama,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,180,De'Aaron Fox,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,181,Donovan Mitchell,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,182,Max Christie,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,183,Cameron Johnson,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,184,Matas Buzelis,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,185,Lauri Markkanen,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,186,Jordan Poole,Washington Wizards,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,187,Scoot Henderson,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,188,Deni Avdja,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,189,Aaron Gordon,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,190,Jared McCain,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,191,Allen Iverson,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,192,Larry Bird,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,193,Magic Johnson,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,194,Shaquille O'Neal,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,195,Dirk Nowitzki,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,196,Kevin Garnett,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,197,Carmelo Anthony,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,198,Dwyane Wade,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,199,Tracy McGrady,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,200,Ray Allen,Seattle Supersonics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,201,Cooper Flagg,Dallas Mavericks,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,202,Dylan Harper,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,203,VJ Edgecombe,Philadelphia 76ers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,204,Kon Knueppel,Charlotte Hornets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,205,Ace Bailey,Utah Jazz,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,206,Tre Johnson III,Washington Wizards,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,207,Jeremiah Fears,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,208,Egor Dëmin,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,209,Collin Murray-Boyles,Toronto Raptors,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,210,Khaman Maluach,Phoenix Suns,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,211,Cedric Coward,Memphis Grizzlies,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,212,Noa Essengue,Chicago Bulls,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,213,Derik Queen,New Orleans Pelicans,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,214,Carter Bryant,San Antonio Spurs,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,215,Thomas Sorber,Oklahoma City Thunder,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,216,Yang Hansen,Portland Trail Blazers,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,217,Joan Beringer,Minnesota Timberwolves,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,218,Walter Clayton Jr.,Utah Jazz,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,219,Nolan Traore,Brooklyn Nets,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,220,Kasparas Jakučionis,Miami Heat,true,Base
+2025-26,2025-26-topps-finest,Topps Finest,221,Jayson Tatum,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,222,Jaylen Brown,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,223,Derrick White,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,224,Jared McCain,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,225,Cam Thomas,Brooklyn Nets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,226,Jalen Brunson,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,227,OG Anunoby,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,228,Karl-Anthony Towns,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,229,Tyrese Maxey,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,230,Joel Embiid,Philadelphia 76ers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,231,Scottie Barnes,Toronto Raptors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,232,Immanuel Quickley,Toronto Raptors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,233,RJ Barrett,Toronto Raptors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,234,Josh Giddey,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,235,Nikola Vučević,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,236,Matas Buzelis,Chicago Bulls,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,237,Cade Cunningham,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,238,Jalen Duren,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,239,Ausar Thompson,Detroit Pistons,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,240,Tyrese Haliburton,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,241,Pascal Siakam,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,242,Andrew Nembhard,Indiana Pacers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,243,Giannis Antetokounmpo,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,244,Damian Lillard,Milwaukee Bucks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,245,Trae Young,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,246,Zaccharie Risacher,Atlanta Hawks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,247,LaMelo Ball,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,248,Brandon Miller,Charlotte Hornets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,249,Trey Murphy III,New Orleans Pelicans,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,250,Tyler Herro,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,251,Kel'El Ware,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,252,Bam Adebayo,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,253,Donovan Mitchell,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,254,Darius Garland,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,255,Evan Mobley,Cleveland Cavaliers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,256,Paolo Banchero,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,257,Franz Wagner,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,258,Bilal Coulibaly,Washington Wizards,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,259,Alex Sarr,Washington Wizards,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,260,Nikola Jokić,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,261,Jamal Murray,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,262,Russell Westbrook,Denver Nuggets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,263,Anthony Edwards,Minnesota Timberwolves,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,264,Victor Wembanyama,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,265,De'Aaron Fox,San Antonio Spurs,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,266,Shai Gilgeous-Alexander,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,267,Jalen Williams,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,268,Chet Holmgren,Oklahoma City Thunder,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,269,Scoot Henderson,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,270,Shaedon Sharpe,Portland Trail Blazers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,271,Lauri Markkanen,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,272,Kyle Filipowski,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,273,Jordan Clarkson,Utah Jazz,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,274,Stephen Curry,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,275,Jimmy Butler III,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,276,Draymond Green,Golden State Warriors,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,277,Kawhi Leonard,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,278,James Harden,Los Angeles Clippers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,279,LeBron James,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,280,Austin Reaves,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,281,Luka Dončić,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,282,Devin Booker,Phoenix Suns,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,283,Kevin Durant,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,284,Bradley Beal,Phoenix Suns,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,285,DeMar DeRozan,Sacramento Kings,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,286,Zach Lavine,Sacramento Kings,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,287,Kyrie Irving,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,288,Anthony Davis,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,289,Klay Thompson,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,290,Jalen Green,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,291,Amen Thompson,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,292,Alperen Sengun,Houston Rockets,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,293,Ja Morant,Memphis Grizzlies,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,294,Shaquille O'Neal,Los Angeles Lakers,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,295,Dirk Nowitzki,Dallas Mavericks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,296,Kevin Garnett,Boston Celtics,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,297,Carmelo Anthony,New York Knicks,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,298,Dwyane Wade,Miami Heat,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,299,Tracy McGrady,Orlando Magic,false,Base
+2025-26,2025-26-topps-finest,Topps Finest,300,Ray Allen,Seattle Supersonics,false,Base

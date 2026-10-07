@@ -2,9 +2,24 @@
 
 CSV files imported with `pnpm import:checklist <file>` (idempotent: re-running creates no duplicates).
 
-`2025-26-topps-basketball.csv` and `2025-26-topps-chrome.csv` are converted from the official
-Topps checklist PDFs with `pnpm convert:checklist` (see below). Each one has a companion
-`*.anomalies.md` report to review by hand. **Files prefixed `DEMO-` are demo data written by
+The 2025-26 Topps sets are converted from the official Topps checklist PDFs with
+`pnpm convert:checklist` (see below). Each one has a companion `*.anomalies.md` report to review
+by hand. Imported on 2026-10-07 (base cards, variations, rookies):
+
+| Set                           | Cards                                             | Rookies                                                         | Numbered parallels      |
+| ----------------------------- | ------------------------------------------------- | --------------------------------------------------------------- | ----------------------- |
+| 2025-26 Topps Basketball      | 300                                               | 50                                                              | yes (`parallels/`)      |
+| 2025-26 Topps Chrome          | 299                                               | 50                                                              | yes (`parallels/`)      |
+| 2025-26 Topps Chrome Updates  | 200                                               | 50                                                              | **missing** (Base only) |
+| 2025-26 Topps Hoops           | 300                                               | 47, inferred from the Chrome rookie list (no marker in the PDF) | **missing**             |
+| 2025-26 Topps Finest          | 300 (common 1-200, rare 201-300)                  | 74, inferred                                                    | **missing**             |
+| 2025-26 Topps Cosmic Chrome   | 199 (#48 absent from the PDF, #101 fixed by hand) | 46                                                              | **missing**             |
+| 2025-26 Topps Chrome Sapphire | 300                                               | 50                                                              | **missing**             |
+| 2025-26 Topps Midnight        | 100                                               | 40                                                              | **missing**             |
+
+Bowman: no PDF yet. Numbered parallels for the six new sets come from the Topps collector
+guides on ripped.topps.com (`parallels/<set_slug>.json`, then re-run the conversion and import).
+`--rookies-from <csv>` flags rookies from a sibling set when the PDF carries no marker. **Files prefixed `DEMO-` are demo data written by
 hand** (the 2026-27 set does not exist yet); players whose team is empty had not been drafted.
 
 ## Converting an official Topps checklist
