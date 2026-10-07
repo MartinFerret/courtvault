@@ -45,20 +45,21 @@ Google sign-in, Cloudflare Pages (web app comes with phase 2).
 
 ## 3. Indexing policy at launch (R25, R49, R55)
 
-The keyword volumes are not in, so most slugs are still pending. To keep every URL safe:
+Slugs were frozen on 2026-10-07. Indexing is quality-gated by the `page_index_status` view:
 
-| Page                                       | Path at launch                      | Indexed                                                                                    | In sitemap                           |
-| ------------------------------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------ |
-| Homepage                                   | `/`                                 | yes, provisional keyword "basketball card collection tracker" (title changes cost nothing) | yes, lastmod = latest nightly update |
-| Waitlist                                   | `/waitlist`                         | no (form, R55)                                                                             | no                                   |
-| Daily movers                               | `/last-night`, `/last-night/[date]` | no until the slug is frozen                                                                | no                                   |
-| Checklists, players, cards, rookie ranking | current paths                       | no until frozen                                                                            | no                                   |
-| Search                                     | `/search`                           | no                                                                                         | no                                   |
-| Legal                                      | `/legal/*`                          | yes                                                                                        | no (R49)                             |
+| Page | Path | Indexed when | Sitemap |
+| --- | --- | --- | --- |
+| Homepage | `/` | always | `sitemaps/pages.xml` |
+| Checklists | `/checklists/<set>-basketball` | the set has cards | `sitemaps/checklists.xml` |
+| Players | `/players/<name>-rookie-cards` or `-cards` | at least one card | `sitemaps/players.xml` |
+| Cards | `/cards/<set>-<player>-rookie-card-<n>` or `-card-<n>` | one parallel priced with 5+ listings | `sitemaps/cards.xml` |
+| Daily movers | `/trending-basketball-cards`, `/<date>` | a game night exists | `sitemaps/movers.xml` |
+| Rookie ranking | `/most-valuable-basketball-rookie-cards` | always | `sitemaps/pages.xml` |
+| Waitlist, search, legal | unchanged | never (R55) or indexable but out of the sitemap (R49) | - |
 
-Flip `NEXT_PUBLIC_SLUGS_FROZEN=true` on Netlify when the slugs are frozen: the pages become
-indexable and enter the sitemap without a deploy (ISR). Because nothing but the homepage is
-indexed before that, renaming a path then is free (R25: no positions, rename immediately).
+`/sitemap.xml` is the index; each child lists only indexable pages with the real lastmod of
+the data (R50). Pages below the threshold carry `noindex, follow` and enter the sitemap by
+themselves once they qualify (ISR, no deploy).
 
 ## 4. Pre-launch checklist from `docs/seo-rules.md`
 

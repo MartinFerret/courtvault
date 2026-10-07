@@ -38,7 +38,8 @@ export class PlayerPage {
     const { data } = await this.supabase.client
       .from('players')
       .select('id, name, slug, team, cards(id, slug, number, is_rookie, card_sets(name, season))')
-      .eq('slug', slug)
+      .or(`slug.eq.${slug},public_slug.eq.${slug}`)
+      .limit(1)
       .maybeSingle();
     this.player.set(data as PlayerView | null);
   }

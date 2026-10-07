@@ -3,15 +3,15 @@ import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { listSets } from '@/lib/data';
-import { pendingRobots } from '@/lib/site';
+import { checklistPath, PATHS } from '@/lib/paths';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  ...pendingRobots(),
-  title: 'Sets',
-  description: 'Every basketball card set in the catalog, by season, with checklists and values.',
-  alternates: { canonical: '/sets' },
+  title: 'Basketball Card Checklists: every Topps set, cards and values',
+  description:
+    'Every 2025-26 Topps basketball checklist in the catalog: base cards, rookie cards, parallels with print runs and median asking prices by grade.',
+  alternates: { canonical: PATHS.checklists },
 };
 
 export default async function SetsPage() {
@@ -21,13 +21,13 @@ export default async function SetsPage() {
       <Breadcrumbs
         items={[
           { name: 'Home', href: '/' },
-          { name: 'Sets', href: '/sets' },
+          { name: 'Checklists', href: PATHS.checklists },
         ]}
       />
-      <h1>Sets</h1>
+      <h1>Basketball card checklists</h1>
       <div className="grid">
         {sets.map((s) => (
-          <Link key={s.id} href={`/sets/${s.slug}`} className="card">
+          <Link key={s.id} href={checklistPath(s.public_slug)} className="card">
             <strong>
               {s.season} {s.name}
             </strong>

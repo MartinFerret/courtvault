@@ -58,7 +58,9 @@ export class CatalogService {
     const { data, error } = await this.supabase.client
       .from('cards')
       .select('id, slug, number, is_rookie, players(id, name, slug, team), card_sets(id, name, slug, season), parallels(id, name, serial_run)')
-      .eq(column, value)
+      // Website deep links carry the public slug, in-app links the internal one.
+      .or(column === 'slug' ? `slug.eq.${value},public_slug.eq.${value}` : `id.eq.${value}`)
+      .limit(1)
       .maybeSingle();
     if (error) throw error;
     if (!data || !data.players || !data.card_sets) return null;

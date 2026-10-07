@@ -53,6 +53,7 @@ export type Database = {
           created_at: string;
           id: string;
           name: string;
+          public_slug: string | null;
           release_date: string | null;
           season: string;
           slug: string;
@@ -61,6 +62,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           name: string;
+          public_slug?: string | null;
           release_date?: string | null;
           season: string;
           slug: string;
@@ -69,6 +71,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           name?: string;
+          public_slug?: string | null;
           release_date?: string | null;
           season?: string;
           slug?: string;
@@ -82,6 +85,7 @@ export type Database = {
           is_rookie: boolean;
           number: string;
           player_id: string;
+          public_slug: string | null;
           set_id: string;
           slug: string;
         };
@@ -91,6 +95,7 @@ export type Database = {
           is_rookie?: boolean;
           number: string;
           player_id: string;
+          public_slug?: string | null;
           set_id: string;
           slug: string;
         };
@@ -100,6 +105,7 @@ export type Database = {
           is_rookie?: boolean;
           number?: string;
           player_id?: string;
+          public_slug?: string | null;
           set_id?: string;
           slug?: string;
         };
@@ -532,6 +538,7 @@ export type Database = {
           highlightly_id: number | null;
           id: string;
           name: string;
+          public_slug: string | null;
           slug: string;
           team: string | null;
         };
@@ -540,6 +547,7 @@ export type Database = {
           highlightly_id?: number | null;
           id?: string;
           name: string;
+          public_slug?: string | null;
           slug: string;
           team?: string | null;
         };
@@ -548,6 +556,7 @@ export type Database = {
           highlightly_id?: number | null;
           id?: string;
           name?: string;
+          public_slug?: string | null;
           slug?: string;
           team?: string | null;
         };
@@ -802,6 +811,16 @@ export type Database = {
           },
         ];
       };
+      page_index_status: {
+        Row: {
+          id: string | null;
+          indexable: boolean | null;
+          kind: string | null;
+          lastmod: string | null;
+          public_slug: string | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       change_24h_cents: {
@@ -1025,6 +1044,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      refresh_public_slugs: { Args: Record<PropertyKey, never>; Returns: undefined };
       rookie_rankings: {
         Args: { p_limit?: number };
         Returns: {

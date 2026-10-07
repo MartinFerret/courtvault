@@ -35,6 +35,9 @@ async function main(): Promise<void> {
     const stats = await importRows(supabase, rows);
     console.log(`  sets ${stats.sets}, players ${stats.players}, cards ${stats.cards}, parallels ${stats.parallels}`);
   }
+  // Public URL slugs (website) derive from the imported rows.
+  const { error: slugError } = await supabase.rpc('refresh_public_slugs');
+  if (slugError) throw slugError;
 }
 
 type Client = SupabaseClient<Database>;

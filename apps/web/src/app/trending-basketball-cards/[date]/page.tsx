@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { PATHS, moversPath } from '@/lib/paths';
 import { notFound } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { LastNightView, lastNightTitle } from '@/components/last-night-page';
+import { cardPublicSlugMap, playerPublicSlugMap } from '@/lib/data';
 import { getLastNight, listLastNightDays } from '@/lib/last-night';
-import { pendingRobots } from '@/lib/site';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -28,10 +29,9 @@ export async function generateMetadata({
   const { date } = await params;
   if (!DAY.test(date)) return { title: 'Not found' };
   return {
-    ...pendingRobots(),
     title: lastNightTitle(date),
     description: `Biggest basketball card movers and performances of ${formatEasternDay(date)}: how median asking prices moved after the games.`,
-    alternates: { canonical: `/last-night/${date}` },
+    alternates: { canonical: moversPath(date) },
     openGraph: { type: 'article', title: lastNightTitle(date) },
   };
 }
@@ -45,5 +45,6 @@ export default async function LastNightArchivePage({
   if (!DAY.test(date)) notFound();
   const data = await getLastNight(date);
   if (!data || !data.day) notFound();
-  return <LastNightView data={data} day={data.day} />;
+  const [cards, players] = await Promise.all([cardPublicSlugMap(), playerPublicSlugMap()]);
+  return <LastNightView data={data} day={data.day} slugs={{ cards, players }} />;
 }

@@ -29,16 +29,9 @@ export const APPLE_APP_ID = process.env['NEXT_PUBLIC_APPLE_APP_ID'] ?? '';
 /** Deep link scheme handled by the app (Universal Links / App Links use the same paths). */
 export const APP_SCHEME = SHARED_APP_SCHEME;
 
-/**
- * Slugs are frozen only once the keyword volumes are in (R25). Until then every page except the
- * homepage and the legal pages is `noindex, follow` and stays out of the sitemap, so a later
- * rename costs nothing. Flip NEXT_PUBLIC_SLUGS_FROZEN=true at freeze time.
- */
-export const SLUGS_FROZEN = process.env['NEXT_PUBLIC_SLUGS_FROZEN'] === 'true';
-
-/** Spread into a page's metadata: `noindex` while its slug is still pending. */
-export function pendingRobots(): { robots?: { index: boolean; follow: boolean } } {
-  return SLUGS_FROZEN ? {} : { robots: { index: false, follow: true } };
+/** Robots meta from the quality gate (page_index_status): index when the page carries data. */
+export function robotsFor(indexable: boolean): { robots: { index: boolean; follow: boolean } } {
+  return { robots: { index: indexable, follow: true } };
 }
 
 /** Pages with no value of their own for search (R55): never indexed, never in the sitemap. */

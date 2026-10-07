@@ -11,21 +11,23 @@ import { FoilCard } from './foil-card';
 import { JsonLd } from './json-ld';
 import { absoluteUrl } from '@/lib/site';
 import type { LastNight, Mover, StatLine } from '@/lib/last-night';
+import { PATHS, cardPath, moversPath, playerPath } from '@/lib/paths';
 
 export function lastNightTitle(day: string): string {
-  return `Last night in the card market: ${formatEasternDay(day)}`;
+  // Keyword of the page (docs/keyword-map.csv): trending basketball cards.
+  return `Trending Basketball Cards: movers after ${formatEasternDay(day)}`;
 }
 
 function shortLine(l: StatLine): string {
   return `${l.points ?? 0} pts · ${l.rebounds ?? 0} reb · ${l.assists ?? 0} ast`;
 }
 
-function MoverCard({ m }: { m: Mover }) {
+function MoverCard({ m, slugs }: { m: Mover; slugs: SlugMaps }) {
   const cls = m.change_cents > 0 ? 'gain' : 'loss';
   return (
     <li>
       <FoilCard
-        href={`/cards/${m.card_slug}`}
+        href={cardPath(slugs.cards.get(m.card_slug) ?? m.card_slug)}
         number={m.card_number}
         player={m.player_name}
         setLabel={`${m.season} ${m.set_name}`}
@@ -47,7 +49,20 @@ function MoverCard({ m }: { m: Mover }) {
   );
 }
 
-export function LastNightView({ data, day }: { data: LastNight; day: string }) {
+export interface SlugMaps {
+  cards: Map<string, string>;
+  players: Map<string, string>;
+}
+
+export function LastNightView({
+  data,
+  day,
+  slugs,
+}: {
+  data: LastNight;
+  day: string;
+  slugs: SlugMaps;
+}) {
   const finals = data.games.filter((g) => g.home_score !== null && g.away_score !== null);
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -55,7 +70,7 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
     headline: lastNightTitle(day),
     datePublished: `${day}T13:00:00Z`,
     dateModified: data.after_at,
-    url: absoluteUrl(`/last-night/${day}`),
+    url: absoluteUrl(moversPath(day)),
     description: `How basketball card asking prices moved after the ${data.games.length} games of ${formatEasternDay(day)}: biggest gainers, biggest losers, performances of the night.`,
     about: data.performances.slice(0, 5).map((p) => ({ '@type': 'Person', name: p.player_name })),
   };
@@ -65,16 +80,12 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
 
       <header className="ln__hero">
         <p className="ln__eyebrow">
-          <Link href="/last-night">Last night</Link> · {formatEasternDay(day)}
+          <Link href={PATHS.movers}>Last night</Link> · {formatEasternDay(day)}
           {data.is_off_day && !data.requested_day ? (
             <span className="muted"> · no games last night, latest game night shown</span>
           ) : null}
         </p>
-        <h1 className="ln__title">
-          {data.games.length} game{data.games.length > 1 ? 's' : ''}.
-          <br />
-          {data.gainers.length + data.losers.length} cards moved.
-        </h1>
+        <h1 className="ln__title">Trending basketball cards after {formatEasternDay(day)}</h1>
         <ul className="ln__scores" aria-label="Final scores">
           {finals.map((g) => (
             <li key={g.id}>
@@ -88,7 +99,7 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
         </ul>
       </header>
 
-      <AppCta context="what last night did to YOUR collection" deepLink="/last-night" />
+      <AppCta context="what last night did to YOUR collection" deepLink={PATHS.movers} />
 
       <section className="ln__section">
         <div className="ln__movers">
@@ -99,7 +110,11 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
             ) : null}
             <ol className="ln__list">
               {data.gainers.map((m) => (
-                <MoverCard key={`${m.card_slug}-${m.parallel_name}-${m.grade}`} m={m} />
+                <MoverCard
+                  slugs={slugs}
+                  key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
+                  m={m}
+                />
               ))}
             </ol>
           </div>
@@ -110,7 +125,11 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
             ) : null}
             <ol className="ln__list">
               {data.losers.map((m) => (
-                <MoverCard key={`${m.card_slug}-${m.parallel_name}-${m.grade}`} m={m} />
+                <MoverCard
+                  slugs={slugs}
+                  key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
+                  m={m}
+                />
               ))}
             </ol>
           </div>
@@ -125,7 +144,10 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
               <div className="perf__rank">{i + 1}</div>
               <div className="perf__body">
                 <div className="perf__head">
-                  <Link href={`/players/${p.player_slug}`} className="perf__name">
+                  <Link
+                    href={playerPath(slugs.players.get(p.player_slug) ?? p.player_slug)}
+                    className="perf__name"
+                  >
                     {p.player_name}
                   </Link>
                   <span className="perf__game">
@@ -147,7 +169,7 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
                       <FoilCard
                         key={`${c.card_slug}-${c.parallel_name}-${c.grade}`}
                         compact
-                        href={`/cards/${c.card_slug}`}
+                        href={cardPath(slugs.cards.get(c.card_slug) ?? c.card_slug)}
                         number={c.card_number}
                         player={p.player_name}
                         setLabel={`${c.season} ${c.set_name}`}
@@ -176,7 +198,7 @@ export function LastNightView({ data, day }: { data: LastNight; day: string }) {
         </ol>
       </section>
 
-      <AppCta context="what last night did to YOUR collection" deepLink="/last-night" />
+      <AppCta context="what last night did to YOUR collection" deepLink={PATHS.movers} />
 
       <p className="ln__footnote">
         {PRICE_LABEL} from active eBay listings, not sold prices. Prices compared before tip-off and

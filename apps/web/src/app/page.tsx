@@ -9,11 +9,13 @@ import {
   formatParallel,
   formatUsd,
 } from '@courtvault/shared';
+import { checklistPublicSlug } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
 import { Delta, Price, PriceNote } from '@/components/price';
-import { listSets, rookieRankings } from '@/lib/data';
+import { cardPublicSlugMap, listSets, rookieRankings } from '@/lib/data';
+import { PATHS, cardPath, checklistPath, moversPath } from '@/lib/paths';
 import { getLastNight } from '@/lib/last-night';
 import {
   HOME_KEYWORD,
@@ -57,11 +59,13 @@ const NOT_DOING = [
 ];
 
 export default async function HomePage() {
-  const [rookies, sets, night] = await Promise.all([
+  const [rookies, sets, night, slugs] = await Promise.all([
     rookieRankings(6),
     listSets(),
     getLastNight().catch(() => null),
+    cardPublicSlugMap(),
   ]);
+  const card = (internal: string) => cardPath(slugs.get(internal) ?? internal);
   const cardCount = sets.reduce((n, s) => n + s.card_count, 0);
   const movers = night ? [...night.gainers.slice(0, 3), ...night.losers.slice(0, 2)] : [];
   const heroCards = rookies.slice(0, 3);
@@ -140,7 +144,7 @@ export default async function HomePage() {
             <Link className="button" href="/waitlist">
               Join the waitlist
             </Link>
-            <Link className="button secondary" href="/last-night">
+            <Link className="button secondary" href={PATHS.movers}>
               See last night&apos;s movers
             </Link>
           </div>
@@ -158,7 +162,7 @@ export default async function HomePage() {
             const foil = foilProps(i === 0 ? 'Refractor' : 'Base', null);
             return (
               <li key={r.card_id} className={`vault-tile ${foil.className}`} style={foil.style}>
-                <Link href={`/cards/${r.card_slug}`} className="vault-tile__link">
+                <Link href={card(r.card_slug)} className="vault-tile__link">
                   <span className="vault-tile__name">
                     #{r.card_number} {r.player_name} <span className="badge">RC</span>
                   </span>
@@ -187,7 +191,7 @@ export default async function HomePage() {
         <section className="section">
           <div className="section__head">
             <h2>What last night did to the market</h2>
-            <Link href="/last-night">All movers and box scores</Link>
+            <Link href={PATHS.movers}>All movers and box scores</Link>
           </div>
           <ul className="movers">
             {movers.map((m) => {
@@ -198,7 +202,7 @@ export default async function HomePage() {
                   className={`mover ${foil.className}`}
                   style={foil.style}
                 >
-                  <Link href={`/cards/${m.card_slug}`} className="mover__link">
+                  <Link href={card(m.card_slug)} className="mover__link">
                     <span className="mover__delta">
                       <Delta cents={m.change_cents} />
                       <span className={m.change_cents >= 0 ? 'gain' : 'loss'}>
@@ -244,7 +248,7 @@ export default async function HomePage() {
       <section className="section">
         <div className="section__head">
           <h2>Trending rookies</h2>
-          <Link href="/rankings/rookies">Full rookie rankings</Link>
+          <Link href={PATHS.rookies}>Full rookie rankings</Link>
         </div>
         <PriceNote />
         <div className="table-wrap">
@@ -261,13 +265,13 @@ export default async function HomePage() {
               {rookies.map((r) => (
                 <tr key={r.card_id}>
                   <td>
-                    <Link href={`/cards/${r.card_slug}`}>
+                    <Link href={card(r.card_slug)}>
                       #{r.card_number} {r.player_name}
                     </Link>{' '}
                     <span className="badge">RC</span>
                   </td>
                   <td>
-                    <Link href={`/sets/${r.set_slug}`}>
+                    <Link href={checklistPath(checklistPublicSlug(r.set_slug))}>
                       {r.season} {r.set_name}
                     </Link>
                   </td>
@@ -289,7 +293,7 @@ export default async function HomePage() {
           <h2>Checklists</h2>
           <div className="grid">
             {sets.map((s) => (
-              <Link key={s.id} href={`/sets/${s.slug}`} className="card">
+              <Link key={s.id} href={checklistPath(s.public_slug)} className="card">
                 <strong>
                   {s.season} {s.name}
                 </strong>

@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { searchCatalog } from '@/lib/data';
+import { cardPath, checklistPath, playerPath } from '@/lib/paths';
+import { checklistPublicSlug } from '@courtvault/shared';
 import { NOINDEX_ROBOTS } from '@/lib/site';
 
 export const dynamic = 'force-dynamic';
@@ -12,9 +14,10 @@ export const metadata: Metadata = {
 };
 
 const HREF: Record<string, (slug: string) => string> = {
-  player: (slug) => `/players/${slug}`,
-  set: (slug) => `/sets/${slug}`,
-  card: (slug) => `/cards/${slug}`,
+  // search_catalog returns internal slugs; players and cards resolve both, sets need the public form.
+  player: (slug) => playerPath(slug),
+  set: (slug) => checklistPath(checklistPublicSlug(slug)),
+  card: (slug) => cardPath(slug),
 };
 
 export default async function SearchPage({

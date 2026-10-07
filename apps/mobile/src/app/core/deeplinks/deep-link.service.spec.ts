@@ -15,6 +15,8 @@ describe('DeepLinkService', () => {
     expect(service.toRoute('http://localhost:3000/players/cooper-flagg')).toBe('/players/cooper-flagg');
     expect(service.toRoute('http://localhost:3000/rankings/rookies')).toBe('/tabs/sets');
     expect(service.toRoute('hoopticker://last-night')).toBe('/tabs/last-night');
+    expect(service.toRoute('https://hoopticker.com/checklists/2025-26-topps-chrome-basketball')).toBe('/sets/2025-26-topps-chrome-basketball');
+    expect(service.toRoute('https://hoopticker.com/trending-basketball-cards/2026-10-06')).toBe('/tabs/last-night');
   });
 
   it('ignores foreign and malformed urls', () => {

@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { formatParallel, GRADE_LABELS } from '@courtvault/shared';
+import { GRADE_LABELS, formatParallel } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
-import { getCard, listCardSlugs } from '@/lib/data';
-import { absoluteUrl, pendingRobots } from '@/lib/site';
+import { getCard, indexStatus, listCardSlugs } from '@/lib/data';
+import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
+import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -17,10 +19,19 @@ export async function generateStaticParams() {
     const cards = await listCardSlugs();
     return cards.map((c) => ({ slug: c.slug }));
   } catch (err) {
-    // No database at build time: pages are generated on demand (dynamicParams = true).
     console.warn(`generateStaticParams skipped: ${err instanceof Error ? err.message : err}`);
     return [];
   }
+}
+
+/** "<season> <set> <player> rookie card #<n>" (docs/keyword-map.csv). */
+function keyword(card: {
+  set: { season: string; name: string };
+  player: { name: string };
+  is_rookie: boolean;
+  number: string;
+}): string {
+  return `${card.set.season} ${card.set.name} ${card.player.name} ${card.is_rookie ? 'Rookie Card' : 'Card'} #${card.number}`;
 }
 
 export async function generateMetadata({
@@ -31,18 +42,20 @@ export async function generateMetadata({
   const { slug } = await params;
   const card = await getCard(slug);
   if (!card) return { title: 'Card not found' };
-  const title = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}${card.is_rookie ? ' RC' : ''} value`;
-  const parallels = card.parallels.map((p) => formatParallel(p.name, p.serial_run)).join(', ');
-  const description = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: median asking price by grade for ${parallels}.`;
+  const status = await indexStatus('card', card.public_slug);
+  const base = card.parallels
+    .find((p) => p.name === 'Base')
+    ?.prices.find((pr) => pr.grade === 'RAW');
+  const description = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: ${card.parallels.length} parallels with print runs, median asking prices raw, PSA 9 and PSA 10${base ? `, Base raw at $${(base.price_cents / 100).toFixed(2)}` : ''}.`;
   return {
-    ...pendingRobots(),
-    title,
+    ...robotsFor(status.indexable),
+    title: seoTitle(keyword(card), 'value by grade'),
     description:
-      description.length > 158
-        ? `${description.slice(0, 155).replace(/,[^,]*$/, '')}…`
+      description.length > 155
+        ? `${description.slice(0, 152).replace(/,[^,]*$/, '')}.`
         : description,
-    alternates: { canonical: `/cards/${card.slug}` },
-    openGraph: { title, type: 'website' },
+    alternates: { canonical: cardPath(card.public_slug) },
+    openGraph: { title: keyword(card), type: 'website' },
   };
 }
 
@@ -52,12 +65,20 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
   if (!card) notFound();
   const name = `${card.set.season} ${card.set.name} #${card.number} ${card.player.name}`;
   const allPrices = card.parallels.flatMap((p) => p.prices.map((pr) => pr.price_cents));
+  const priced = card.parallels.filter((p) => p.prices.length > 0);
+  const numbered = card.parallels.filter((p) => p.serial_run !== null);
+  const top = priced
+    .map((p) => ({ p, max: Math.max(...p.prices.map((pr) => pr.price_cents)) }))
+    .sort((a, b) => b.max - a.max)[0];
+  const base = card.parallels.find((p) => p.name === 'Base');
+  const baseRaw = base?.prices.find((pr) => pr.grade === 'RAW');
+  const basePsa10 = base?.prices.find((pr) => pr.grade === 'PSA10');
   const product = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name,
     description: `${card.player.name} basketball trading card, ${card.set.season} ${card.set.name}, card #${card.number}.`,
-    url: absoluteUrl(`/cards/${card.slug}`),
+    url: absoluteUrl(cardPath(card.public_slug)),
     category: 'Sports Trading Card Singles',
     ...(allPrices.length > 0
       ? {
@@ -82,21 +103,61 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
       <Breadcrumbs
         items={[
           { name: 'Home', href: '/' },
-          { name: 'Sets', href: '/sets' },
-          { name: `${card.set.season} ${card.set.name}`, href: `/sets/${card.set.slug}` },
-          { name: `#${card.number} ${card.player.name}`, href: `/cards/${card.slug}` },
+          { name: 'Checklists', href: PATHS.checklists },
+          {
+            name: `${card.set.season} ${card.set.name}`,
+            href: checklistPath(card.set.public_slug),
+          },
+          { name: `#${card.number} ${card.player.name}`, href: cardPath(card.public_slug) },
         ]}
       />
       <h1>
-        #{card.number} {card.player.name}{' '}
-        {card.is_rookie ? <span className="badge">RC</span> : null}
+        {card.set.season} {card.set.name} {card.player.name}{' '}
+        {card.is_rookie ? 'rookie card' : 'card'} #{card.number}
       </h1>
       <p className="muted">
-        <Link href={`/sets/${card.set.slug}`}>
-          {card.set.season} {card.set.name}
+        <Link href={checklistPath(card.set.public_slug)}>
+          {card.set.season} {card.set.name} checklist
         </Link>{' '}
-        · <Link href={`/players/${card.player.slug}`}>{card.player.name}</Link>
+        ·{' '}
+        <Link href={playerPath(card.player.public_slug)}>
+          {card.player.name} {card.is_rookie ? 'rookie cards' : 'cards'}
+        </Link>
         {card.player.team ? ` · ${card.player.team}` : ''}
+      </p>
+      <p className="lead">
+        {card.player.name}&apos;s {card.set.season} {card.set.name}{' '}
+        {card.is_rookie ? 'rookie card' : 'card'} #{card.number} has {card.parallels.length}{' '}
+        parallels, {numbered.length} of them numbered
+        {numbered.length > 0
+          ? ` (from /${Math.max(...numbered.map((p) => p.serial_run ?? 0))} down to ${numbered.some((p) => p.serial_run === 1) ? '1 of 1' : `/${Math.min(...numbered.map((p) => p.serial_run ?? 0))}`})`
+          : ''}
+        .
+        {baseRaw ? (
+          <>
+            {' '}
+            The Base parallel asks <Price cents={baseRaw.price_cents} /> raw
+            {basePsa10 ? (
+              <>
+                {' '}
+                and <Price cents={basePsa10.price_cents} /> in PSA 10
+              </>
+            ) : null}
+            .
+          </>
+        ) : null}
+        {top && top.p.name !== 'Base' ? (
+          <>
+            {' '}
+            The most valuable priced parallel is {formatParallel(
+              top.p.name,
+              top.p.serial_run,
+            )} at <Price cents={top.max} />.
+          </>
+        ) : null}
+        {priced.length === 0
+          ? ' No listing has been priced yet; values appear after the next nightly update.'
+          : ''}
       </p>
 
       <h2>Value by parallel and grade</h2>
@@ -116,9 +177,17 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
             {card.parallels.map((p) => {
               const byGrade = new Map(p.prices.map((pr) => [pr.grade, pr]));
               const buy = p.prices.find((pr) => pr.buy_url)?.buy_url;
+              const foil = foilProps(p.name, p.serial_run);
               return (
                 <tr key={p.id}>
-                  <td>{formatParallel(p.name, p.serial_run)}</td>
+                  <td>
+                    <span
+                      className={`foil-chip ${foil.className}`}
+                      style={foil.style}
+                      aria-hidden="true"
+                    />
+                    {formatParallel(p.name, p.serial_run)}
+                  </td>
                   <td className="num">
                     <Price cents={byGrade.get('RAW')?.price_cents} />
                   </td>
@@ -150,7 +219,7 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
 
       <AppCta
         context={`your ${card.player.name} #${card.number}`}
-        deepLink={`/cards/${card.slug}`}
+        deepLink={cardPath(card.public_slug)}
       />
     </>
   );

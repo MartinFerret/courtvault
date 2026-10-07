@@ -46,8 +46,9 @@ copy its checklists into PRs). Keyword map: `docs/keyword-map.csv` (source) and
 `docs/keyword-map.md` (generated). Architecture and slugs: `docs/site-architecture.md`.
 Full plan and decisions: `docs/plan-web-seo.md`. Minimal public launch (what Martin provides,
 what gets deployed, indexing policy while slugs are pending): `docs/launch-checklist.md`.
-Slugs are frozen with `NEXT_PUBLIC_SLUGS_FROZEN=true` on Netlify; before that only the homepage
-is indexable and in the sitemap. Push to GitHub at the end of every session.
+Slugs were frozen on 2026-10-07 (`public_slug` columns, `refresh_public_slugs()` after each
+import, `apps/web/src/lib/paths.ts`); indexing is quality-gated by the `page_index_status`
+view (sitemap index by type, robots meta). Push to GitHub at the end of every session.
 
 ## Vocabulary
 

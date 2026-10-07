@@ -1,8 +1,8 @@
 # Website architecture and slugs
 
-Draft 2026-10-07, phase 1 deliverable. Slugs are **pending** until the keyword volumes are
-in (decision 3 of 2026-10-07); nothing is renamed before Martin freezes them (R25). Pages
-derive from `docs/keyword-map.csv` (R7): no page without a row.
+Phase 1 deliverable, 2026-10-07. **Slugs frozen the same day** without Keyword Planner data (Martin's
+decision): the SERP data of the keyword map, Google autocomplete and the standard hobby search
+formats decided them. Pages derive from `docs/keyword-map.csv` (R7): no page without a row.
 
 ## Two hosts
 
@@ -55,10 +55,11 @@ their player page; guides on their hub.
 Wave counts (how many cards and players qualify) come from the `page_index_status` SQL view
 in phase 3 and are reported in that phase's summary.
 
-## Slugs: current vs proposed (R22 to R25)
+## Slugs: frozen 2026-10-07 (R22 to R25)
 
 The domain carries no keyword word, so the path must carry all of them (R22). No editorial
-or product-internal names (R23). Pending final volumes.
+or product-internal names (R23). Stored in `public_slug` columns (`refresh_public_slugs()` after
+every import); `apps/web/src/lib/paths.ts` builds the paths; the app mirrors them for deep links.
 
 | Page                               | Current                                                      | Proposed                                                                                                                                                         | Keyword words in the path                                                                                             |
 | ---------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |

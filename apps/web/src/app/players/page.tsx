@@ -3,15 +3,15 @@ import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { listPlayers } from '@/lib/data';
-import { pendingRobots } from '@/lib/site';
+import { PATHS, playerPath } from '@/lib/paths';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  ...pendingRobots(),
-  title: 'Players',
-  description: 'Basketball players in the catalog with their cards and values.',
-  alternates: { canonical: '/players' },
+  title: 'NBA Players and Their Cards: values by set and parallel',
+  description:
+    'Every player with a 2025-26 Topps basketball card: rookie cards and base cards, parallels with print runs, median asking prices by grade, recent box scores.',
+  alternates: { canonical: PATHS.players },
 };
 
 export default async function PlayersPage() {
@@ -21,13 +21,13 @@ export default async function PlayersPage() {
       <Breadcrumbs
         items={[
           { name: 'Home', href: '/' },
-          { name: 'Players', href: '/players' },
+          { name: 'Players', href: PATHS.players },
         ]}
       />
-      <h1>Players</h1>
+      <h1>NBA players and their cards</h1>
       <div className="grid">
         {players.map((p) => (
-          <Link key={p.id} href={`/players/${p.slug}`} className="card">
+          <Link key={p.id} href={playerPath(p.public_slug ?? p.slug)} className="card">
             <strong>{p.name}</strong>
             <br />
             <span className="muted small">{p.team ?? 'Team to be announced'}</span>

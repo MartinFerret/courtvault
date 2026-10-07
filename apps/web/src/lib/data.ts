@@ -4,6 +4,7 @@ import { supabase } from './supabase';
 export interface SetSummary {
   id: string;
   slug: string;
+  public_slug: string;
   name: string;
   season: string;
   release_date: string | null;
@@ -13,13 +14,14 @@ export interface SetSummary {
 export async function listSets(): Promise<SetSummary[]> {
   const { data, error } = await supabase()
     .from('card_sets')
-    .select('id, slug, name, season, release_date, cards(count)')
+    .select('id, slug, public_slug, name, season, release_date, cards(count)')
     .order('season', { ascending: false })
     .order('name');
   if (error) throw error;
   return (data ?? []).map((s) => ({
     id: s.id,
     slug: s.slug,
+    public_slug: s.public_slug ?? s.slug,
     name: s.name,
     season: s.season,
     release_date: s.release_date,
@@ -31,9 +33,9 @@ export async function getSet(slug: string) {
   const { data, error } = await supabase()
     .from('card_sets')
     .select(
-      'id, slug, name, season, release_date, cards(id, slug, number, is_rookie, players(name, slug, team))',
+      'id, slug, public_slug, name, season, release_date, cards(id, slug, public_slug, number, is_rookie, players(name, slug, public_slug, team))',
     )
-    .eq('slug', slug)
+    .eq('public_slug', slug)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
@@ -41,21 +43,30 @@ export async function getSet(slug: string) {
     data.cards as unknown as {
       id: string;
       slug: string;
+      public_slug: string;
       number: string;
       is_rookie: boolean;
-      players: { name: string; slug: string; team: string | null } | null;
+      players: { name: string; slug: string; public_slug: string; team: string | null } | null;
     }[]
   )
     .map((c) => ({ ...c, player: c.players }))
     .sort((a, b) => Number(a.number) - Number(b.number) || a.number.localeCompare(b.number));
   const base = await basePricesForCards(cards.map((c) => c.id));
-  return { ...data, cards: cards.map((c) => ({ ...c, base_cents: base.get(c.id) ?? null })) };
+  return {
+    ...data,
+    public_slug: data.public_slug ?? data.slug,
+    cards: cards.map((c) => ({
+      ...c,
+      public_slug: c.public_slug ?? c.slug,
+      base_cents: base.get(c.id) ?? null,
+    })),
+  };
 }
 
 export async function listPlayers() {
   const { data, error } = await supabase()
     .from('players')
-    .select('id, slug, name, team')
+    .select('id, slug, public_slug, name, team')
     .order('name');
   if (error) throw error;
   return data ?? [];
@@ -65,9 +76,9 @@ export async function getPlayer(slug: string) {
   const { data, error } = await supabase()
     .from('players')
     .select(
-      'id, slug, name, team, cards(id, slug, number, is_rookie, card_sets(name, slug, season))',
+      'id, slug, public_slug, name, team, cards(id, slug, public_slug, number, is_rookie, card_sets(name, slug, public_slug, season))',
     )
-    .eq('slug', slug)
+    .eq('public_slug', slug)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
@@ -75,9 +86,10 @@ export async function getPlayer(slug: string) {
     data.cards as unknown as {
       id: string;
       slug: string;
+      public_slug: string;
       number: string;
       is_rookie: boolean;
-      card_sets: { name: string; slug: string; season: string } | null;
+      card_sets: { name: string; slug: string; public_slug: string; season: string } | null;
     }[]
   )
     .map((c) => ({ ...c, set: c.card_sets }))
@@ -96,9 +108,56 @@ export async function getPlayer(slug: string) {
 }
 
 export async function listCardSlugs(): Promise<{ slug: string; updated: string | null }[]> {
-  const { data, error } = await supabase().from('cards').select('slug, created_at');
+  const { data, error } = await supabase().from('cards').select('public_slug, created_at');
   if (error) throw error;
-  return (data ?? []).map((c) => ({ slug: c.slug, updated: c.created_at }));
+  return (data ?? [])
+    .map((c) => ({ slug: c.public_slug ?? '', updated: c.created_at }))
+    .filter((c) => c.slug);
+}
+
+/** Internal card slug -> public slug, for lists that only carry the internal one (movers, rankings). */
+export async function cardPublicSlugMap(): Promise<Map<string, string>> {
+  const { data, error } = await supabase().from('cards').select('slug, public_slug');
+  if (error) throw error;
+  return new Map((data ?? []).map((c) => [c.slug, c.public_slug ?? c.slug]));
+}
+
+/** Internal player slug -> public slug. */
+export async function playerPublicSlugMap(): Promise<Map<string, string>> {
+  const { data, error } = await supabase().from('players').select('slug, public_slug');
+  if (error) throw error;
+  return new Map((data ?? []).map((p) => [p.slug, p.public_slug ?? p.slug]));
+}
+
+export type PageKind = 'checklist' | 'player' | 'card';
+
+/** Quality gate for one page (sitemap and robots meta). Unknown pages are not indexable. */
+export async function indexStatus(
+  kind: PageKind,
+  publicSlug: string,
+): Promise<{ indexable: boolean; lastmod: string | null }> {
+  const { data } = await supabase()
+    .from('page_index_status')
+    .select('indexable, lastmod')
+    .eq('kind', kind)
+    .eq('public_slug', publicSlug)
+    .maybeSingle();
+  return { indexable: data?.indexable ?? false, lastmod: data?.lastmod ?? null };
+}
+
+/** Every indexable page of a kind with its real lastmod (R49, R50). */
+export async function listIndexable(
+  kind: PageKind,
+): Promise<{ slug: string; lastmod: string | null }[]> {
+  const { data, error } = await supabase()
+    .from('page_index_status')
+    .select('public_slug, lastmod')
+    .eq('kind', kind)
+    .eq('indexable', true);
+  if (error) throw error;
+  return (data ?? [])
+    .filter((r) => r.public_slug)
+    .map((r) => ({ slug: r.public_slug as string, lastmod: r.lastmod }));
 }
 
 export interface CardPage {
@@ -106,8 +165,9 @@ export interface CardPage {
   slug: string;
   number: string;
   is_rookie: boolean;
-  player: { id: string; name: string; slug: string; team: string | null };
-  set: { id: string; name: string; slug: string; season: string };
+  public_slug: string;
+  player: { id: string; name: string; slug: string; public_slug: string; team: string | null };
+  set: { id: string; name: string; slug: string; public_slug: string; season: string };
   parallels: {
     id: string;
     name: string;
@@ -127,9 +187,9 @@ export async function getCard(slug: string): Promise<CardPage | null> {
   const { data, error } = await client
     .from('cards')
     .select(
-      'id, slug, number, is_rookie, players(id, name, slug, team), card_sets(id, name, slug, season), parallels(id, name, serial_run)',
+      'id, slug, public_slug, number, is_rookie, players(id, name, slug, public_slug, team), card_sets(id, name, slug, public_slug, season), parallels(id, name, serial_run)',
     )
-    .eq('slug', slug)
+    .eq('public_slug', slug)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
@@ -163,6 +223,7 @@ export async function getCard(slug: string): Promise<CardPage | null> {
   return {
     id: data.id,
     slug: data.slug,
+    public_slug: data.public_slug ?? data.slug,
     number: data.number,
     is_rookie: data.is_rookie,
     player,

@@ -5,7 +5,7 @@ import {
   SITE_DESCRIPTION,
   SITE_NAME,
   absoluteUrl,
-  pendingRobots,
+  robotsFor,
   seoTitle,
   siteUrl,
 } from './site';
@@ -27,7 +27,8 @@ describe('homepage SEO (R27, R33, R37)', () => {
   it('starts the title with the keyword', () => {
     expect(seoTitle(HOME_KEYWORD, HOME_PROMISE).startsWith(HOME_KEYWORD)).toBe(true);
   });
-  it('marks pending pages noindex until the slugs are frozen', () => {
-    expect(pendingRobots()).toEqual({ robots: { index: false, follow: true } });
+  it('maps the quality gate to the robots meta', () => {
+    expect(robotsFor(false)).toEqual({ robots: { index: false, follow: true } });
+    expect(robotsFor(true).robots.index).toBe(true);
   });
 });

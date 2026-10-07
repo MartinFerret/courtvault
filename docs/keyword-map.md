@@ -5,7 +5,7 @@ from it, do not edit the table by hand). US market, English only (R8, R89).
 
 ## How to read it
 
-- **Volume**: `TBD` everywhere. No volume was invented. Martin provides a Google Keyword
+- **Volume**: `TBD` everywhere. No volume was invented. Martin decided on 2026-10-07 to go without Keyword Planner data: slugs were frozen from the SERP data, Google autocomplete and the standard hobby formats. Earlier text: Martin provides a Google Keyword
   Planner export; volumes are merged into the CSV, then the main keyword of each row is
   re-checked against its variants (R6) and slugs are frozen (R25).
 - **SERP top 3**: read on 2026-10-07 in Google through Chrome with `gl=us&hl=en&pws=0`,

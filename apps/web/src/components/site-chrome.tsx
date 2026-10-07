@@ -1,11 +1,12 @@
 import Link from 'next/link';
+import { PATHS } from '@/lib/paths';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
 
 const NAV = [
-  { href: '/players', label: 'Players' },
-  { href: '/sets', label: 'Checklists' },
-  { href: '/rankings/rookies', label: 'Rookie rankings' },
-  { href: '/last-night', label: 'Last night' },
+  { href: PATHS.players, label: 'Players' },
+  { href: PATHS.checklists, label: 'Checklists' },
+  { href: PATHS.rookies, label: 'Rookie rankings' },
+  { href: PATHS.movers, label: 'Last night' },
 ];
 
 /** Sticky header: brand, the card-values pages, one action. Identical on every page (R46). */
