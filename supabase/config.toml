@@ -448,3 +448,18 @@ verify_jwt = false
 [auth.email.template.magic_link]
 subject = "Your sign-in code"
 content_path = "./supabase/templates/magic_link.html"
+
+# Production overrides for `supabase config push` (everything else comes from the sections above).
+[remotes.production]
+project_id = "lufpytmtwocqgooxedfx"
+
+[remotes.production.auth]
+site_url = "https://hoopticker.com"
+additional_redirect_urls = [
+  "https://hoopticker.com/**",
+  "https://vault.hoopticker.com/**",
+  "https://hoopticker.netlify.app/**",
+  "http://localhost:4200",
+  "http://localhost:3000",
+  "hoopticker://auth/callback",
+]
