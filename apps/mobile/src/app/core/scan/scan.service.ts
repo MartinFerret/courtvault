@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { TextRecognition } from '@capacitor-mlkit/text-recognition';
+import { environment } from '../../../environments/environment';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export interface ScanCandidate {
@@ -39,6 +40,8 @@ export interface CapturedPhoto {
   thumbnail: Blob;
   /** Path on device for native OCR, null in the browser. */
   nativePath: string | null;
+  /** Full-size image for browser OCR (webcam frame or uploaded photo), null on native. */
+  webImage: Blob | null;
 }
 
 /** Fake OCR text used in the browser or when the camera is unavailable. */
@@ -50,15 +53,36 @@ export const SIMULATED_OCR_SAMPLES = [
 ];
 
 /**
- * Scan flow: photo of the card back -> on-device OCR (ML Kit on native) -> scan-match.
- * In the browser (no camera plugin) the OCR step is simulated with sample texts.
+ * Scan flow: photo of the card back -> OCR -> scan-match. Native: ML Kit on device. Web:
+ * Tesseract.js, loaded only when a photo is actually scanned (R63), behind the web_scanner
+ * flag until its accuracy is measured. Dev builds without a photo fall back to sample texts.
  */
 @Injectable({ providedIn: 'root' })
 export class ScanService {
   private readonly supabase = inject(SupabaseService);
   readonly isNative = Capacitor.isNativePlatform();
   readonly lastText = signal<string>('');
+  readonly webScannerEnabled = signal(false);
+  /** OCR progress on the web (0..1), for the spinner label. */
+  readonly ocrProgress = signal(0);
   private sampleIndex = 0;
+
+  async loadFlags(): Promise<void> {
+    if (this.isNative) return;
+    const { data } = await this.supabase.client.rpc('web_scanner_enabled');
+    this.webScannerEnabled.set(!!data);
+  }
+
+  /** Browser: a webcam frame or an uploaded photo becomes a CapturedPhoto. */
+  async captureFromFile(file: Blob): Promise<CapturedPhoto> {
+    const url = URL.createObjectURL(file);
+    try {
+      const { dataUrl, blob } = await this.compress(url);
+      return { dataUrl, thumbnail: blob, nativePath: null, webImage: file };
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
 
   async capture(): Promise<CapturedPhoto | null> {
     if (!this.isNative) return null;
@@ -71,21 +95,41 @@ export class ScanService {
     });
     if (!photo.webPath) return null;
     const { dataUrl, blob } = await this.compress(photo.webPath);
-    return { dataUrl, thumbnail: blob, nativePath: photo.path ?? null };
+    return { dataUrl, thumbnail: blob, nativePath: photo.path ?? null, webImage: null };
   }
 
-  /** Runs OCR on the captured photo, or returns a simulated text in the browser. */
+  /** Runs OCR on the captured photo. Dev builds without a photo use a simulated text. */
   async recognize(photo: CapturedPhoto | null): Promise<string> {
     let text = '';
     if (this.isNative && photo?.nativePath) {
       const result = await TextRecognition.processImage({ path: photo.nativePath });
       text = result.text;
-    } else {
+    } else if (photo?.webImage) {
+      text = await this.recognizeInBrowser(photo.webImage);
+    } else if (!environment.production) {
       text = SIMULATED_OCR_SAMPLES[this.sampleIndex % SIMULATED_OCR_SAMPLES.length] ?? '';
       this.sampleIndex++;
     }
     this.lastText.set(text);
     return text;
+  }
+
+  /** Tesseract.js, English, loaded on demand (about 2 MB of worker and language data, cached). */
+  async recognizeInBrowser(image: Blob): Promise<string> {
+    this.ocrProgress.set(0);
+    const { createWorker } = await import('tesseract.js');
+    const worker = await createWorker('eng', 1, {
+      logger: (m: { status: string; progress: number }) => {
+        if (m.status === 'recognizing text') this.ocrProgress.set(m.progress);
+      },
+    });
+    try {
+      const { data } = await worker.recognize(image);
+      return data.text;
+    } finally {
+      await worker.terminate();
+      this.ocrProgress.set(0);
+    }
   }
 
   match(text: string): Promise<ScanResult> {
@@ -119,6 +163,10 @@ export class ScanService {
 
 function toBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
   return new Promise((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/jpeg', quality),
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error('toBlob failed'))),
+      'image/jpeg',
+      quality,
+    ),
   );
 }

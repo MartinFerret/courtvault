@@ -2,8 +2,18 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import {
-  IonButton, IonContent, IonIcon, IonInput, IonItem, IonLabel, IonList,
-  IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner,
+  IonButton,
+  IonContent,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
+  IonSpinner,
 } from '@ionic/angular';
 import { GRADES, formatParallel, parseLimitReached, type Grade } from '@courtvault/shared';
 import { CatalogService, type SearchResult } from '../../core/catalog/catalog.service';
@@ -11,9 +21,16 @@ import { CollectionService } from '../../core/collection/collection.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { PushService } from '../../core/push/push.service';
 import { ScanService, type CapturedPhoto, type ScanCandidate } from '../../core/scan/scan.service';
-import { CentsPipe, FoilClassPipe, FoilHuePipe, FoilSatPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
+import {
+  CentsPipe,
+  FoilClassPipe,
+  FoilHuePipe,
+  FoilSatPipe,
+  GradePipe,
+  ParallelPipe,
+} from '../../shared/pipes';
 
-type Step = 'idle' | 'scanning' | 'pick-card' | 'pick-parallel' | 'no-match';
+type Step = 'idle' | 'webcam' | 'scanning' | 'pick-card' | 'pick-parallel' | 'no-match';
 
 /**
  * Scan: photo -> OCR -> scan-match -> card -> parallel grid -> add. Burst mode keeps the
@@ -22,8 +39,26 @@ type Step = 'idle' | 'scanning' | 'pick-card' | 'pick-parallel' | 'no-match';
 @Component({
   selector: 'cv-scan',
   imports: [
-    FormsModule, RouterLink, IonButton, IonContent, IonIcon, IonList, IonItem, IonLabel,
-    IonNote, IonSearchbar, IonSegment, IonSegmentButton, IonSpinner, IonInput, CentsPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe,
+    FormsModule,
+    RouterLink,
+    IonButton,
+    IonContent,
+    IonIcon,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonNote,
+    IonSearchbar,
+    IonSegment,
+    IonSegmentButton,
+    IonSpinner,
+    IonInput,
+    CentsPipe,
+    ParallelPipe,
+    GradePipe,
+    FoilClassPipe,
+    FoilHuePipe,
+    FoilSatPipe,
   ],
   templateUrl: './scan.page.html',
 })
@@ -59,6 +94,74 @@ export class ScanPage {
   readonly manualBusy = signal(false);
 
   readonly selectedParallels = computed(() => this.selected()?.parallels ?? []);
+  private stream: MediaStream | null = null;
+
+  constructor() {
+    void this.scan.loadFlags();
+  }
+
+  /** Web: open the webcam in the page. Falls back to the photo upload when refused. */
+  async openWebcam(): Promise<void> {
+    this.error.set(null);
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1920 } },
+        audio: false,
+      });
+      this.step.set('webcam');
+      setTimeout(() => {
+        const video = document.querySelector<HTMLVideoElement>('video.cv-webcam__video');
+        if (video && this.stream) {
+          video.srcObject = this.stream;
+          void video.play();
+        }
+      });
+    } catch {
+      this.error.set('Camera unavailable. Upload a photo of the card back instead.');
+    }
+  }
+
+  closeWebcam(): void {
+    this.stream?.getTracks().forEach((t) => t.stop());
+    this.stream = null;
+    if (this.step() === 'webcam') this.step.set('idle');
+  }
+
+  /** Grabs the current webcam frame and runs the scan on it. */
+  async captureFrame(): Promise<void> {
+    const video = document.querySelector<HTMLVideoElement>('video.cv-webcam__video');
+    if (!video || !video.videoWidth) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d')?.drawImage(video, 0, 0);
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.92),
+    );
+    this.closeWebcam();
+    if (blob) await this.scanBlob(blob);
+  }
+
+  async onUpload(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    (event.target as HTMLInputElement).value = '';
+    if (file) await this.scanBlob(file);
+  }
+
+  /** Web scan: OCR in the browser, then the same matcher as native. */
+  async scanBlob(blob: Blob): Promise<void> {
+    this.error.set(null);
+    this.step.set('scanning');
+    try {
+      const photo = await this.scan.captureFromFile(blob);
+      this.photo.set(photo);
+      const text = await this.scan.recognize(photo);
+      await this.handleText(text);
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'Scan failed.');
+      this.step.set('no-match');
+    }
+  }
 
   async start(): Promise<void> {
     this.error.set(null);
@@ -67,27 +170,31 @@ export class ScanPage {
       const photo = await this.scan.capture();
       this.photo.set(photo);
       const text = await this.scan.recognize(photo);
-      this.ocrText.set(text);
-      if (!text.trim()) {
-        // OCR read nothing (blurry photo, no text): no server call, offer manual search.
-        this.candidates.set([]);
-        this.step.set('no-match');
-        return;
-      }
-      const result = await this.scan.match(text);
-      this.serialRead.set(result.signals.serial?.number ?? null);
-      this.serialNumber = result.signals.serial?.number ?? null;
-      this.candidates.set(result.candidates);
-      if (result.candidates.length === 0) {
-        this.step.set('no-match');
-      } else if (result.candidates.length === 1 || (result.candidates[0]?.score ?? 0) >= 80) {
-        this.pickCard(result.candidates[0]!);
-      } else {
-        this.step.set('pick-card');
-      }
+      await this.handleText(text);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Scan failed.');
       this.step.set('no-match');
+    }
+  }
+
+  private async handleText(text: string): Promise<void> {
+    this.ocrText.set(text);
+    if (!text.trim()) {
+      // OCR read nothing (blurry photo, no text): no server call, offer manual search.
+      this.candidates.set([]);
+      this.step.set('no-match');
+      return;
+    }
+    const result = await this.scan.match(text);
+    this.serialRead.set(result.signals.serial?.number ?? null);
+    this.serialNumber = result.signals.serial?.number ?? null;
+    this.candidates.set(result.candidates);
+    if (result.candidates.length === 0) {
+      this.step.set('no-match');
+    } else if (result.candidates.length === 1 || (result.candidates[0]?.score ?? 0) >= 80) {
+      this.pickCard(result.candidates[0]!);
+    } else {
+      this.step.set('pick-card');
     }
   }
 
@@ -108,7 +215,9 @@ export class ScanPage {
       });
       this.sessionCount.update((n) => n + 1);
       this.sessionCents.update((c) => c + (item.current_cents ?? 0));
-      this.sessionItems.update((list) => [{ label, cents: item.current_cents }, ...list].slice(0, 20));
+      this.sessionItems.update((list) =>
+        [{ label, cents: item.current_cents }, ...list].slice(0, 20),
+      );
       await this.push.requestAfterFirstScan();
       this.resetForNext();
     } catch (err) {
@@ -150,8 +259,16 @@ export class ScanPage {
     if (!card) return;
     this.pickCard({
       card: {
-        id: card.id, slug: card.slug, number: card.number, isRookie: card.is_rookie, playerId: card.player.id,
-        playerName: card.player.name, setId: card.set.id, setName: card.set.name, setSlug: card.set.slug, season: card.set.season,
+        id: card.id,
+        slug: card.slug,
+        number: card.number,
+        isRookie: card.is_rookie,
+        playerId: card.player.id,
+        playerName: card.player.name,
+        setId: card.set.id,
+        setName: card.set.name,
+        setSlug: card.set.slug,
+        season: card.set.season,
       },
       score: 0,
       reasons: ['manual'],
@@ -172,6 +289,7 @@ export class ScanPage {
   }
 
   onGrade(value: string | number | undefined): void {
-    if (typeof value === 'string' && (GRADES as readonly string[]).includes(value)) this.grade = value as Grade;
+    if (typeof value === 'string' && (GRADES as readonly string[]).includes(value))
+      this.grade = value as Grade;
   }
 }

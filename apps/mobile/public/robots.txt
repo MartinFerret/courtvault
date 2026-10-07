@@ -1,0 +1,3 @@
+# vault.hoopfolio.app is the logged-in web app: nothing to index (the public website is hoopfolio.app).
+User-agent: *
+Disallow: /

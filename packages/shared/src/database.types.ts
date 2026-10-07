@@ -1097,6 +1097,7 @@ export type Database = {
           value: number;
         }[];
       };
+      web_scanner_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
       within_photo_cap: { Args: { uid: string }; Returns: boolean };
     };
     Enums: {
