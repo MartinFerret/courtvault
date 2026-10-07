@@ -31,8 +31,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <SiteHeader />
-        <main className="container">{children}</main>
+        <main id="main" className="container">
+          {children}
+        </main>
         <SiteFooter />
       </body>
     </html>

@@ -1,10 +1,19 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { BRAND_TAGLINE, PRICING, formatParallel, formatUsd } from '@courtvault/shared';
+import {
+  BRAND_DIFFERENTIATOR,
+  BRAND_TAGLINE,
+  GRADE_LABELS,
+  PRICING,
+  formatParallel,
+  formatUsd,
+} from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
+import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
 import { Delta, Price, PriceNote } from '@/components/price';
 import { listSets, rookieRankings } from '@/lib/data';
+import { getLastNight } from '@/lib/last-night';
 import {
   HOME_KEYWORD,
   HOME_PROMISE,
@@ -24,8 +33,38 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
+const STEPS = [
+  {
+    title: 'Add your cards',
+    text: 'Search the catalog by player, set or number, scan on your phone, or import the spreadsheet you already keep.',
+  },
+  {
+    title: 'See what they are worth',
+    text: 'Every parallel and print run, Raw, PSA 9 and PSA 10, with the price history behind each number.',
+  },
+  {
+    title: 'Wake up to the box score',
+    text: 'Each morning: how your players played and what the night did to the value of your cards.',
+  },
+];
+
+const NOT_DOING = [
+  'NBA basketball only, starting with the 2025-26 Topps sets.',
+  'Asking prices from live listings, labeled as such. No sold-price promises.',
+  'No marketplace, no trading between users.',
+  'No official card images: the only photos are the ones you take, and they stay private.',
+];
+
 export default async function HomePage() {
-  const [rookies, sets] = await Promise.all([rookieRankings(10), listSets()]);
+  const [rookies, sets, night] = await Promise.all([
+    rookieRankings(6),
+    listSets(),
+    getLastNight().catch(() => null),
+  ]);
+  const cardCount = sets.reduce((n, s) => n + s.card_count, 0);
+  const movers = night ? [...night.gainers.slice(0, 3), ...night.losers.slice(0, 2)] : [];
+  const heroCards = rookies.slice(0, 3);
+
   return (
     <>
       <JsonLd
@@ -79,89 +118,189 @@ export default async function HomePage() {
           ],
         }}
       />
-      <h1>{HOME_KEYWORD}</h1>
-      <p className="muted">
-        {BRAND_TAGLINE} {SITE_DESCRIPTION}
-      </p>
-      <p className="muted small">
-        Free, with Premium at {formatUsd(PRICING.monthlyUsd)}/month or{' '}
-        {formatUsd(PRICING.yearlyUsd)}/year.
-      </p>
 
-      <form className="search-form" action="/search" method="get" role="search">
-        <label htmlFor="q" className="muted small" style={{ flexBasis: '100%' }}>
-          Search a player, a set or a card number
-        </label>
-        <input
-          id="q"
-          name="q"
-          type="search"
-          placeholder="Cooper Flagg, Topps Chrome, #3…"
-          required
-        />
-        <button className="button" type="submit">
-          Search
-        </button>
-      </form>
+      <section className="hero">
+        <div className="hero__copy">
+          <h1>{HOME_KEYWORD}</h1>
+          <p className="hero__lead">
+            {BRAND_TAGLINE} {BRAND_DIFFERENTIATOR}
+          </p>
+          <div className="hero__actions">
+            <Link className="button" href="/waitlist">
+              Join the waitlist
+            </Link>
+            <Link className="button secondary" href="/last-night">
+              See last night&apos;s movers
+            </Link>
+          </div>
+          <p className="muted small">
+            {cardCount.toLocaleString('en-US')} cards from {sets.length} Topps sets, priced every
+            night. Free, Premium at {formatUsd(PRICING.monthlyUsd)}/month or{' '}
+            {formatUsd(PRICING.yearlyUsd)}/year.
+          </p>
+        </div>
 
-      <h2>Trending rookies</h2>
-      <PriceNote />
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Card</th>
-              <th>Set</th>
-              <th className="num">Base, raw</th>
-              <th className="num">7 days</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rookies.map((r) => (
-              <tr key={r.card_id}>
-                <td>
-                  <Link href={`/cards/${r.card_slug}`}>
-                    #{r.card_number} {r.player_name}
-                  </Link>{' '}
-                  <span className="badge">RC</span>
-                </td>
-                <td>
-                  <Link href={`/sets/${r.set_slug}`}>
-                    {r.season} {r.set_name}
+        <div
+          className="vault-panel"
+          aria-label="Three rookie cards and their current asking prices"
+        >
+          <span className="watermark" aria-hidden="true">
+            Vault
+          </span>
+          <p className="vault-panel__title">Trending rookies, Base parallel, raw</p>
+          <ul className="vault-panel__list">
+            {heroCards.map((r, i) => {
+              const foil = foilProps(i === 0 ? 'Refractor' : 'Base', null);
+              return (
+                <li key={r.card_id} className={`vault-tile ${foil.className}`} style={foil.style}>
+                  <Link href={`/cards/${r.card_slug}`} className="vault-tile__link">
+                    <span className="vault-tile__name">
+                      #{r.card_number} {r.player_name} <span className="badge">RC</span>
+                    </span>
+                    <span className="muted small">
+                      {r.season} {r.set_name}
+                    </span>
+                    <span className="vault-tile__price">
+                      <Price cents={r.price_cents} />
+                    </span>
+                    <span className="small">
+                      <Delta cents={r.change_7d_cents} /> <span className="muted">7 days</span>
+                    </span>
                   </Link>
-                </td>
-                <td className="num">
-                  <Price cents={r.price_cents} />
-                </td>
-                <td className="num">
-                  <Delta cents={r.change_7d_cents} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p>
-        <Link href="/rankings/rookies">Full rookie rankings →</Link>
-      </p>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="vault-panel__note">Median asking prices, refreshed every night.</p>
+        </div>
+      </section>
 
-      <h2>Sets</h2>
-      <div className="grid">
-        {sets.map((s) => (
-          <Link key={s.id} href={`/sets/${s.slug}`} className="card">
-            <strong>
-              {s.season} {s.name}
-            </strong>
-            <br />
-            <span className="muted small">
-              {s.card_count} cards{s.release_date ? ` · released ${s.release_date}` : ''}
-            </span>
-          </Link>
-        ))}
-      </div>
-      <p className="muted small" style={{ marginTop: 8 }}>
-        Example: {formatParallel('Gold Refractor', 50)} means numbered to 50 copies.
-      </p>
+      {movers.length > 0 && night?.day ? (
+        <section className="section">
+          <div className="section__head">
+            <h2>What last night did to the market</h2>
+            <Link href="/last-night">All movers and box scores</Link>
+          </div>
+          <ul className="movers">
+            {movers.map((m) => {
+              const foil = foilProps(m.parallel_name, m.serial_run);
+              return (
+                <li
+                  key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
+                  className={`mover ${foil.className}`}
+                  style={foil.style}
+                >
+                  <Link href={`/cards/${m.card_slug}`} className="mover__link">
+                    <span className="mover__delta">
+                      <Delta cents={m.change_cents} />
+                      <span className={m.change_cents >= 0 ? 'gain' : 'loss'}>
+                        {' '}
+                        {m.change_pct > 0 ? '+' : ''}
+                        {m.change_pct}%
+                      </span>
+                    </span>
+                    <span className="mover__name">
+                      #{m.card_number} {m.player_name}
+                    </span>
+                    <span className="muted small">
+                      {formatParallel(m.parallel_name, m.serial_run)} · {GRADE_LABELS[m.grade]}
+                    </span>
+                    {m.line ? (
+                      <span className="small">
+                        {m.line.points} pts · {m.line.rebounds} reb · {m.line.assists} ast
+                      </span>
+                    ) : null}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : null}
+
+      <section className="section">
+        <h2>How it works</h2>
+        <ol className="steps">
+          {STEPS.map((step, i) => (
+            <li key={step.title} className="step">
+              <span className="step__n" aria-hidden="true">
+                {i + 1}
+              </span>
+              <h3>{step.title}</h3>
+              <p className="muted">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="section">
+        <div className="section__head">
+          <h2>Trending rookies</h2>
+          <Link href="/rankings/rookies">Full rookie rankings</Link>
+        </div>
+        <PriceNote />
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Card</th>
+                <th>Set</th>
+                <th className="num">Base, raw</th>
+                <th className="num">7 days</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rookies.map((r) => (
+                <tr key={r.card_id}>
+                  <td>
+                    <Link href={`/cards/${r.card_slug}`}>
+                      #{r.card_number} {r.player_name}
+                    </Link>{' '}
+                    <span className="badge">RC</span>
+                  </td>
+                  <td>
+                    <Link href={`/sets/${r.set_slug}`}>
+                      {r.season} {r.set_name}
+                    </Link>
+                  </td>
+                  <td className="num">
+                    <Price cents={r.price_cents} />
+                  </td>
+                  <td className="num">
+                    <Delta cents={r.change_7d_cents} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="section section--split">
+        <div>
+          <h2>Checklists</h2>
+          <div className="grid">
+            {sets.map((s) => (
+              <Link key={s.id} href={`/sets/${s.slug}`} className="card">
+                <strong>
+                  {s.season} {s.name}
+                </strong>
+                <span className="muted small">
+                  {s.card_count} cards{s.release_date ? ` · released ${s.release_date}` : ''}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="plain">
+          <h2>What we do not do</h2>
+          <ul className="plain__list">
+            {NOT_DOING.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       <AppCta />
     </>
