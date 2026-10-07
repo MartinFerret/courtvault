@@ -2530,3 +2530,300 @@ form.stack input {
     white-space: normal;
   }
 }
+
+/* ---------------------------------------------------------------------------------------
+   Last night: the differentiator, drawn. Game cards, performance bars, points-vs-value
+   scatter, diverging mover bars. */
+.facts--night {
+  margin-top: 16px;
+}
+.facts--night div {
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+}
+.facts--night dt {
+  color: inherit;
+  opacity: 0.65;
+}
+.games {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.game {
+  padding: 16px 18px 14px;
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-surface);
+}
+.game__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.game__team {
+  color: var(--cv-text-muted);
+  font-size: 0.95rem;
+}
+.game__team--won {
+  color: var(--cv-text);
+  font-weight: 600;
+}
+.game__score {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.game__bar {
+  display: flex;
+  gap: 3px;
+  height: 6px;
+  margin: 8px 0 10px;
+}
+.game__bar span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--cv-surface-2);
+}
+.game__bar .game__bar--won {
+  background: var(--cv-text);
+}
+.game__top {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--cv-text-muted);
+}
+.game__top a {
+  color: var(--cv-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pbars {
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pbar {
+  display: grid;
+  grid-template-columns: 28px 200px minmax(0, 1fr) 120px 150px;
+  align-items: center;
+  gap: 14px;
+}
+.pbar__rank {
+  color: var(--cv-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.pbar__who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pbar__who a {
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pbar__who .badge {
+  align-self: flex-start;
+}
+.pbar__track {
+  display: block;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--cv-surface-2);
+  overflow: hidden;
+}
+.pbar__fill {
+  display: block;
+  height: 100%;
+  background: var(--cv-text);
+  border-radius: 6px;
+}
+.pbar__fill--rookie {
+  background: var(--cv-primary);
+}
+.pbar__pts {
+  display: flex;
+  flex-direction: column;
+  font-variant-numeric: tabular-nums;
+}
+.pbar__pts strong {
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+}
+.pbar__move {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 860px) {
+  .pbar {
+    grid-template-columns: 22px minmax(0, 1fr) 90px;
+    grid-template-areas:
+      'rank who pts'
+      'rank track track'
+      'rank move move';
+    row-gap: 4px;
+  }
+  .pbar__rank {
+    grid-area: rank;
+  }
+  .pbar__who {
+    grid-area: who;
+  }
+  .pbar__track {
+    grid-area: track;
+    height: 14px;
+  }
+  .pbar__pts {
+    grid-area: pts;
+    text-align: right;
+  }
+  .pbar__move {
+    grid-area: move;
+    flex-direction: row;
+    gap: 8px;
+    align-items: baseline;
+  }
+}
+
+.pvv {
+  margin: 0;
+  padding: 16px 12px 8px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface);
+}
+.pvv__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: var(--cv-font);
+}
+.pvv__zero {
+  stroke: var(--cv-text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.pvv__axis {
+  stroke: var(--cv-surface-2);
+  stroke-width: 2;
+}
+.pvv__label {
+  font-size: 12px;
+  fill: var(--cv-text-muted);
+}
+.pvv__dot {
+  fill: var(--cv-text-muted);
+  opacity: 0.85;
+}
+.pvv__dot--up {
+  fill: var(--cv-gain);
+}
+.pvv__dot--down {
+  fill: var(--cv-loss);
+}
+.pvv__dot--rookie {
+  stroke: var(--cv-text);
+  stroke-width: 2;
+  fill: var(--cv-primary);
+}
+.pvv__name {
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--cv-text);
+}
+
+.mbars {
+  list-style: none;
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.mbar {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 150px;
+  align-items: center;
+  gap: 14px;
+}
+.mbar__who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  text-decoration: none;
+  font-weight: 600;
+}
+.mbar__track {
+  display: flex;
+  height: 18px;
+}
+.mbar__half {
+  display: flex;
+  flex: 1 1 0;
+  position: relative;
+}
+.mbar__half:first-child {
+  justify-content: flex-end;
+  border-right: 2px solid var(--cv-text-muted);
+}
+.mbar__fill {
+  display: block;
+  height: 100%;
+}
+.mbar__fill--gain {
+  background: var(--cv-gain);
+  border-radius: 0 6px 6px 0;
+}
+.mbar__fill--loss {
+  background: var(--cv-loss);
+  border-radius: 6px 0 0 6px;
+}
+.mbar__pct {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.mbar__pct .muted {
+  font-weight: 400;
+}
+@media (max-width: 860px) {
+  .mbar {
+    grid-template-columns: minmax(0, 1fr) 110px;
+    grid-template-areas:
+      'who pct'
+      'track track';
+    row-gap: 4px;
+  }
+  .mbar__who {
+    grid-area: who;
+  }
+  .mbar__track {
+    grid-area: track;
+    height: 12px;
+  }
+  .mbar__pct {
+    grid-area: pct;
+  }
+}

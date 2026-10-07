@@ -1,56 +1,19 @@
 import Link from 'next/link';
-import {
-  formatCents,
-  formatCentsDelta,
-  formatEasternDay,
-  formatPercent,
-  PRICE_LABEL,
-} from '@courtvault/shared';
+import { formatCents, formatEasternDay, PRICE_LABEL } from '@courtvault/shared';
 import { AppCta } from './app-cta';
-import { FoilCard } from './foil-card';
 import { JsonLd } from './json-ld';
 import { FreshnessLine } from './freshness';
 import { EmptyState } from './empty-state';
 import { NightPager } from './night-pager';
+import { GameCards, MoverBars, PerformanceBars, PointsVsValue } from './night-charts';
 import type { Freshness } from '@/lib/freshness';
 import { absoluteUrl } from '@/lib/site';
-import type { LastNight, Mover, StatLine } from '@/lib/last-night';
-import { PATHS, cardPath, moversPath, playerPath } from '@/lib/paths';
+import type { LastNight } from '@/lib/last-night';
+import { PATHS, moversPath } from '@/lib/paths';
 
 export function lastNightTitle(day: string): string {
   // Keyword of the page (docs/keyword-map.csv): trending basketball cards.
   return `Trending Basketball Cards: after ${formatEasternDay(day)}`;
-}
-
-function shortLine(l: StatLine): string {
-  return `${l.points ?? 0} pts · ${l.rebounds ?? 0} reb · ${l.assists ?? 0} ast`;
-}
-
-function MoverCard({ m, slugs }: { m: Mover; slugs: SlugMaps }) {
-  const cls = m.change_cents > 0 ? 'gain' : 'loss';
-  return (
-    <li>
-      <FoilCard
-        href={cardPath(slugs.cards.get(m.card_slug) ?? m.card_slug)}
-        number={m.card_number}
-        player={m.player_name}
-        setLabel={`${m.season} ${m.set_name}`}
-        parallelName={m.parallel_name}
-        serialRun={m.serial_run}
-        grade={m.grade}
-        isRookie={m.is_rookie}
-        footer={
-          <>
-            <span className={`mover__pct ${cls}`}>{formatPercent(m.change_pct)}</span>
-            <span className="mover__prices">
-              {formatCents(m.before_cents)} → {formatCents(m.after_cents)}
-            </span>
-            {m.line ? <span className="mover__stat">{shortLine(m.line)}</span> : null}
-          </>
-        }
-      />
-    </li>
-  );
 }
 
 export interface SlugMaps {
@@ -91,135 +54,81 @@ export function LastNightView({
           <Link href={PATHS.movers}>Last night</Link>, {formatEasternDay(day)}
           {data.is_preseason ? <span className="tag">Preseason</span> : null}
           {data.is_off_day && !data.requested_day ? (
-            <span className="muted"> · no games last night, latest game night shown</span>
+            <span className="muted"> (no games last night, latest game night shown)</span>
           ) : null}
         </p>
         <h1 className="ln__title">Trending basketball cards after {formatEasternDay(day)}</h1>
         <FreshnessLine data={freshness} />
-        <ul className="ln__scores" aria-label="Final scores">
-          {finals.map((g) => (
-            <li key={g.id}>
-              <span>{g.away_team}</span>
-              <strong>{g.away_score}</strong>
-              <span className="ln__at">at</span>
-              <span>{g.home_team}</span>
-              <strong>{g.home_score}</strong>
-            </li>
-          ))}
-        </ul>
+        <dl className="facts facts--night">
+          <div>
+            <dd>{finals.length}</dd>
+            <dt>games</dt>
+          </div>
+          <div>
+            <dd>{data.performances.length}</dd>
+            <dt>top lines tracked</dt>
+          </div>
+          {freshness?.priced_cards ? (
+            <>
+              <div>
+                <dd>{data.gainers.length}</dd>
+                <dt>cards up</dt>
+              </div>
+              <div>
+                <dd>{data.losers.length}</dd>
+                <dt>cards down</dt>
+              </div>
+            </>
+          ) : null}
+        </dl>
       </header>
 
-      <div className="ln__grid">
-        <div className="ln__col">
-          <section className="ln__section ln__section--perf">
-            <h2 className="ln__h2">Performances of the night</h2>
-            <ol className="ln__perf">
-              {data.performances.map((p, i) => (
-                <li key={p.player_slug} id={p.player_slug} className="perf">
-                  <div className="perf__rank">{i + 1}</div>
-                  <div className="perf__body">
-                    <div className="perf__head">
-                      <Link
-                        href={playerPath(slugs.players.get(p.player_slug) ?? p.player_slug)}
-                        className="perf__name"
-                      >
-                        {p.player_name}
-                      </Link>
-                      <span className="perf__game">
-                        {p.away_team} {p.away_score}–{p.home_score} {p.home_team}
-                      </span>
-                    </div>
-                    <div className="perf__stats">
-                      <span className="perf__big">{p.points ?? 0}</span>
-                      <span className="perf__label">pts</span>
-                      <span className="perf__sep" />
-                      <span>{p.rebounds ?? 0} reb</span>
-                      <span>{p.assists ?? 0} ast</span>
-                      <span>{p.steals ?? 0} stl</span>
-                      <span>{p.blocks ?? 0} blk</span>
-                    </div>
-                    {p.top_cards.length > 0 ? (
-                      <div className="foil-row">
-                        {p.top_cards.map((c) => (
-                          <FoilCard
-                            key={`${c.card_slug}-${c.parallel_name}-${c.grade}`}
-                            compact
-                            href={cardPath(slugs.cards.get(c.card_slug) ?? c.card_slug)}
-                            number={c.card_number}
-                            player={p.player_name}
-                            setLabel={`${c.season} ${c.set_name}`}
-                            parallelName={c.parallel_name}
-                            serialRun={c.serial_run}
-                            grade={c.grade}
-                            isRookie={c.is_rookie}
-                            footer={
-                              <>
-                                <span className="mono">{formatCents(c.after_cents)}</span>
-                                {c.change_cents ? (
-                                  <span className={`mono ${c.change_cents > 0 ? 'gain' : 'loss'}`}>
-                                    {' '}
-                                    {formatCentsDelta(c.change_cents)}
-                                  </span>
-                                ) : null}
-                              </>
-                            }
-                          />
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
+      <section className="ln__section">
+        <h2 className="ln__h2">The games</h2>
+        <GameCards data={data} slugs={slugs} />
+      </section>
+
+      <section className="ln__section">
+        <div className="section__head">
+          <h2 className="ln__h2">Who showed up</h2>
+          <span className="muted small">
+            Points scored, and what the reference card asks this morning
+          </span>
         </div>
-        <div className="ln__col">
-          <section className="ln__section">
-            <div className="ln__movers">
-              <div>
-                <h2 className="ln__h2 gain">Up after the games</h2>
-                {data.gainers.length === 0 ? (
-                  <EmptyState
-                    title={
-                      freshness?.priced_cards
-                        ? 'Nothing moved up enough to list.'
-                        : 'Movers start with the regular season.'
-                    }
-                  >
-                    {freshness?.priced_cards
-                      ? `A mover needs ${data.thresholds.min_sample_size} listings and a change since tip-off.`
-                      : 'Box scores are in; asking prices are compared before tip-off and the next morning once cards are priced.'}
-                  </EmptyState>
-                ) : null}
-                <ol className="ln__list">
-                  {data.gainers.map((m) => (
-                    <MoverCard
-                      slugs={slugs}
-                      key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
-                      m={m}
-                    />
-                  ))}
-                </ol>
-              </div>
-              <div hidden={!freshness?.priced_cards && data.losers.length === 0}>
-                <h2 className="ln__h2 loss">Down after the games</h2>
-                {data.losers.length === 0 && freshness?.priced_cards ? (
-                  <EmptyState title="Nothing moved down enough to list." />
-                ) : null}
-                <ol className="ln__list">
-                  {data.losers.map((m) => (
-                    <MoverCard
-                      slugs={slugs}
-                      key={`${m.card_slug}-${m.parallel_name}-${m.grade}`}
-                      m={m}
-                    />
-                  ))}
-                </ol>
-              </div>
-            </div>
-          </section>
+        <PerformanceBars data={data} slugs={slugs} />
+      </section>
+
+      {freshness?.priced_cards ? (
+        <section className="ln__section">
+          <h2 className="ln__h2">Points against card value, same night</h2>
+          <PointsVsValue data={data} slugs={slugs} />
+          {data.performances.every((p) => p.top_cards.length === 0) ? (
+            <EmptyState title="No priced card among the players who played." />
+          ) : null}
+        </section>
+      ) : null}
+
+      <section className="ln__section">
+        <div className="section__head">
+          <h2 className="ln__h2">What moved since tip-off</h2>
+          <span className="muted small">Asking prices before the games and this morning</span>
         </div>
-      </div>
+        {data.gainers.length + data.losers.length > 0 ? (
+          <MoverBars gainers={data.gainers} losers={data.losers} slugs={slugs} />
+        ) : (
+          <EmptyState
+            title={
+              freshness?.priced_cards
+                ? 'Nothing moved enough to list.'
+                : 'Movers start with the regular season.'
+            }
+          >
+            {freshness?.priced_cards
+              ? `A mover needs ${data.thresholds.min_sample_size} listings and a change since tip-off.`
+              : 'Box scores are in; asking prices are compared before tip-off and the next morning once cards are priced.'}
+          </EmptyState>
+        )}
+      </section>
 
       <NightPager days={days} current={day} />
 
