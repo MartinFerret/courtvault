@@ -186,14 +186,24 @@ export function PointsVsValue({ data, slugs }: { data: LastNight; slugs: SlugMap
             className={`pvv__dot${pt.pct > 0 ? ' pvv__dot--up' : pt.pct < 0 ? ' pvv__dot--down' : ''}${pt.p.is_rookie ? ' pvv__dot--rookie' : ''}`}
           />
         ))}
-        {labelled.map((pt) => (
-          <text
-            key={`l-${pt.p.player_slug}`}
-            x={x(pts(pt.p)) + 9}
-            y={y(pt.pct) - 8}
-            className="pvv__name"
-          >
-            {pt.p.player_name}
+        {labelled.map((pt) => {
+          const right = x(pts(pt.p)) > SW * 0.7;
+          return (
+            <text
+              key={`l-${pt.p.player_slug}`}
+              x={right ? x(pts(pt.p)) - 10 : x(pts(pt.p)) + 10}
+              y={y(pt.pct) - 9}
+              textAnchor={right ? 'end' : 'start'}
+              className="pvv__name"
+            >
+              {pt.p.player_name}
+            </text>
+          );
+        })}
+        <line x1={SP.l} x2={SW - SP.r} y1={SH - SP.b} y2={SH - SP.b} className="pvv__axis" />
+        {[0, Math.round(maxPts / 2), maxPts].map((v) => (
+          <text key={v} x={x(v)} y={SH - SP.b + 16} textAnchor="middle" className="pvv__label">
+            {v}
           </text>
         ))}
       </svg>

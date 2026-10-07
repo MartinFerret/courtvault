@@ -69,16 +69,10 @@ export function LastNightView({
             <dt>top lines tracked</dt>
           </div>
           {freshness?.priced_cards ? (
-            <>
-              <div>
-                <dd>{data.gainers.length}</dd>
-                <dt>cards up</dt>
-              </div>
-              <div>
-                <dd>{data.losers.length}</dd>
-                <dt>cards down</dt>
-              </div>
-            </>
+            <div>
+              <dd>{freshness.priced_cards}</dd>
+              <dt>cards with a value</dt>
+            </div>
           ) : null}
         </dl>
       </header>
