@@ -1,5 +1,10 @@
 {
   "cards": {
+    "2025-26-topps-basketball-shai-gilgeous-alexander-card-115": {
+      "parallels": {},
+      "width": 731,
+      "height": 1024
+    },
     "2025-26-topps-chrome-victor-wembanyama-card-221": {
       "parallels": {
         "black-refractor": {
@@ -44,6 +49,20 @@
     }
   },
   "gallery": {
+    "2025-26-topps-basketball": [
+      {
+        "name": "brandon-miller-woven-wonders-relic-1-of-1",
+        "caption": "Brandon Miller, Woven Wonders Relics, player-worn jersey, 1 of 1",
+        "width": 720,
+        "height": 1011
+      },
+      {
+        "name": "nikola-jokic-mvp-vault",
+        "caption": "Nikola Jokić, MVP Vault insert",
+        "width": 720,
+        "height": 1009
+      }
+    ],
     "2025-26-topps-chrome": [
       {
         "name": "cedric-coward-rookie-autograph-blue-150",

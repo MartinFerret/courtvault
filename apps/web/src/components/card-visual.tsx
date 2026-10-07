@@ -1,31 +1,24 @@
 import Image from 'next/image';
-import { formatParallel } from '@courtvault/shared';
 import { cardImage } from '@/lib/images';
-import { foilProps } from './foil';
 
 /**
  * The visual of one card: the official Topps image when we have it (exact card, exact parallel),
- * the foil frame otherwise. Explicit size, lazy unless `priority`.
+ * nothing otherwise. Explicit size, lazy unless `priority`.
  */
 export function CardVisual({
   publicSlug,
   name,
-  number,
   parallelName = 'Base',
-  serialRun = null,
-  isRookie = false,
-  player,
-  setLabel,
   size = 'medium',
   priority = false,
 }: {
   publicSlug: string;
   name: string;
-  number: string;
+  /** Kept by callers for the alt text and future frames; not drawn. */
+  number?: string;
   parallelName?: string;
   serialRun?: number | null;
   isRookie?: boolean;
-  /** Written on the fallback frame (medium and large): the player, then the set. */
   player?: string;
   setLabel?: string;
   size?: 'thumb' | 'medium' | 'large';
@@ -49,23 +42,6 @@ export function CardVisual({
       />
     );
   }
-  const foil = foilProps(parallelName, serialRun);
-  return (
-    <span
-      className={`card-visual card-visual--${size} card-visual--frame ${foil.className}`}
-      style={foil.style}
-      role="img"
-      aria-label={name}
-    >
-      <span className="card-visual__number">#{number}</span>
-      {isRookie ? <span className="card-visual__rc">RC</span> : null}
-      {size !== 'thumb' && player ? (
-        <span className="card-visual__name">
-          <strong>{player}</strong>
-          {setLabel ? <small>{setLabel}</small> : null}
-        </span>
-      ) : null}
-      <span className="card-visual__parallel">{formatParallel(parallelName, serialRun)}</span>
-    </span>
-  );
+  // No official image for this exact card and parallel: nothing is drawn, no placeholder.
+  return null;
 }

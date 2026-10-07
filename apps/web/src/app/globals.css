@@ -3158,3 +3158,26 @@ form.stack input {
 .set-visual--image {
   box-shadow: 0 16px 36px rgba(18, 20, 23, 0.22);
 }
+
+/* No placeholders: columns reserved for a visual collapse when there is no image. */
+.phero {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.chero,
+.shero {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.chero__visual:empty,
+.shero__visual:empty,
+.phero__card:empty,
+.mtile__visual:empty,
+.hero__card:empty {
+  display: none;
+}
+.mtile__link {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.cardset__item > span:first-child:empty,
+.related__item > span:first-child:empty {
+  display: none;
+}
