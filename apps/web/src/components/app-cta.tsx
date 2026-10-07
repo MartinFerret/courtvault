@@ -13,7 +13,7 @@ export function AppCta({ context }: { context?: string }) {
         night&apos;s games moved your collection.
       </p>
       <p>
-        <Link className="button" href="/waitlist">
+        <Link className="button" href="/waitlist" data-attr="cta-block">
           Join the waitlist
         </Link>
       </p>

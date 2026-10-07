@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase';
 export interface WaitlistState {
   status: 'idle' | 'ok' | 'error';
   message?: string;
+  /** Set on a real sign-up (not the honeypot path): the client identifies the visitor with it. */
+  email?: string;
 }
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -30,9 +32,9 @@ export async function joinWaitlist(
   if (error) {
     // Unique violation = already subscribed; treat as success and never leak the list.
     if (error.code === '23505')
-      return { status: 'ok', message: 'You are already on the list. Thanks!' };
+      return { status: 'ok', message: 'You are already on the list. Thanks!', email };
     console.error(error);
     return { status: 'error', message: 'Something went wrong. Please try again.' };
   }
-  return { status: 'ok', message: 'Thanks, you are on the list.' };
+  return { status: 'ok', message: 'Thanks, you are on the list.', email };
 }

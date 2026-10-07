@@ -1,6 +1,7 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
+import { track } from './analytics';
 
 /**
  * Text filter for a long server-rendered list. Rows carry `data-filter="<searchable text>"`
@@ -26,9 +27,14 @@ export function ListFilter({
   const [only, setOnly] = useState(false);
   const [shown, setShown] = useState(total);
   const id = useId();
+  const tracked = useRef(false);
 
   // Runs on each change, not in an effect: the rows are plain server-rendered DOM.
   const apply = (nextQuery: string, nextOnly: boolean) => {
+    if (!tracked.current && (nextQuery || nextOnly)) {
+      tracked.current = true;
+      track('filter_used', { target, rookies_only: nextOnly });
+    }
     setQuery(nextQuery);
     setOnly(nextOnly);
     const root = document.getElementById(target);

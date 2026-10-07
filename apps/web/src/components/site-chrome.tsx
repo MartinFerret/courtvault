@@ -23,7 +23,11 @@ export function SiteHeader() {
         <nav className="nav" aria-label="Main">
           <NavLinks items={NAV} />
         </nav>
-        <Link href="/waitlist" className="button button--small site-header__cta">
+        <Link
+          href="/waitlist"
+          className="button button--small site-header__cta"
+          data-attr="cta-navbar"
+        >
           Join the waitlist
         </Link>
       </div>

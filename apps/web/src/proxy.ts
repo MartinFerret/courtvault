@@ -18,5 +18,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Pages only: static assets and the image CDN never need the header.
-  matcher: ['/((?!_next/|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|webp|ico|woff2|txt|xml)$).*)'],
+  matcher: [
+    '/((?!_next/|ingest/|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|webp|ico|woff2|txt|xml)$).*)',
+  ],
 };

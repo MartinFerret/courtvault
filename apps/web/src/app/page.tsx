@@ -162,10 +162,10 @@ export default async function HomePage() {
             {BRAND_TAGLINE} {BRAND_DIFFERENTIATOR}
           </p>
           <div className="hero__actions">
-            <Link className="button" href="/waitlist">
+            <Link className="button" href="/waitlist" data-attr="cta-hero">
               Join the waitlist
             </Link>
-            <Link className="button secondary" href={PATHS.movers}>
+            <Link className="button secondary" href={PATHS.movers} data-attr="cta-hero-movers">
               See last night&apos;s movers
             </Link>
           </div>

@@ -42,7 +42,7 @@ export default async function SearchPage({
           aria-label="Search"
           placeholder="Player, set or card number"
         />
-        <button className="button" type="submit">
+        <button className="button" type="submit" data-attr="search-submit">
           Search
         </button>
       </form>

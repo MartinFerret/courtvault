@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import '@fontsource-variable/outfit';
 import './globals.css';
+import { Analytics } from '@/components/analytics';
 import { SiteFooter, SiteHeader } from '@/components/site-chrome';
 import { APPLE_APP_ID, SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
 
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a href="#main" className="skip-link">
           Skip to content
         </a>
+        <Analytics />
         <SiteHeader />
         <main id="main" className="container">
           {children}

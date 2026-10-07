@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { identifyWaitlist, track } from '@/components/analytics';
 import type { WaitlistState } from './actions';
 
 export function WaitlistForm({
@@ -9,6 +10,14 @@ export function WaitlistForm({
   action: (prev: WaitlistState, formData: FormData) => Promise<WaitlistState>;
 }) {
   const [state, formAction, pending] = useActionState(action, { status: 'idle' } as WaitlistState);
+  useEffect(() => {
+    if (state.status === 'ok') {
+      if (state.email) identifyWaitlist(state.email);
+      track('waitlist_submitted');
+    } else if (state.status === 'error') {
+      track('waitlist_failed', { reason: state.message ?? null });
+    }
+  }, [state]);
   if (state.status === 'ok') {
     return (
       <p className="notice" role="status">

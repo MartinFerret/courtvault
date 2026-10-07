@@ -119,7 +119,9 @@ export function LastNightModule({
           </>
         )}
         <p className="lnm__links">
-          <Link href={moversPath(night.day)}>Every mover and box score of the night</Link>
+          <Link href={moversPath(night.day)} data-attr="band-movers">
+            Every mover and box score of the night
+          </Link>
         </p>
       </div>
       <div className="lnm__foot">

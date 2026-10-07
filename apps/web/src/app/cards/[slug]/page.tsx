@@ -223,7 +223,12 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
                       </td>
                       <td>
                         {buy ? (
-                          <a href={buy} rel="sponsored nofollow noopener" target="_blank">
+                          <a
+                            href={buy}
+                            rel="sponsored nofollow noopener"
+                            target="_blank"
+                            data-attr="ebay-listing"
+                          >
                             eBay listings
                           </a>
                         ) : (
