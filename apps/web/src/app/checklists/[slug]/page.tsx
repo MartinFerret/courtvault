@@ -7,6 +7,7 @@ import { JsonLd } from '@/components/json-ld';
 import { CardVisual } from '@/components/card-visual';
 import { ImageCredit } from '@/components/image-credit';
 import { SetVisual } from '@/components/set-visual';
+import { SetGallery } from '@/components/set-gallery';
 import { ListFilter } from '@/components/list-filter';
 import { Price, PriceNote } from '@/components/price';
 import { getSet, indexStatus, listSets, topRookiesOfSet } from '@/lib/data';
@@ -239,6 +240,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
           </ul>
         </>
       ) : null}
+      <SetGallery setSlug={set.slug} setName={name} />
       <ImageCredit />
       <p className="muted small">
         Track your {name} cards with the <Link href="/">basketball card collection tracker</Link>.

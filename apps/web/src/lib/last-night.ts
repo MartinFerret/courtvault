@@ -127,6 +127,28 @@ export function pickNotable(
   return byPoints.find((p) => p.player_slug !== previousSlug) ?? candidate;
 }
 
+/** The top 3 gainers and top 3 losers with their 90-day Base raw history (quote tiles). */
+export async function moverSpotlight(
+  night: LastNight,
+  cardSlugs: Map<string, string>,
+): Promise<
+  { mover: Mover; history: { captured_at: string; price_cents: number; sample_size: number }[] }[]
+> {
+  const picks = [...night.gainers.slice(0, 3), ...night.losers.slice(0, 3)];
+  return Promise.all(
+    picks.map(async (mover) => {
+      const slug = cardSlugs.get(mover.card_slug) ?? mover.card_slug;
+      // Only the Base raw history exists publicly: other parallels show the tile without a chart.
+      if (mover.parallel_name !== 'Base' || mover.grade !== 'RAW') return { mover, history: [] };
+      const { data } = await supabase().rpc('public_price_history', {
+        p_card_slug: slug,
+        p_days: 90,
+      });
+      return { mover, history: data ?? [] };
+    }),
+  );
+}
+
 /** Slug of the player featured on the previous game night, for the "not twice in a row" rule. */
 export async function previousFeaturedSlug(currentDay: string | null): Promise<string | null> {
   if (!currentDay) return null;

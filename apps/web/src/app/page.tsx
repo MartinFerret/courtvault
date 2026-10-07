@@ -87,6 +87,14 @@ export default async function HomePage() {
       }
     : null;
   const featuredSets = sets.slice(0, 6);
+  // Hero visual: the first set with an official key visual (Topps Chrome today).
+  const heroVisual =
+    sets
+      .map((set) => ({ set, image: setImage(set.slug) }))
+      .find(
+        (x): x is { set: (typeof sets)[number]; image: NonNullable<ReturnType<typeof setImage>> } =>
+          x.image !== null,
+      ) ?? null;
 
   return (
     <>
@@ -172,7 +180,24 @@ export default async function HomePage() {
             at {formatUsd(PRICING.monthlyUsd)}/month or {formatUsd(PRICING.yearlyUsd)}/year.
           </p>
         </div>
-        {heroCard ? (
+        {heroVisual ? (
+          <Link
+            href={checklistPath(heroVisual.set.public_slug)}
+            className="hero__card hero__card--image"
+            aria-label={`${heroVisual.image.caption ?? heroVisual.set.name}, see the ${heroVisual.set.season} ${heroVisual.set.name} checklist`}
+          >
+            <Image
+              src={heroVisual.image.src}
+              alt={heroVisual.image.caption ?? `${heroVisual.set.season} ${heroVisual.set.name}`}
+              width={300}
+              height={Math.round((heroVisual.image.height / heroVisual.image.width) * 300)}
+              sizes="300px"
+              priority
+              className="hero__card-img"
+            />
+            <span className="hero__card-caption">{heroVisual.image.caption}</span>
+          </Link>
+        ) : heroCard ? (
           <Link href={cardPath(heroCard.slug)} className="hero__card" aria-label={heroCard.name}>
             <CardVisual
               publicSlug={heroCard.slug}

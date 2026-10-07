@@ -11,6 +11,7 @@ import { CardVisual } from '@/components/card-visual';
 import { EmptyState } from '@/components/empty-state';
 import { ImageCredit } from '@/components/image-credit';
 import { PriceHistory } from '@/components/price-history';
+import { cardImage } from '@/lib/images';
 import {
   getCard,
   getPlayer,
@@ -220,12 +221,23 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
               const foil = foilProps(p.name, p.serial_run);
               return (
                 <tr key={p.id}>
-                  <td>
-                    <span
-                      className={`foil-chip ${foil.className}`}
-                      style={foil.style}
-                      aria-hidden="true"
-                    />
+                  <td className="td-parallel">
+                    {cardImage(card.public_slug, p.name) ? (
+                      <CardVisual
+                        publicSlug={card.public_slug}
+                        name={`${name}, ${formatParallel(p.name, p.serial_run)}`}
+                        number={card.number}
+                        parallelName={p.name}
+                        serialRun={p.serial_run}
+                        size="thumb"
+                      />
+                    ) : (
+                      <span
+                        className={`foil-chip ${foil.className}`}
+                        style={foil.style}
+                        aria-hidden="true"
+                      />
+                    )}
                     {formatParallel(p.name, p.serial_run)}
                   </td>
                   {priced.length > 0 ? (

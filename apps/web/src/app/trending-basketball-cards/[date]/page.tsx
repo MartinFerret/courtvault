@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { LastNightView, lastNightTitle } from '@/components/last-night-page';
 import { cardPublicSlugMap, playerPublicSlugMap } from '@/lib/data';
-import { getLastNight, listLastNightDays } from '@/lib/last-night';
+import { getLastNight, listLastNightDays, moverSpotlight } from '@/lib/last-night';
 
 export const revalidate = 86400;
 export const dynamicParams = true;
@@ -50,5 +50,14 @@ export default async function LastNightArchivePage({
     playerPublicSlugMap(),
     listLastNightDays().catch(() => []),
   ]);
-  return <LastNightView data={data} day={data.day} slugs={{ cards, players }} days={days} />;
+  const spotlight = await moverSpotlight(data, cards).catch(() => []);
+  return (
+    <LastNightView
+      data={data}
+      day={data.day}
+      slugs={{ cards, players }}
+      days={days}
+      spotlight={spotlight}
+    />
+  );
 }

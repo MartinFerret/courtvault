@@ -6,6 +6,8 @@ import { FreshnessLine } from './freshness';
 import { EmptyState } from './empty-state';
 import { NightPager } from './night-pager';
 import { GameCards, MoverBars, PerformanceBars, PointsVsValue } from './night-charts';
+import { MoverTiles, type MoverWithHistory } from './mover-tiles';
+import { ImageCredit } from './image-credit';
 import type { Freshness } from '@/lib/freshness';
 import { absoluteUrl } from '@/lib/site';
 import type { LastNight } from '@/lib/last-night';
@@ -27,14 +29,28 @@ export function LastNightView({
   slugs,
   freshness = null,
   days = [],
+  spotlight = [],
 }: {
   data: LastNight;
   day: string;
   slugs: SlugMaps;
   freshness?: Freshness | null;
   days?: { game_day: string }[];
+  /** Top movers with their 90-day history, for the quote tiles. */
+  spotlight?: MoverWithHistory[];
 }) {
   const finals = data.games.filter((g) => g.home_score !== null && g.away_score !== null);
+  const topLine = [...data.performances].sort((a, b) => (b.points ?? 0) - (a.points ?? 0))[0];
+  const topMove = [...data.gainers, ...data.losers].sort(
+    (a, b) => Math.abs(b.change_pct) - Math.abs(a.change_pct),
+  )[0];
+  const headline = topLine
+    ? `${topLine.player_name} ${topLine.points ?? 0} points${
+        topMove
+          ? `; ${topMove.player_name} #${topMove.card_number} ${topMove.parallel_name === 'Base' ? '' : `${topMove.parallel_name} `}${topMove.change_pct > 0 ? 'up' : 'down'} ${Math.abs(topMove.change_pct).toFixed(1)}% since tip-off.`
+          : '.'
+      }`
+    : null;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -49,17 +65,22 @@ export function LastNightView({
     <article className="ln">
       <JsonLd data={jsonLd} />
 
-      <header className="ln__hero">
-        <p className="ln__eyebrow">
-          <Link href={PATHS.movers}>Last night</Link>, {formatEasternDay(day)}
-          {data.is_preseason ? <span className="tag">Preseason</span> : null}
-          {data.is_off_day && !data.requested_day ? (
-            <span className="muted"> (no games last night, latest game night shown)</span>
-          ) : null}
-        </p>
-        <h1 className="ln__title">Trending basketball cards after {formatEasternDay(day)}</h1>
-        <FreshnessLine data={freshness} />
-        <dl className="facts facts--night">
+      <header className="board">
+        <div className="board__top">
+          <p className="ln__eyebrow board__eyebrow">
+            <Link href={PATHS.movers}>Last night</Link>, {formatEasternDay(day)}
+            {data.is_preseason ? <span className="tag">Preseason</span> : null}
+            {data.is_off_day && !data.requested_day ? (
+              <span className="board__note"> (no games last night, latest game night shown)</span>
+            ) : null}
+          </p>
+          <h1 className="ln__title board__title">
+            Trending basketball cards after {formatEasternDay(day)}
+          </h1>
+          {headline ? <p className="board__headline">{headline}</p> : null}
+          <FreshnessLine data={freshness} className="board__fresh" />
+        </div>
+        <dl className="board__facts">
           <div>
             <dd>{finals.length}</dd>
             <dt>games</dt>
@@ -78,7 +99,10 @@ export function LastNightView({
       </header>
 
       <section className="ln__section">
-        <h2 className="ln__h2">The games</h2>
+        <div className="section__head">
+          <h2 className="ln__h2">The games</h2>
+          <span className="muted small">Final scores and the best line of each game</span>
+        </div>
         <GameCards data={data} slugs={slugs} />
       </section>
 
@@ -89,7 +113,9 @@ export function LastNightView({
             Points scored, and what the reference card asks this morning
           </span>
         </div>
-        <PerformanceBars data={data} slugs={slugs} />
+        <div className="chart">
+          <PerformanceBars data={data} slugs={slugs} />
+        </div>
       </section>
 
       {freshness?.priced_cards ? (
@@ -107,6 +133,7 @@ export function LastNightView({
           <h2 className="ln__h2">What moved since tip-off</h2>
           <span className="muted small">Asking prices before the games and this morning</span>
         </div>
+        {spotlight.length > 0 ? <MoverTiles items={spotlight} slugs={slugs} /> : null}
         {data.gainers.length + data.losers.length > 0 ? (
           <MoverBars gainers={data.gainers} losers={data.losers} slugs={slugs} />
         ) : (
@@ -124,6 +151,7 @@ export function LastNightView({
         )}
       </section>
 
+      <ImageCredit />
       <NightPager days={days} current={day} />
 
       <AppCta context="what last night did to YOUR collection" />

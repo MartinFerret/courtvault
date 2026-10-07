@@ -31,7 +31,7 @@ export function CardVisual({
   size?: 'thumb' | 'medium' | 'large';
   priority?: boolean;
 }) {
-  const image = parallelName === 'Base' ? cardImage(publicSlug) : null;
+  const image = cardImage(publicSlug, parallelName);
   const widths = { thumb: 72, medium: 240, large: 360 } as const;
   const width = widths[size];
   if (image) {

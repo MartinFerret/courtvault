@@ -2827,3 +2827,323 @@ form.stack input {
     grid-area: pct;
   }
 }
+
+/* Official images: hero visual, parallel thumbnails, set gallery. */
+.hero__card--image {
+  width: min(100%, 300px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+.hero__card-img {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 24px 48px rgba(18, 20, 23, 0.28);
+}
+.hero__card-caption {
+  font-size: 0.8rem;
+  color: var(--cv-text-muted);
+  background: var(--cv-surface-high);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.card-visual--image {
+  box-shadow: 0 16px 36px rgba(18, 20, 23, 0.22);
+}
+.card-visual--thumb.card-visual--image {
+  box-shadow: 0 6px 14px rgba(18, 20, 23, 0.2);
+  border-radius: 6px;
+}
+.td-parallel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.td-parallel .card-visual {
+  width: 34px;
+}
+.gallery {
+  margin-top: 32px;
+}
+.gallery__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+.gallery__list li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.gallery__img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(18, 20, 23, 0.2);
+}
+
+/* Quote tiles on the Last night page. */
+.mtiles {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+.mtile {
+  border-radius: var(--cv-radius-md);
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+  overflow: hidden;
+}
+.mtile__link {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 6px 14px;
+  padding: 16px 18px 14px;
+  text-decoration: none;
+  color: inherit;
+}
+.mtile__visual {
+  grid-row: 1 / span 2;
+}
+.mtile__visual .card-visual {
+  width: 56px;
+}
+.mtile__visual .card-visual--frame {
+  background: rgba(247, 248, 249, 0.1);
+  box-shadow: none;
+  color: inherit;
+}
+.mtile__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.mtile__name {
+  font-weight: 600;
+}
+.mtile__num {
+  opacity: 0.6;
+  font-weight: 400;
+}
+.mtile__meta {
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+.mtile__price {
+  margin-top: 6px;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.mtile__change {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.mtile--up .mtile__change {
+  color: #9be37c;
+}
+.mtile--down .mtile__change {
+  color: #ff8a7a;
+}
+.mtile__since {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(247, 248, 249, 0.6);
+}
+.mtile__chart {
+  grid-column: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+.mtile__spark {
+  width: 100%;
+  height: 44px;
+}
+.mtile__period {
+  font-size: 0.7rem;
+  color: rgba(247, 248, 249, 0.5);
+  white-space: nowrap;
+}
+.mtile__line {
+  fill: none;
+  stroke-width: 2;
+}
+.mtile__line--up,
+.mtile__dot--up {
+  stroke: #9be37c;
+  fill: #9be37c;
+}
+.mtile__line--down,
+.mtile__dot--down {
+  stroke: #ff8a7a;
+  fill: #ff8a7a;
+}
+.mtile__line--up,
+.mtile__line--down {
+  fill: none;
+}
+.mtile__area--up {
+  fill: rgba(155, 227, 124, 0.15);
+}
+.mtile__area--down {
+  fill: rgba(255, 138, 122, 0.15);
+}
+
+/* ---------------------------------------------------------------------------------------
+   Last night, the board: ink header with the night in one sentence, white cards below. */
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px 40px;
+  align-items: end;
+  margin: 8px 0 28px;
+  padding: 36px 40px 32px;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+}
+.board__eyebrow,
+.board__eyebrow a {
+  color: rgba(247, 248, 249, 0.7);
+}
+.board__eyebrow a {
+  text-decoration-color: rgba(247, 248, 249, 0.3);
+}
+.board__note {
+  color: rgba(247, 248, 249, 0.5);
+}
+.board__title {
+  margin: 6px 0 12px;
+  color: var(--cv-surface-high);
+  font-size: clamp(2rem, 4.2vw, 3.1rem);
+}
+.board__headline {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--cv-primary);
+  font-weight: 500;
+}
+.board__fresh {
+  margin: 14px 0 0;
+  color: rgba(247, 248, 249, 0.55);
+}
+.board__facts {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  margin: 0;
+}
+.board__facts div {
+  display: flex;
+  flex-direction: column;
+  min-width: 110px;
+  padding: 14px 16px;
+  border-radius: var(--cv-radius-md);
+  background: rgba(247, 248, 249, 0.08);
+}
+.board__facts dd {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.board__facts dt {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: rgba(247, 248, 249, 0.6);
+}
+.ln__section {
+  margin-top: 36px;
+}
+.ln__h2 {
+  margin-top: 0;
+}
+.chart {
+  padding: 4px;
+}
+.game {
+  background: var(--cv-surface-high);
+  box-shadow: var(--cv-shadow);
+}
+.game__bar .game__bar--won {
+  background: var(--cv-primary);
+  outline: 1px solid rgba(18, 20, 23, 0.15);
+}
+.pbars,
+.mbars,
+.pvv,
+.ph {
+  background: var(--cv-surface-high);
+  box-shadow: var(--cv-shadow);
+}
+.pbar__track,
+.mbar__half {
+  background: var(--cv-surface);
+}
+.pbar__track {
+  height: 26px;
+  border-radius: 8px;
+}
+.pbar__fill {
+  border-radius: 8px;
+}
+.pbar__move {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--cv-surface);
+  justify-self: start;
+}
+.pvv__zero {
+  stroke: var(--cv-text);
+  opacity: 0.35;
+}
+.pvv__dot {
+  r: 6;
+}
+.mbar__half:first-child {
+  border-right: 2px solid var(--cv-text);
+}
+.mbar__fill--gain,
+.mbar__fill--loss {
+  height: 100%;
+}
+@media (max-width: 860px) {
+  .board {
+    grid-template-columns: 1fr;
+    padding: 24px 20px;
+  }
+  .board__facts {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.board .tag {
+  background: rgba(247, 248, 249, 0.14);
+  color: var(--cv-surface-high);
+}
+.td-parallel .card-visual {
+  width: 26px;
+  border-radius: 4px;
+}
+.td-parallel {
+  min-height: 44px;
+}

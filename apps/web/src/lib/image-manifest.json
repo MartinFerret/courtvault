@@ -1,1 +1,80 @@
-{ "cards": {}, "sets": {} }
+{
+  "cards": {
+    "2025-26-topps-chrome-victor-wembanyama-card-221": {
+      "parallels": {
+        "black-refractor": {
+          "width": 700,
+          "height": 980
+        },
+        "blue-refractor": {
+          "width": 700,
+          "height": 980
+        },
+        "green-refractor": {
+          "width": 700,
+          "height": 980
+        },
+        "magenta-refractor": {
+          "width": 700,
+          "height": 980
+        },
+        "red-refractor": {
+          "width": 700,
+          "height": 980
+        },
+        "yellow-refractor": {
+          "width": 700,
+          "height": 980
+        }
+      },
+      "width": 731,
+      "height": 1024
+    }
+  },
+  "sets": {
+    "2025-26-topps-basketball": {
+      "width": 732,
+      "height": 1024,
+      "caption": "Jalen Brunson, from 2025-26 Topps Basketball"
+    },
+    "2025-26-topps-chrome": {
+      "width": 800,
+      "height": 1100,
+      "caption": "Cooper Flagg rookie insert, 1 of 1, from 2025-26 Topps Chrome"
+    }
+  },
+  "gallery": {
+    "2025-26-topps-chrome": [
+      {
+        "name": "cedric-coward-rookie-autograph-blue-150",
+        "caption": "Cedric Coward rookie autograph, Blue Refractor /150",
+        "width": 720,
+        "height": 1007
+      },
+      {
+        "name": "dylan-harper-rookie-autograph",
+        "caption": "Dylan Harper rookie autograph",
+        "width": 720,
+        "height": 1009
+      },
+      {
+        "name": "shai-gilgeous-alexander-clutch-gene-10",
+        "caption": "Shai Gilgeous-Alexander, Clutch Gene insert /10",
+        "width": 720,
+        "height": 1009
+      },
+      {
+        "name": "victor-wembanyama-skywrite-signatures-10",
+        "caption": "Victor Wembanyama, SkyWrite Signatures autograph /10",
+        "width": 720,
+        "height": 1009
+      },
+      {
+        "name": "victor-wembanyama-tall-tales",
+        "caption": "Victor Wembanyama, Tall Tales insert",
+        "width": 720,
+        "height": 994
+      }
+    ]
+  }
+}

@@ -22,7 +22,11 @@ export function SetVisual({
     return (
       <Image
         src={image.src}
-        alt={`${season} ${name} basketball cards`}
+        alt={
+          image.caption
+            ? `${image.caption} (${season} ${name})`
+            : `${season} ${name} basketball cards`
+        }
         width={width}
         height={height}
         sizes="(max-width: 860px) 100vw, 480px"
