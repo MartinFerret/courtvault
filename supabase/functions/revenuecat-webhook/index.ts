@@ -16,6 +16,27 @@ serve(async (req) => {
   if (!update) return json({ ok: true, ignored: body.event.type });
 
   const supabase = serviceClient();
+  if (
+    body.event.type === 'NON_RENEWING_PURCHASE' && body.event.product_id === 'founders_lifetime'
+  ) {
+    const store = (body.event as { store?: string }).store ?? '';
+    const platform = /app_store|mac_app_store/i.test(store)
+      ? 'ios'
+      : /play_store/i.test(store)
+      ? 'android'
+      : 'web';
+    const { error: grantError } = await supabase.rpc('grant_lifetime', {
+      p_user_id: update.userId,
+      p_platform: platform,
+      p_reference: `rc:${
+        (body.event as { transaction_id?: string; id?: string }).transaction_id ??
+          (body.event as { id?: string }).id ?? update.userId
+      }`,
+      p_amount_cents: null,
+    });
+    if (grantError) return error(grantError.message, 500);
+    return json({ ok: true, type: body.event.type, userId: update.userId, lifetime: true });
+  }
   const { error: updateError, count } = await supabase
     .from('profiles')
     .update({ is_premium: update.isPremium, premium_until: update.premiumUntil }, {

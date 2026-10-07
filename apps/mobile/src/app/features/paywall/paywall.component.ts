@@ -1,6 +1,16 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonModal, IonNote, IonTitle, IonToolbar } from '@ionic/angular';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonModal,
+  IonNote,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { PRICING } from '@courtvault/shared';
 import { BillingService, type Offering } from '../../core/billing/billing.service';
 import { PaywallService } from '../../core/billing/paywall.service';
@@ -19,7 +29,17 @@ const REASONS: Record<string, string> = {
 /** Global paywall modal, opened by PaywallService (from LIMIT_REACHED errors or the profile). */
 @Component({
   selector: 'cv-paywall',
-  imports: [IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonContent, IonNote, IonIcon],
+  imports: [
+    IonModal,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonContent,
+    IonNote,
+    IonIcon,
+  ],
   templateUrl: './paywall.component.html',
 })
 export class PaywallComponent {
@@ -42,7 +62,8 @@ export class PaywallComponent {
   constructor() {
     // Load offerings (RevenueCat, or the mock list without keys) the first time the paywall opens.
     effect(() => {
-      if (this.paywall.isOpen() && this.billing.offerings().length === 0) void this.billing.configure();
+      if (this.paywall.isOpen() && this.billing.offerings().length === 0)
+        void this.billing.configure();
     });
   }
 
@@ -54,8 +75,12 @@ export class PaywallComponent {
   async buy(offering: Offering): Promise<void> {
     this.message.set(null);
     try {
+      if (this.billing.isWeb) this.message.set('Opening secure checkout…');
       const active = await this.billing.purchase(offering);
-      this.message.set(active ? 'Welcome to Premium!' : 'Purchase pending. Your plan updates in a moment.');
+      if (this.billing.isWeb) return;
+      this.message.set(
+        active ? 'Welcome to Premium!' : 'Purchase pending. Your plan updates in a moment.',
+      );
       if (active) setTimeout(() => this.paywall.close(), 1200);
     } catch (err) {
       this.message.set(err instanceof Error ? err.message : 'Purchase failed.');
@@ -66,7 +91,13 @@ export class PaywallComponent {
     this.message.set(null);
     try {
       const active = await this.billing.restore();
-      this.message.set(active ? 'Premium restored.' : 'No active subscription found.');
+      this.message.set(
+        active
+          ? this.billing.isWeb
+            ? 'You are on Premium.'
+            : 'Premium restored.'
+          : 'No active subscription found.',
+      );
     } catch (err) {
       this.message.set(err instanceof Error ? err.message : 'Restore failed.');
     }

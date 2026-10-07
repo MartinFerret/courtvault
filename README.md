@@ -211,7 +211,21 @@ no-op), far below the 500k/month free quota. App traffic (scan-match, export, de
 4. Set `WEB_REVALIDATE_URL=https://<site>/api/revalidate` and `WEB_REVALIDATE_SECRET` as
    function secrets so price updates refresh pages without a redeploy.
 
-### 3. RevenueCat
+### 3. Stripe (web checkout)
+
+Products and prices in Stripe (test mode first) carrying the amounts of `PRICING`:
+`premium_monthly` $5.99/month, `premium_yearly` $49.99/year (the 7-day trial is set on the
+Checkout session), `founders_lifetime` $149 one-time. Function secrets: `STRIPE_SECRET_KEY`,
+`STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY`, `STRIPE_PRICE_LIFETIME`.
+Webhook endpoint `https://<ref>.supabase.co/functions/v1/stripe-webhook` with the events
+`checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`,
+`customer.subscription.deleted`. Customer Portal enabled in the Stripe dashboard (cancel,
+change plan, invoices). The webhook is the second service-role writer of `profiles.is_premium`
+next to RevenueCat; events are deduplicated in `billing_events`. Founder's Lifetime: flag,
+end date and cap in `app_settings.founders_lifetime`, real count in `lifetime_purchases`,
+public `founders_lifetime_status()`.
+
+### 4. RevenueCat
 
 Create the app (iOS + Android), products `premium_monthly` ($5.99), `premium_yearly`
 ($49.99 with a 7-day trial) and the non-consumable `founders_lifetime` ($149), the entitlement
@@ -219,7 +233,7 @@ Create the app (iOS + Android), products `premium_monthly` ($5.99), `premium_yea
 `https://<ref>.supabase.co/functions/v1/revenuecat-webhook`, Authorization header value equal
 to `REVENUECAT_WEBHOOK_SECRET`. The app user id is the Supabase user id (set by the app).
 
-### 4. Mobile builds
+### 5. Mobile builds
 
 ```bash
 cd apps/mobile

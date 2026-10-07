@@ -18,6 +18,39 @@
       </div>
 
       <section class="cv-section">
+        <h2>Morning email</h2>
+
+        <p class="cv-caption" style="margin: 6px 0 12px">
+          Last night's box scores and what they did to your cards, in your inbox. @if
+          (!plan.isPremium()) { Weekly on the free plan, daily with Premium. }
+        </p>
+
+        <ion-segment
+          class="cv-chips"
+          [value]="plan.profile()?.digest_frequency ?? 'daily'"
+          (ionChange)="setDigest($any($event).detail.value)"
+        >
+          <ion-segment-button value="daily"><ion-label>Daily</ion-label></ion-segment-button>
+
+          <ion-segment-button value="weekly"><ion-label>Weekly</ion-label></ion-segment-button>
+
+          <ion-segment-button value="off"><ion-label>Off</ion-label></ion-segment-button>
+        </ion-segment>
+
+        <ion-list style="margin-top: 12px">
+          <ion-item lines="none">
+            <ion-icon slot="start" name="mail-outline" aria-hidden="true"></ion-icon>
+
+            <ion-toggle
+              [checked]="!!plan.profile()?.marketing_consent_at"
+              (ionChange)="setMarketing($any($event).detail.checked)"
+              >Product news and offers by email</ion-toggle
+            >
+          </ion-item>
+        </ion-list>
+      </section>
+
+      <section class="cv-section">
         <ion-list>
           <ion-item lines="none">
             <ion-icon slot="start" name="notifications-outline" aria-hidden="true"></ion-icon>

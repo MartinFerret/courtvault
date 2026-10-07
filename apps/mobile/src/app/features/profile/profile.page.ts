@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   ActionSheetController,
   AlertController,
@@ -16,6 +16,7 @@ import {
 } from '@ionic/angular';
 import { AFFILIATION_DISCLAIMER, parseLimitReached } from '@courtvault/shared';
 import { AuthService } from '../../core/auth/auth.service';
+import { BillingService } from '../../core/billing/billing.service';
 import { CollectionService } from '../../core/collection/collection.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { PlanService } from '../../core/plan/plan.service';
@@ -43,6 +44,8 @@ export class ProfilePage {
   readonly auth = inject(AuthService);
   readonly plan = inject(PlanService);
   readonly push = inject(PushService);
+  readonly billing = inject(BillingService);
+  private readonly route = inject(ActivatedRoute);
   private readonly collection = inject(CollectionService);
   private readonly paywall = inject(PaywallService);
   private readonly supabase = inject(SupabaseService);
@@ -54,6 +57,35 @@ export class ProfilePage {
 
   constructor() {
     void this.plan.load();
+    // Back from Stripe Checkout: the webhook grants Premium within seconds; poll a few times.
+    const checkout = this.route.snapshot.queryParamMap.get('checkout');
+    if (checkout === 'success') {
+      this.message.set('Payment received. Your plan updates in a moment…');
+      let tries = 0;
+      const poll = setInterval(() => {
+        void this.plan.load().then(() => {
+          if (this.plan.isPremium() || ++tries >= 10) {
+            clearInterval(poll);
+            this.message.set(
+              this.plan.isPremium()
+                ? 'Welcome to Premium!'
+                : 'Payment received. Premium will appear shortly; refresh if needed.',
+            );
+          }
+        });
+      }, 2000);
+    } else if (checkout === 'cancel') {
+      this.message.set('Checkout cancelled. Nothing was charged.');
+    }
+  }
+
+  async manageSubscription(): Promise<void> {
+    this.message.set(null);
+    try {
+      await this.billing.openPortal();
+    } catch (err) {
+      this.message.set(err instanceof Error ? err.message : 'Could not open the billing portal.');
+    }
   }
 
   openPaywall(): void {

@@ -24,6 +24,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      billing_events: {
+        Row: {
+          id: string;
+          provider: string;
+          received_at: string;
+          type: string;
+          user_id: string | null;
+        };
+        Insert: {
+          id: string;
+          provider: string;
+          received_at?: string;
+          type: string;
+          user_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          provider?: string;
+          received_at?: string;
+          type?: string;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
       card_sets: {
         Row: {
           created_at: string;
@@ -354,6 +378,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      lifetime_purchases: {
+        Row: {
+          amount_cents: number | null;
+          platform: string;
+          purchased_at: string;
+          reference: string;
+          user_id: string;
+        };
+        Insert: {
+          amount_cents?: number | null;
+          platform: string;
+          purchased_at?: string;
+          reference: string;
+          user_id: string;
+        };
+        Update: {
+          amount_cents?: number | null;
+          platform?: string;
+          purchased_at?: string;
+          reference?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       parallels: {
         Row: {
           card_id: string;
@@ -611,8 +659,11 @@ export type Database = {
           is_premium: boolean;
           marketing_consent_at: string | null;
           marketing_consent_source: string | null;
+          premium_source: string | null;
           premium_until: string | null;
           push_token: string | null;
+          stripe_customer_id: string | null;
+          stripe_subscription_id: string | null;
           unsubscribe_token: string;
         };
         Insert: {
@@ -623,8 +674,11 @@ export type Database = {
           is_premium?: boolean;
           marketing_consent_at?: string | null;
           marketing_consent_source?: string | null;
+          premium_source?: string | null;
           premium_until?: string | null;
           push_token?: string | null;
+          stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
           unsubscribe_token?: string;
         };
         Update: {
@@ -635,8 +689,11 @@ export type Database = {
           is_premium?: boolean;
           marketing_consent_at?: string | null;
           marketing_consent_source?: string | null;
+          premium_source?: string | null;
           premium_until?: string | null;
           push_token?: string | null;
+          stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
           unsubscribe_token?: string;
         };
         Relationships: [];
@@ -801,6 +858,26 @@ export type Database = {
         };
         Returns: undefined;
       };
+      founders_lifetime_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          available: boolean;
+          cap: number;
+          enabled: boolean;
+          ends_at: string;
+          remaining: number;
+          sold: number;
+        }[];
+      };
+      grant_lifetime: {
+        Args: {
+          p_amount_cents?: number;
+          p_platform: string;
+          p_reference: string;
+          p_user_id: string;
+        };
+        Returns: boolean;
+      };
       import_collection: {
         Args: { p_items: Json; p_reviews?: Json };
         Returns: {
@@ -829,6 +906,21 @@ export type Database = {
           serial_run: number;
           set_name: string;
           status: string;
+        }[];
+      };
+      morning_email_recipients: {
+        Args: { p_day?: string };
+        Returns: {
+          due: boolean;
+          effective_frequency: string;
+          email: string;
+          headline_player: string;
+          headline_points: number;
+          is_premium: boolean;
+          players_count: number;
+          unsubscribe_token: string;
+          user_id: string;
+          value_change_cents: number;
         }[];
       };
       morning_recipients: {

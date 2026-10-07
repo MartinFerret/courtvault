@@ -1249,6 +1249,33 @@ ion-checkbox.cv-consent {
 }
 
 /* Paywall */
+.cv-lifetime {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+  background: var(--cv-text);
+  color: var(--cv-surface-high);
+  border-radius: var(--cv-radius-tile);
+  padding: 16px 18px;
+  font-family: var(--cv-font);
+  .cv-lifetime__title {
+    font: 600 16px/1.2 var(--cv-font);
+  }
+  .cv-lifetime__price {
+    font: 600 24px/1.1 var(--cv-font);
+    color: var(--cv-accent);
+  }
+  .cv-caption {
+    color: var(--cv-surface-2);
+  }
+  &[disabled] {
+    opacity: 0.6;
+  }
+}
 .cv-paywall-reason {
   font: var(--cv-text-heading);
   margin: 4px 0 20px;
