@@ -297,6 +297,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      import_reviews: {
+        Row: {
+          created_at: string;
+          id: string;
+          raw: NonNullable<Json>;
+          reason: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          raw: NonNullable<Json>;
+          reason: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          raw?: NonNullable<Json>;
+          reason?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       job_runs: {
         Row: {
           details: Json | null;
@@ -777,8 +801,36 @@ export type Database = {
         };
         Returns: undefined;
       };
+      import_collection: {
+        Args: { p_items: Json; p_reviews?: Json };
+        Returns: {
+          inserted: number;
+          limit_reached: boolean;
+          reviews_saved: number;
+          skipped: number;
+        }[];
+      };
       invoke_job: { Args: { p_body?: Json; p_job: string }; Returns: number };
       is_premium: { Args: { uid?: string }; Returns: boolean };
+      match_import_rows: {
+        Args: { p_rows: Json };
+        Returns: {
+          candidates: Json;
+          card_id: string;
+          card_number: string;
+          card_slug: string;
+          parallel_id: string;
+          parallel_name: string;
+          parallels: Json;
+          player_name: string;
+          row_index: number;
+          score: number;
+          season: string;
+          serial_run: number;
+          set_name: string;
+          status: string;
+        }[];
+      };
       morning_recipients: {
         Args: { p_day?: string };
         Returns: {

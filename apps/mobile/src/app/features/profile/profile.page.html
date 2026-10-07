@@ -7,49 +7,70 @@
   </div>
 
   <div class="cv-cols cv-cols--main">
-  <div>
-  <div class="cv-card">
-    <span class="cv-watermark" aria-hidden="true">Vault</span>
-    <p class="cv-caption">Signed in as</p>
-    <h2 style="margin-top: 6px; word-break: break-all">{{ auth.user()?.email }}</h2>
-    @if (!plan.isPremium()) {
-      <ion-button style="margin-top: 20px" (click)="openPaywall()">Go Premium</ion-button>
-    }
-  </div>
+    <div>
+      <div class="cv-card">
+        <span class="cv-watermark" aria-hidden="true">Vault</span>
+        <p class="cv-caption">Signed in as</p>
+        <h2 style="margin-top: 6px; word-break: break-all">{{ auth.user()?.email }}</h2>
+        @if (!plan.isPremium()) {
+        <ion-button style="margin-top: 20px" (click)="openPaywall()">Go Premium</ion-button>
+        }
+      </div>
 
-  <section class="cv-section">
-    <ion-list>
-      <ion-item lines="none">
-        <ion-icon slot="start" name="notifications-outline" aria-hidden="true"></ion-icon>
-        <ion-toggle [checked]="push.enabled()" (ionChange)="toggleNotifications($any($event).detail.checked)">Morning notifications</ion-toggle>
-      </ion-item>
-      <ion-item button (click)="chooseExport()" [detail]="true">
-        <ion-icon slot="start" name="albums-outline" aria-hidden="true"></ion-icon>
-        <ion-label><h2>Export my collection</h2><p>Basic for everyone, full with values for Premium</p></ion-label>
-      </ion-item>
-      <ion-item routerLink="/onboarding/players" [detail]="true">
-        <ion-icon slot="start" name="heart-outline" aria-hidden="true"></ion-icon>
-        <ion-label><h2>Followed players</h2></ion-label>
-      </ion-item>
-    </ion-list>
-  </section>
+      <section class="cv-section">
+        <ion-list>
+          <ion-item lines="none">
+            <ion-icon slot="start" name="notifications-outline" aria-hidden="true"></ion-icon>
+            <ion-toggle
+              [checked]="push.enabled()"
+              (ionChange)="toggleNotifications($any($event).detail.checked)"
+              >Morning notifications</ion-toggle
+            >
+          </ion-item>
+          <ion-item button (click)="chooseExport()" [detail]="true">
+            <ion-icon slot="start" name="albums-outline" aria-hidden="true"></ion-icon>
+            <ion-label
+              ><h2>Export my collection</h2>
+              <p>Basic for everyone, full with values for Premium</p></ion-label
+            >
+          </ion-item>
+          <ion-item routerLink="/import" [detail]="true">
+            <ion-icon slot="start" name="cloud-upload-outline" aria-hidden="true"></ion-icon>
+            <ion-label
+              ><h2>Import a spreadsheet</h2>
+              <p>CSV from Excel or Google Sheets</p></ion-label
+            >
+          </ion-item>
+          <ion-item routerLink="/onboarding/players" [detail]="true">
+            <ion-icon slot="start" name="heart-outline" aria-hidden="true"></ion-icon>
+            <ion-label><h2>Followed players</h2></ion-label>
+          </ion-item>
+        </ion-list>
+      </section>
+    </div>
+    <div>
+      <section class="cv-section" style="margin-top: 0">
+        <ion-list>
+          <ion-item routerLink="/legal/terms" [detail]="true"
+            ><ion-label><h2>Terms of service</h2></ion-label></ion-item
+          >
+          <ion-item routerLink="/legal/privacy" [detail]="true"
+            ><ion-label><h2>Privacy policy</h2></ion-label></ion-item
+          >
+          <ion-item routerLink="/legal/about" [detail]="true"
+            ><ion-label><h2>About</h2></ion-label></ion-item
+          >
+        </ion-list>
+      </section>
 
-  </div>
-  <div>
-  <section class="cv-section" style="margin-top: 0">
-    <ion-list>
-      <ion-item routerLink="/legal/terms" [detail]="true"><ion-label><h2>Terms of service</h2></ion-label></ion-item>
-      <ion-item routerLink="/legal/privacy" [detail]="true"><ion-label><h2>Privacy policy</h2></ion-label></ion-item>
-      <ion-item routerLink="/legal/about" [detail]="true"><ion-label><h2>About</h2></ion-label></ion-item>
-    </ion-list>
-  </section>
-
-  <section class="cv-section cv-stack">
-    @if (message(); as text) { <ion-note>{{ text }}</ion-note> }
-    <ion-button expand="block" fill="outline" (click)="signOut()">Sign out</ion-button>
-    <ion-button expand="block" fill="clear" color="danger" (click)="deleteAccount()">Delete account</ion-button>
-    <p class="cv-caption ion-text-center">{{ disclaimer }}</p>
-  </section>
-  </div>
+      <section class="cv-section cv-stack">
+        @if (message(); as text) { <ion-note>{{ text }}</ion-note> }
+        <ion-button expand="block" fill="outline" (click)="signOut()">Sign out</ion-button>
+        <ion-button expand="block" fill="clear" color="danger" (click)="deleteAccount()"
+          >Delete account</ion-button
+        >
+        <p class="cv-caption ion-text-center">{{ disclaimer }}</p>
+      </section>
+    </div>
   </div>
 </ion-content>

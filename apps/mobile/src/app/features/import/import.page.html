@@ -1,0 +1,273 @@
+<ion-header class="cv-header">
+  <ion-toolbar>
+    <ion-buttons slot="start"
+      ><ion-back-button defaultHref="/tabs/vault" aria-label="Back"></ion-back-button
+    ></ion-buttons>
+    <ion-title>Import a spreadsheet</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="cv-page-head">
+    <div>
+      <p class="cv-page-head__eyebrow">CSV from Excel, Numbers or Google Sheets</p>
+      <h1>Import a spreadsheet</h1>
+    </div>
+  </div>
+
+  @if (error(); as message) { <ion-note class="cv-error" role="alert">{{ message }}</ion-note> }
+  @switch (step()) { @case ('upload') {
+  <div class="cv-cols cv-cols--main">
+    <div>
+      <label
+        class="cv-dropzone"
+        [class.is-dragging]="dragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="dragging.set(false)"
+        (drop)="onDrop($event)"
+      >
+        <ion-icon name="cloud-upload-outline" aria-hidden="true"></ion-icon>
+        <strong>Drop your CSV here, or click to choose a file</strong>
+        <span class="cv-caption"
+          >One row per card. A header row with column names. Up to 2,000 rows per file.</span
+        >
+        <input type="file" accept=".csv,text/csv" (change)="onFileInput($event)" />
+      </label>
+      @if (busy()) {
+      <p class="cv-caption" style="margin-top: 12px">Reading the file…</p>
+      }
+    </div>
+    <div class="cv-tile">
+      <h3>What the import reads</h3>
+      <p class="cv-small cv-muted" style="margin-top: 8px">
+        Player, set, season, card number and parallel find the card in the catalog. Grade (Raw, PSA
+        9, PSA 10), serial number (12/50), purchase price and quantity fill the item. Column names
+        are guessed; you can fix them.
+      </p>
+      <p class="cv-small cv-muted" style="margin-top: 8px">
+        Rows that cannot be matched are kept in a review list below, never lost.
+      </p>
+      @if (cardLimit(); as max) {
+      <p class="cv-caption" style="margin-top: 12px">
+        Free plan: {{ max }} cards in the Vault. The import stops at the limit and tells you.
+      </p>
+      }
+    </div>
+  </div>
+  } @case ('map') {
+  <p class="cv-small cv-muted">{{ fileName() }} · {{ parsed()?.rows?.length }} rows</p>
+  <section class="cv-section">
+    <h2>Match the columns</h2>
+    <div class="cv-mapping">
+      @for (field of fields; track field) {
+      <label class="cv-mapping__row">
+        <span
+          >{{ fieldLabels[field] }}@if (field === 'player') {
+          <span class="cv-badge">required</span> }</span
+        >
+        <select [value]="mapping()[field] ?? ''" (change)="setMapping(field, valueOf($event))">
+          <option value="">Not in the file</option>
+          @for (h of parsed()?.headers ?? []; track h) {
+          <option [value]="h" [selected]="mapping()[field] === h">{{ h }}</option>
+          }
+        </select>
+      </label>
+      }
+    </div>
+  </section>
+  <section class="cv-section">
+    <h2>First rows</h2>
+    <div class="cv-table-wrap">
+      <table class="cv-table">
+        <thead>
+          <tr>
+            @for (h of parsed()?.headers ?? []; track h) {
+            <th>{{ h }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of previewRows(); track $index) {
+          <tr>
+            @for (h of parsed()?.headers ?? []; track h) {
+            <td>{{ row[h] }}</td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <div class="cv-actions">
+    <ion-button fill="clear" (click)="reset()">Choose another file</ion-button>
+    <ion-button size="large" [disabled]="busy()" (click)="runMatch()"
+      >{{ busy() ? 'Matching…' : 'Find the cards' }}</ion-button
+    >
+  </div>
+  } @case ('preview') {
+  <div class="cv-import-summary">
+    <div class="cv-tile cv-stat">
+      <span class="cv-stat__label">Ready to add</span
+      ><span class="cv-stat__value">{{ counts().copies }}</span
+      ><span class="cv-stat__note">{{ counts().add }} rows</span>
+    </div>
+    <div class="cv-tile cv-stat">
+      <span class="cv-stat__label">To review</span
+      ><span class="cv-stat__value">{{ counts().review }}</span
+      ><span class="cv-stat__note">kept for later</span>
+    </div>
+    <div class="cv-tile cv-stat">
+      <span class="cv-stat__label">Skipped</span
+      ><span class="cv-stat__value">{{ counts().skip }}</span
+      ><span class="cv-stat__note">not imported</span>
+    </div>
+  </div>
+  <p class="cv-caption" style="margin: 12px 0">
+    Check each match. Ambiguous rows show the best guess with the alternatives. Set the parallel and
+    grade, then confirm.
+  </p>
+  <div class="cv-table-wrap">
+    <table class="cv-table cv-table--import">
+      <thead>
+        <tr>
+          <th>Your row</th>
+          <th>Match</th>
+          <th>Parallel</th>
+          <th>Grade</th>
+          <th class="num">Serial</th>
+          <th class="num">Paid ($)</th>
+          <th class="num">Qty</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of candidates(); track c.index) {
+        <tr [class.is-review]="c.action === 'review'" [class.is-skip]="c.action === 'skip'">
+          <td class="cv-table__raw">{{ rawSummary(c) }}</td>
+          <td>
+            @if (c.match.card_id && c.match.status !== 'unmatched') {
+            <span class="cv-table__player"
+              >#{{ c.match.card_number }} {{ c.match.player_name }}</span
+            >
+            <span class="cv-caption" style="display: block"
+              >{{ c.match.season }} {{ c.match.set_name }}</span
+            >
+            @if (c.match.status === 'ambiguous') {
+            <span class="cv-badge cv-badge--warn">check</span> } } @else {
+            <span class="cv-muted">No card found</span>
+            }
+          </td>
+          <td>
+            @if (c.match.card_id && c.match.status !== 'unmatched') {
+            <select
+              [value]="c.parallelId ?? ''"
+              (change)="update(c.index, { parallelId: valueOf($event) || null })"
+            >
+              @for (p of parallelsOf(c); track p.id) {
+              <option [value]="p.id" [selected]="c.parallelId === p.id">
+                {{ parallelLabel(p) }}
+              </option>
+              }
+            </select>
+            }
+          </td>
+          <td>
+            <select [value]="c.grade" (change)="onGrade(c.index, valueOf($event))">
+              @for (g of grades; track g) {
+              <option [value]="g" [selected]="c.grade === g">{{ g | grade }}</option>
+              }
+            </select>
+          </td>
+          <td class="num">
+            <input
+              type="number"
+              min="1"
+              [value]="c.serialNumber ?? ''"
+              (change)="onNumber(c.index, 'serialNumber', valueOf($event))"
+              aria-label="Serial number"
+            />
+          </td>
+          <td class="num">
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              [value]="c.purchaseCents === null ? '' : c.purchaseCents / 100"
+              (change)="onNumber(c.index, 'purchaseCents', valueOf($event))"
+              aria-label="Purchase price"
+            />
+          </td>
+          <td class="num">
+            <input
+              type="number"
+              min="1"
+              max="50"
+              [value]="c.quantity"
+              (change)="onNumber(c.index, 'quantity', valueOf($event))"
+              aria-label="Quantity"
+            />
+          </td>
+          <td>
+            <select
+              [value]="c.action"
+              (change)="update(c.index, { action: $any(valueOf($event)) })"
+            >
+              @if (c.match.card_id && c.match.status !== 'unmatched') {
+              <option value="add" [selected]="c.action === 'add'">Add</option>
+              }
+              <option value="review" [selected]="c.action === 'review'">Review later</option>
+              <option value="skip" [selected]="c.action === 'skip'">Skip</option>
+            </select>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="cv-actions">
+    <ion-button fill="clear" (click)="step.set('map')">Back to columns</ion-button>
+    <ion-button
+      size="large"
+      [disabled]="busy() || counts().add + counts().review === 0"
+      (click)="confirm()"
+      >{{ busy() ? 'Importing…' : 'Add ' + counts().copies + ' cards to my Vault' }}</ion-button
+    >
+  </div>
+  } @case ('done') { @if (result(); as r) {
+  <div class="cv-card cv-card--accent">
+    <span class="cv-watermark" aria-hidden="true">Done</span>
+    <div class="cv-stat cv-stat--hero" style="min-height: 0; gap: 10px">
+      <span class="cv-stat__label">Added to your Vault</span>
+      <span class="cv-stat__value">{{ r.inserted }}</span>
+      <span class="cv-stat__note" style="color: var(--cv-on-accent)">
+        @if (r.limitReached) { Stopped at the free plan limit: {{ r.skipped }} card{{ r.skipped > 1
+        ? 's' : '' }} not added. } @else if (r.reviewsSaved > 0) { {{ r.reviewsSaved }} row{{
+        r.reviewsSaved > 1 ? 's' : '' }} kept for review. } @else { Everything matched. }
+      </span>
+    </div>
+  </div>
+  <div class="cv-actions" style="margin-top: 16px">
+    <ion-button fill="outline" (click)="reset()">Import another file</ion-button>
+    <ion-button routerLink="/tabs/vault">Open the Vault</ion-button>
+  </div>
+  } } } @if (importer.reviews().length > 0) {
+  <section class="cv-section">
+    <h2>Rows to review <span class="cv-caption">{{ importer.reviews().length }}</span></h2>
+    <p class="cv-caption" style="margin-bottom: 12px">
+      Search the card by hand from "Add a card", then remove the row here.
+    </p>
+    <ul class="cv-review-list">
+      @for (r of importer.reviews(); track r.id) {
+      <li>
+        <span>{{ reviewSummary(r.raw) }}</span>
+        <span class="cv-review-list__actions">
+          <ion-button size="small" fill="outline" routerLink="/tabs/scan">Find it</ion-button>
+          <ion-button size="small" fill="clear" (click)="deleteReview(r.id)" aria-label="Remove row"
+            ><ion-icon slot="icon-only" name="trash-outline"></ion-icon
+          ></ion-button>
+        </span>
+      </li>
+      }
+    </ul>
+  </section>
+  }
+</ion-content>
