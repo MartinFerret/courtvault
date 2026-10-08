@@ -11,7 +11,13 @@ import { ImageCredit } from '@/components/image-credit';
 import { FormPriceChart } from '@/components/form-price-chart';
 import { JsonLd } from '@/components/json-ld';
 import { Price, PriceNote } from '@/components/price';
-import { getPlayer, indexStatus, listPlayers, playerAliasTarget } from '@/lib/data';
+import {
+  getPlayer,
+  indexStatus,
+  listPlayers,
+  playerAliasTarget,
+  playerCurrentTeam,
+} from '@/lib/data';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { getPlayerForm } from '@/lib/player-form';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
@@ -64,7 +70,10 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
   }
   const publicSlug = player.public_slug ?? player.slug;
   if (publicSlug !== slug) permanentRedirect(playerPath(publicSlug));
-  const form = await getPlayerForm(player.id).catch(() => null);
+  const [form, currentTeam] = await Promise.all([
+    getPlayerForm(player.id).catch(() => null),
+    playerCurrentTeam(player.id).catch(() => player.team),
+  ]);
   const chartable = form && form.games.length >= 3;
   const rookie = player.cards.some((c) => c.is_rookie);
   const priced = player.cards.filter((c) => c.base_cents !== null);
@@ -95,7 +104,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
           '@type': 'Person',
           name: player.name,
           url: absoluteUrl(playerPath(publicSlug)),
-          ...(player.team ? { affiliation: { '@type': 'SportsTeam', name: player.team } } : {}),
+          ...(currentTeam ? { affiliation: { '@type': 'SportsTeam', name: currentTeam } } : {}),
         }}
       />
       <Breadcrumbs
@@ -111,7 +120,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
             {player.name} {rookie ? 'rookie cards' : 'cards'}
           </h1>
           <p className="phero__meta">
-            {player.team ? <span>{player.team}</span> : null}
+            {currentTeam ? <span>{currentTeam}</span> : null}
             {rookie ? <span className="badge">RC</span> : null}
             <FormBadge badge={form?.badge} />
           </p>

@@ -84,6 +84,7 @@ serve(
             assists: line.assists,
             steals: line.steals,
             blocks: line.blocks,
+            team: line.team || null,
             raw: line.raw,
           });
         }

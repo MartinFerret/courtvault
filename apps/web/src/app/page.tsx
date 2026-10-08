@@ -19,6 +19,7 @@ import {
 import { getLastNight, pickNotable, previousFeaturedSlug } from '@/lib/last-night';
 import { PATHS, cardPath, checklistPath } from '@/lib/paths';
 import {
+  HOME_H1,
   HOME_KEYWORD,
   HOME_PROMISE,
   SITE_DESCRIPTION,
@@ -162,12 +163,13 @@ export default async function HomePage() {
             alt=""
             fill
             priority
-            sizes="(max-width: 860px) 100vw, 60vw"
+            // The photo fills 70% of a panel capped at 1080px (audit 4.11): never a 1080 wide source.
+            sizes="(max-width: 860px) 100vw, 756px"
             className="hero__img"
           />
         </div>
         <div className="hero__copy">
-          <h1>{HOME_KEYWORD}</h1>
+          <h1>{HOME_H1}</h1>
           <p className="hero__lead">
             {BRAND_TAGLINE} {BRAND_DIFFERENTIATOR}
           </p>

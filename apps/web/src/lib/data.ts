@@ -366,6 +366,13 @@ export async function topRookiesOfSet(setId: string, limit = 6) {
     .slice(0, limit);
 }
 
+/** Team of the player's latest box score, the card team as a fallback (audit 4.6). */
+export async function playerCurrentTeam(playerId: string): Promise<string | null> {
+  const { data, error } = await supabase().rpc('player_current_team', { p_player_id: playerId });
+  if (error) throw error;
+  return data ?? null;
+}
+
 export async function rookieRankings(limit = 20) {
   const { data, error } = await supabase().rpc('rookie_rankings', { p_limit: limit });
   if (error) throw error;

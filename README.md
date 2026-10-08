@@ -217,9 +217,11 @@ only when the config lives there and the deploy runs from the root with `--filte
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL`
    (`https://hoopticker.com`), `REVALIDATE_SECRET`, later `NEXT_PUBLIC_APPLE_APP_ID`.
    `netlify env:set KEY value --context production`.
-3. Deploy from the repository root: `netlify deploy --prod --filter @courtvault/web`
-   (the build runs locally, then the static files and the server function are uploaded;
-   check the log says "1 function"). Each production deploy costs 15 credits: deploy only
+3. Deploy from the repository root: `pnpm deploy:web` (runs `netlify deploy --prod --filter
+@courtvault/web`, then `apps/web/tools/warm-up.mjs`, which requests the homepage, the hub
+   pages, every checklist and every player page so the first visitor never waits for a cold
+   render; `pnpm warm:web` runs the warm-up alone). The build runs locally, then the static
+   files and the server function are uploaded; check the log says "1 function". Each production deploy costs 15 credits: deploy only
    for code changes, data changes revalidate pages on demand.
 4. Function secrets `WEB_REVALIDATE_URL=https://hoopticker.com/api/revalidate` and
    `WEB_REVALIDATE_SECRET` (same value as `REVALIDATE_SECRET`) so job-prices refreshes pages.

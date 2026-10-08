@@ -17,6 +17,8 @@
     "lint:functions": "cd supabase/functions && deno lint && deno fmt --check",
     "typecheck": "pnpm -r --if-present typecheck && pnpm typecheck:functions",
     "typecheck:functions": "cd supabase/functions && deno check **/index.ts _shared/**/*.ts",
+    "deploy:web": "netlify deploy --prod --filter @courtvault/web && node apps/web/tools/warm-up.mjs",
+    "warm:web": "node apps/web/tools/warm-up.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:start": "supabase start",

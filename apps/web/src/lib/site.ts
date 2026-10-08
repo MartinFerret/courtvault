@@ -7,14 +7,16 @@ import {
 export const SITE_NAME = BRAND_NAME;
 export const SITE_TAGLINE = 'Basketball card values by parallel and grade';
 /**
- * Homepage commercial keyword (R5, R24). Provisional until the Keyword Planner volumes are in:
- * "basketball card collection tracker" has the most accessible top 3 (docs/keyword-map.md).
- * A title change costs nothing; the URL (/) never changes.
+ * Homepage commercial keyword (R5, R24): "basketball card values app" (210 searches a month)
+ * with "basketball card scanner app" (70) as the variant, per the SEO audit of 2026-10-08. The
+ * generic "basketball card values" belongs to /basketball-card-values. The URL (/) never changes.
  */
-export const HOME_KEYWORD = 'Basketball card collection tracker';
-export const HOME_PROMISE = 'live values';
+export const HOME_KEYWORD = 'Basketball Card Values App';
+export const HOME_PROMISE = 'Scan & Track';
+/** H1 of the homepage (R35, R37): the keyword alone, sentence case. */
+export const HOME_H1 = 'Basketball card values app';
 export const SITE_DESCRIPTION =
-  'Basketball card values by parallel and grade from live eBay listings, plus a morning report of what last night’s games did to your cards.';
+  'Scan a card, see its value by parallel and grade, track your collection, and get every morning what last night’s games did to it. Free on iOS and Android.';
 export const DISCLAIMER = AFFILIATION_DISCLAIMER;
 
 export function siteUrl(): string {

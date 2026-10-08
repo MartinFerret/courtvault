@@ -6,17 +6,22 @@ import { JsonLd } from '@/components/json-ld';
 import { Delta, Price, PriceNote } from '@/components/price';
 import { cardPublicSlugMap, rookieRankings } from '@/lib/data';
 import { PATHS, cardPath, checklistPath } from '@/lib/paths';
-import { absoluteUrl, seoTitle } from '@/lib/site';
+import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 import { checklistPublicSlug } from '@courtvault/shared';
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: seoTitle('Most Valuable Basketball Rookie Cards', 'ranked'),
-  description:
-    '2025-26 Topps basketball rookie cards ranked by median asking price, Base parallel raw, with the 7-day change, from live eBay listings.',
-  alternates: { canonical: PATHS.rookies },
-};
+/** Indexable only once a rookie card has a price (audit 4.4): the ranking is empty before. */
+export async function generateMetadata(): Promise<Metadata> {
+  const ranked = await rookieRankings(1).catch(() => []);
+  return {
+    ...robotsFor(ranked.some((r) => r.price_cents !== null)),
+    title: seoTitle('Most Valuable Basketball Rookie Cards', 'ranked'),
+    description:
+      '2025-26 Topps basketball rookie cards ranked by median asking price, Base parallel raw, with the 7-day change, from live eBay listings.',
+    alternates: { canonical: PATHS.rookies },
+  };
+}
 
 export default async function RookieRankingsPage() {
   const [ranked, slugs] = await Promise.all([rookieRankings(50), cardPublicSlugMap()]);

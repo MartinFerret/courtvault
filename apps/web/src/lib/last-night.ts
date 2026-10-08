@@ -150,6 +150,28 @@ export async function moverSpotlight(
 }
 
 /** Slug of the player featured on the previous game night, for the "not twice in a row" rule. */
+export interface MoversWindow {
+  days: number;
+  /** No stat line: the window spans several nights. */
+  gainers: Omit<Mover, 'line'>[];
+  losers: Omit<Mover, 'line'>[];
+  nights: { game_day: string; games: number; lines: number }[];
+  priced_cards: number;
+}
+
+/** Movers over the last `days` nights and the nights themselves (main trending page). */
+export async function getMoversWindow(days = 7): Promise<MoversWindow | null> {
+  const { minSample, minPriceCents } = lastNightThresholds();
+  const { data, error } = await supabase().rpc('public_movers_window', {
+    p_days: days,
+    p_min_sample: minSample,
+    p_min_price_cents: minPriceCents,
+    p_limit: 10,
+  });
+  if (error) throw error;
+  return (data as unknown as MoversWindow | null) ?? null;
+}
+
 export async function previousFeaturedSlug(currentDay: string | null): Promise<string | null> {
   if (!currentDay) return null;
   const days = await listLastNightDays().catch(() => []);

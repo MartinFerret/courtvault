@@ -32,7 +32,7 @@ const PAGES: Record<string, { title: string; paragraphs: string[] }> = {
     title: 'About',
     paragraphs: [
       AFFILIATION_DISCLAIMER,
-      'Player names, set names and game statistics are displayed as factual information for identification only. No official imagery is used.',
+      'Player names, set names and game statistics are displayed as factual information for identification only.',
       'Card photos are taken by you and stay private.',
     ],
   },

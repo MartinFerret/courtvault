@@ -544,6 +544,7 @@ export type Database = {
           raw: Json | null;
           rebounds: number | null;
           steals: number | null;
+          team: string | null;
         };
         Insert: {
           assists?: number | null;
@@ -557,6 +558,7 @@ export type Database = {
           raw?: Json | null;
           rebounds?: number | null;
           steals?: number | null;
+          team?: string | null;
         };
         Update: {
           assists?: number | null;
@@ -570,6 +572,7 @@ export type Database = {
           raw?: Json | null;
           rebounds?: number | null;
           steals?: number | null;
+          team?: string | null;
         };
         Relationships: [
           {
@@ -1058,6 +1061,7 @@ export type Database = {
         }[];
       };
       player_base_key: { Args: { p_name: string }; Returns: string };
+      player_current_team: { Args: { p_player_id: string }; Returns: string };
       player_form: { Args: { p_games?: number; p_player_id: string }; Returns: Json };
       player_key: { Args: { p_name: string }; Returns: string };
       players_distinct: { Args: { p_a: string; p_b: string }; Returns: boolean };
@@ -1093,6 +1097,15 @@ export type Database = {
           game_day: string;
           games: number;
         }[];
+      };
+      public_movers_window: {
+        Args: {
+          p_days?: number;
+          p_limit?: number;
+          p_min_price_cents?: number;
+          p_min_sample?: number;
+        };
+        Returns: Json;
       };
       public_price_history: {
         Args: { p_card_slug: string; p_days?: number };

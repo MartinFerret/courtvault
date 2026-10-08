@@ -21,6 +21,13 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // HSTS (audit 4.11): the apex and www already redirect to https with one hop.
+        source: '/:path*',
+        headers: [
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+        ],
+      },
+      {
         source: '/:all*(svg|png|jpg|jpeg|webp|ico|woff2)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
