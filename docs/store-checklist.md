@@ -1,5 +1,7 @@
 # Store launch checklist (App Store and Google Play)
 
+Step-by-step instructions with links: `docs/store-setup-guide.md`.
+
 What has to exist in each console before the first store build, and what the repository
 expects from it. Written 2026-10-08. Nothing here is automated: every row is an account,
 a key or a screen that only the owner can create. Keys go to the gitignored `.env` files
