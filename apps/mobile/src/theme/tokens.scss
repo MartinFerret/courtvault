@@ -1768,6 +1768,18 @@ ion-alert.cv-shortcuts .alert-message {
 .cv-scan-tile {
   position: relative;
 }
+/* A lone tile (the web Add page without the webcam scanner: only "Import a spreadsheet") is a
+   full-width row, not a half-width square that towers over the search column on phones. */
+.cv-scan-grid > .cv-scan-tile:only-child {
+  grid-column: 1 / -1;
+  aspect-ratio: auto;
+  min-height: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+}
 
 /* Spreadsheet import */
 .cv-dropzone {

@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   skipTrailingSlashRedirect: true,
   async rewrites() {
     return [
+      // Universal Links and App Links association files (404 until the store keys exist).
+      { source: '/.well-known/apple-app-site-association', destination: '/api/app-links/apple' },
+      { source: '/.well-known/assetlinks.json', destination: '/api/app-links/android' },
       { source: '/ingest/static/:path*', destination: `${POSTHOG_ASSETS}/static/:path*` },
       { source: '/ingest/:path*', destination: `${POSTHOG_HOST}/:path*` },
     ];

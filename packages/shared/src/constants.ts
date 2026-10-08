@@ -6,9 +6,23 @@ export const BRAND_NAME = 'HoopTicker';
 /** Positioning line, used on the website, the app stores and the onboarding hero. */
 export const BRAND_TAGLINE = 'Turn your basketball card collection into a portfolio.';
 /** The daily reason to open the app, appended to the tagline where there is room. */
-export const BRAND_DIFFERENTIATOR = 'See what last night\'s games did to it.';
+export const BRAND_DIFFERENTIATOR = "See what last night's games did to it.";
 /** Deep link scheme of the mobile app (Universal Links / App Links use the website paths). */
 export const APP_SCHEME = 'hoopticker://';
+/** Bundle id (iOS) and application id (Android), pinned in apps/mobile/capacitor.config.ts. */
+export const APP_BUNDLE_ID = 'app.hoopticker.mobile';
+/**
+ * Website paths the installed app opens (Universal Links, App Links). They mirror the routes
+ * DeepLinkService maps; patterns use the apple-app-site-association syntax.
+ */
+export const APP_LINK_PATHS = [
+  '/cards/*',
+  '/players/*',
+  '/checklists/*',
+  '/trending-basketball-cards',
+  '/trending-basketball-cards/*',
+  '/most-valuable-basketball-rookie-cards',
+] as const;
 
 /** Shown in the website footer and the app's About screen. Required by the brief. */
 export const AFFILIATION_DISCLAIMER = 'Not affiliated with the NBA, NBPA or Topps.';
@@ -70,7 +84,9 @@ export const PRICING = {
 } as const;
 
 /** Rounded saving of the yearly plan versus twelve monthly payments, e.g. 30 for "save 30%". */
-export function yearlySavingsPercent(pricing: { monthlyUsd: number; yearlyUsd: number } = PRICING): number {
+export function yearlySavingsPercent(
+  pricing: { monthlyUsd: number; yearlyUsd: number } = PRICING,
+): number {
   return Math.round((1 - pricing.yearlyUsd / (pricing.monthlyUsd * 12)) * 100);
 }
 
@@ -91,7 +107,8 @@ export const PRICE_KIND_LABELS: Record<PriceKind, string> = {
 };
 /** The label of one figure, with the sale date for a last auction sale ("Last auction sale, Oct 2"). */
 export function priceKindLabel(kind: string | null | undefined, saleAt?: string | null): string {
-  const label = PRICE_KIND_LABELS[(kind ?? 'ask_median') as PriceKind] ?? PRICE_KIND_LABELS.ask_median;
+  const label =
+    PRICE_KIND_LABELS[(kind ?? 'ask_median') as PriceKind] ?? PRICE_KIND_LABELS.ask_median;
   if (kind === 'last_auction' && saleAt) {
     const d = new Date(saleAt);
     if (!Number.isNaN(d.getTime())) {

@@ -20,7 +20,8 @@
     "prebuild": "node tools/write-env.mjs",
     "pretypecheck": "node tools/write-env.mjs",
     "prelint": "node tools/write-env.mjs",
-    "pretest": "node tools/write-env.mjs"
+    "pretest": "node tools/write-env.mjs",
+    "assets": "node tools/make-assets.mjs && npx --yes @capacitor/assets@3 generate --iconBackgroundColor '#121417' --iconBackgroundColorDark '#121417' --splashBackgroundColor '#121417' --splashBackgroundColorDark '#121417'"
   },
   "dependencies": {
     "@angular/common": "^22.2.0",
