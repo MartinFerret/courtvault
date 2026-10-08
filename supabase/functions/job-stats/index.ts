@@ -1,5 +1,6 @@
 /**
- * job-stats: last night's games and box scores -> games + player_game_lines.
+ * job-stats: last night's games and box scores -> games + player_game_lines, then the
+ * Vault Score of last night's locked lineups (score_game_day, a no-op while the game is off).
  * Target 5:00 AM New York. Highlightly free plan: 100 requests/day; one night costs ~16.
  */
 import { defineJob } from '../_shared/jobs.ts';
@@ -84,6 +85,7 @@ serve(
             assists: line.assists,
             steals: line.steals,
             blocks: line.blocks,
+            turnovers: line.turnovers,
             team: line.team || null,
             raw: line.raw,
           });
@@ -98,7 +100,19 @@ serve(
         if (provider.name !== 'mock') await sleep(250); // be gentle with the free plan
       }
 
-      return { provider: provider.name, games: games.length, lines: linesUpserted, idsLearned };
+      const { data: scored, error: scoreError } = await supabase.rpc('score_game_day', {
+        p_day: day,
+      });
+      if (scoreError) throw scoreError;
+      log('vault score', { lineups: scored });
+
+      return {
+        provider: provider.name,
+        games: games.length,
+        lines: linesUpserted,
+        idsLearned,
+        lineupsScored: scored,
+      };
     },
   ),
 );

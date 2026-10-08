@@ -40,6 +40,7 @@ const BOX_SCORE = [
           { name: 'Total Assists', value: 3 },
           { name: 'Total Steals', value: 1 },
           { name: 'Total Blocks', value: 0 },
+          { name: 'Total Turnovers', value: 2 },
         ],
       },
     ],
@@ -88,9 +89,11 @@ Deno.test('maps a Highlightly box score to player lines', () => {
   assertEquals(barnes.assists, 3);
   assertEquals(barnes.steals, 1);
   assertEquals(barnes.blocks, 0);
+  assertEquals(barnes.turnovers, 2);
   const jokic = lines[1]!;
   assertEquals(jokic.points, 31);
   assertEquals(jokic.rebounds, null);
+  assertEquals(jokic.turnovers, null);
 });
 
 Deno.test('mock provider is deterministic and pairs known teams', async () => {

@@ -396,6 +396,45 @@ export type Database = {
           },
         ];
       };
+      fantasy_scoring: {
+        Row: {
+          stat: string;
+          valid_from: string;
+          weight: number;
+        };
+        Insert: {
+          stat: string;
+          valid_from: string;
+          weight: number;
+        };
+        Update: {
+          stat?: string;
+          valid_from?: string;
+          weight?: number;
+        };
+        Relationships: [];
+      };
+      fantasy_seasons: {
+        Row: {
+          id: string;
+          label: string;
+          regular_end: string;
+          regular_start: string;
+        };
+        Insert: {
+          id: string;
+          label: string;
+          regular_end: string;
+          regular_start: string;
+        };
+        Update: {
+          id?: string;
+          label?: string;
+          regular_end?: string;
+          regular_start?: string;
+        };
+        Relationships: [];
+      };
       followed_players: {
         Row: {
           created_at: string;
@@ -428,6 +467,33 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      game_days: {
+        Row: {
+          day: string;
+          first_tip_at: string | null;
+          games: number;
+          locked_at: string | null;
+          scored_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          day: string;
+          first_tip_at?: string | null;
+          games?: number;
+          locked_at?: string | null;
+          scored_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          day?: string;
+          first_tip_at?: string | null;
+          games?: number;
+          locked_at?: string | null;
+          scored_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
       };
       games: {
         Row: {
@@ -545,6 +611,102 @@ export type Database = {
           platform?: string;
           purchased_at?: string;
           reference?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      lineup_drafts: {
+        Row: {
+          captain_id: string;
+          player_ids: string[];
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          captain_id: string;
+          player_ids: string[];
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          captain_id?: string;
+          player_ids?: string[];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      lineup_events: {
+        Row: {
+          action: string;
+          at: string;
+          details: Json | null;
+          id: number;
+          user_id: string;
+        };
+        Insert: {
+          action: string;
+          at?: string;
+          details?: Json | null;
+          id?: never;
+          user_id: string;
+        };
+        Update: {
+          action?: string;
+          at?: string;
+          details?: Json | null;
+          id?: never;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      lineup_scores: {
+        Row: {
+          counts: boolean;
+          game_day: string;
+          per_player: NonNullable<Json>;
+          scored_at: string;
+          total: number;
+          user_id: string;
+        };
+        Insert: {
+          counts: boolean;
+          game_day: string;
+          per_player: NonNullable<Json>;
+          scored_at?: string;
+          total: number;
+          user_id: string;
+        };
+        Update: {
+          counts?: boolean;
+          game_day?: string;
+          per_player?: NonNullable<Json>;
+          scored_at?: string;
+          total?: number;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      lineups: {
+        Row: {
+          captain_id: string | null;
+          game_day: string;
+          locked_at: string;
+          player_ids: string[];
+          user_id: string;
+        };
+        Insert: {
+          captain_id?: string | null;
+          game_day: string;
+          locked_at?: string;
+          player_ids: string[];
+          user_id: string;
+        };
+        Update: {
+          captain_id?: string | null;
+          game_day?: string;
+          locked_at?: string;
+          player_ids?: string[];
           user_id?: string;
         };
         Relationships: [];
@@ -686,6 +848,7 @@ export type Database = {
           rebounds: number | null;
           steals: number | null;
           team: string | null;
+          turnovers: number | null;
         };
         Insert: {
           assists?: number | null;
@@ -700,6 +863,7 @@ export type Database = {
           rebounds?: number | null;
           steals?: number | null;
           team?: string | null;
+          turnovers?: number | null;
         };
         Update: {
           assists?: number | null;
@@ -714,6 +878,7 @@ export type Database = {
           rebounds?: number | null;
           steals?: number | null;
           team?: string | null;
+          turnovers?: number | null;
         };
         Relationships: [
           {
@@ -1190,6 +1355,20 @@ export type Database = {
           deleted_weekly: number;
         }[];
       };
+      eastern_day: { Args: { p_at?: string }; Returns: string };
+      eligible_player_ids: { Args: { p_day: string; p_user_id: string }; Returns: string[] };
+      fantasy_points: {
+        Args: {
+          p_assists: number;
+          p_blocks: number;
+          p_day: string;
+          p_points: number;
+          p_rebounds: number;
+          p_steals: number;
+          p_turnovers: number;
+        };
+        Returns: number;
+      };
       finish_job_run: {
         Args: {
           p_details?: Json;
@@ -1241,6 +1420,8 @@ export type Database = {
       import_set_key: { Args: { p_name: string }; Returns: string };
       invoke_job: { Args: { p_body?: Json; p_job: string }; Returns: number };
       is_premium: { Args: { uid?: string }; Returns: boolean };
+      is_regular_season_day: { Args: { p_day: string }; Returns: boolean };
+      lock_due_game_days: { Args: Record<PropertyKey, never>; Returns: number };
       match_import_rows: {
         Args: { p_rows: Json };
         Returns: {
@@ -1310,6 +1491,8 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      my_lineup: { Args: Record<PropertyKey, never>; Returns: Json };
+      next_lineup_day: { Args: Record<PropertyKey, never>; Returns: string };
       parallels_to_price: {
         Args: { p_rookie_limit?: number };
         Returns: {
@@ -1405,6 +1588,10 @@ export type Database = {
         };
         Returns: undefined;
       };
+      record_schedule: {
+        Args: { p_day: string; p_first_tip_at: string; p_games: number };
+        Returns: undefined;
+      };
       refresh_public_slugs: { Args: Record<PropertyKey, never>; Returns: undefined };
       resolve_player_names: {
         Args: { p_names: string[] };
@@ -1436,6 +1623,7 @@ export type Database = {
           team: string;
         }[];
       };
+      score_game_day: { Args: { p_day: string }; Returns: number };
       search_catalog: {
         Args: { p_limit?: number; q: string };
         Returns: {
@@ -1447,6 +1635,7 @@ export type Database = {
           title: string;
         }[];
       };
+      set_lineup: { Args: { p_captain_id: string; p_player_ids: string[] }; Returns: Json };
       set_progress: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1489,6 +1678,7 @@ export type Database = {
           value: number;
         }[];
       };
+      vault_score_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
       web_scanner_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
       within_photo_cap: { Args: { uid: string }; Returns: boolean };
     };

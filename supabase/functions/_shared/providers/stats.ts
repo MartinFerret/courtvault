@@ -28,6 +28,8 @@ export interface PlayerLine {
   assists: number | null;
   steals: number | null;
   blocks: number | null;
+  /** Highlightly "Total Turnovers"; null when the provider does not report it. */
+  turnovers: number | null;
   raw: unknown;
 }
 
@@ -106,6 +108,7 @@ const STAT_PATTERNS: [
   ['assists', /assist/i],
   ['steals', /steal/i],
   ['blocks', /block/i],
+  ['turnovers', /turnover/i],
 ];
 
 export function mapHighlightlyBoxScore(teams: HighlightlyBoxScoreTeam[]): PlayerLine[] {
@@ -123,6 +126,7 @@ export function mapHighlightlyBoxScore(teams: HighlightlyBoxScoreTeam[]): Player
         assists: null,
         steals: null,
         blocks: null,
+        turnovers: null,
         raw: entry,
       };
       for (const stat of entry.statistics ?? []) {
@@ -244,6 +248,7 @@ export class MockStatsProvider implements StatsProvider {
           assists: 1 + ((seed >>> 6) % 10),
           steals: (seed >>> 9) % 4,
           blocks: (seed >>> 11) % 4,
+          turnovers: (seed >>> 13) % 5,
           raw: { source: 'mock' },
         };
       });

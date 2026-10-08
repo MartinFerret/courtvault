@@ -323,3 +323,9 @@ begin
 end $$;
 
 insert into public.waitlist (email, source) values ('early-bird@example.com', 'seed') on conflict do nothing;
+
+-- ---------------------------------------------------------------------------
+-- Vault Score: on locally (off in production until Highlightly confirms, see
+-- docs/legal/highlightly-terms.md).
+-- ---------------------------------------------------------------------------
+update public.app_settings set value = jsonb_set(value, '{enabled}', 'true') where key = 'vault_score';

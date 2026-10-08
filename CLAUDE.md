@@ -35,8 +35,8 @@ logo, domain or branding.
 
 ## Two surfaces, one codebase per surface (plan of 2026-10-07)
 
-| Surface                      | Host                  | Code                                                  | Indexed                         |
-| ---------------------------- | --------------------- | ----------------------------------------------------- | ------------------------------- |
+| Surface                      | Host                   | Code                                                  | Indexed                         |
+| ---------------------------- | ---------------------- | ----------------------------------------------------- | ------------------------------- |
 | Public website (acquisition) | `hoopticker.com`       | `apps/web`, Next.js on Netlify                        | Yes                             |
 | Web app (logged-in product)  | `vault.hoopticker.com` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
 
@@ -66,8 +66,15 @@ In scope: NBA basketball only, Topps 2025-26 sets and Topps 2026-27 sets as they
 (2026-27 Flagship first).
 
 Out of scope, do not build: other sports, sets older than 2025-26, automatic parallel
-recognition from images, PSA/CGC label scanning, leaderboards and badges, user-to-user
-marketplace, sealed products.
+recognition from images, PSA/CGC label scanning, user-to-user marketplace, sealed products.
+
+In scope since 2026-10-08 (Martin's decision, plan `docs/plan-vault-score.md`): **Vault Score**
+(a free daily fantasy lineup of 5 owned players plus a captain, scored from real box scores
+only) and **Leagues** (global and private rankings, badges as the only reward). Legal basis
+and guardrails: `docs/legal/fantasy-game.md` (no prizes, no fees, no player photos, no league
+or team logos, "NBA" never in the game's name). Scoring stays behind
+`app_settings.vault_score.enabled` (off in production) until Highlightly confirms derived data
+is allowed (`docs/legal/highlightly-terms.md`).
 
 ## Non-negotiable constraints
 
@@ -89,12 +96,12 @@ marketplace, sealed products.
 
 ### Data (100% free for the MVP)
 
-| Data       | Source                                                                    | Notes                                                                                       |
-| ---------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Catalog    | Official Topps checklists, CSV import (`scripts/src/import-checklist.ts`) | Format in `data/checklists/README.md`. `DEMO-*.csv` are hand-written demo files             |
-| Game stats | Highlightly (`https://nba.highlightly.net`, header `x-rapidapi-key`)      | Free plan: 100 requests/day, box scores included. One night costs ~16 requests              |
+| Data       | Source                                                                                 | Notes                                                                                                                                                                                                                   |
+| ---------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catalog    | Official Topps checklists, CSV import (`scripts/src/import-checklist.ts`)              | Format in `data/checklists/README.md`. `DEMO-*.csv` are hand-written demo files                                                                                                                                         |
+| Game stats | Highlightly (`https://nba.highlightly.net`, header `x-rapidapi-key`)                   | Free plan: 100 requests/day, box scores included. One night costs ~16 requests                                                                                                                                          |
 | Prices     | CardSight AI (`https://api.cardsight.ai`, header `X-API-Key`), eBay sales and listings | Free tier 750 calls/month, one bulk call = 100 cards. Three labelled states (`priceKindLabel`): auction median (90 d, 3+ sales), last auction sale with date, asking median. eBay Browse stays as the disabled fallback |
-| Buy links  | eBay search links (Partner Network campaign id when set)                   | Optional, plain links when no campaign id                                                   |
+| Buy links  | eBay search links (Partner Network campaign id when set)                               | Optional, plain links when no campaign id                                                                                                                                                                               |
 
 Every external source goes through an interface in `supabase/functions/_shared/providers/`
 with a real and a deterministic mock implementation, selected by `STATS_PROVIDER`,
@@ -144,7 +151,8 @@ Netlify Free (Vercel excluded: its free plan forbids commercial use).
 ```
 Topps CSV ──► import script (service role) ──┐
                                              ▼
-pg_cron ──► job-stats   ◄── Highlightly
+pg_cron ──► job-schedule ◄── Highlightly (today's first tip-off = lineup lock)
+        ──► job-stats   ◄── Highlightly (then score_game_day: Vault Score)
         ──► job-prices  ◄── CardSight AI     ──► PostgreSQL (RLS, triggers, views, RPC)
         ──► job-alerts  ──► FCM                     ▲            ▲
         ──► job-morning ──► FCM                     │            │
@@ -165,6 +173,11 @@ apps/mobile (user session) ──► tables, RPC, storage, ───────
   limits, RLS, prices, RPC, storage, jobs/cron, usage). `price_points` has no surrogate key and
   stores one row per actual price change (`record_price()`); `current_prices` holds the last
   price (`latest_prices` view). Compaction: daily for 90 days, weekly to 1 year, monthly after.
+- Vault Score (`supabase/migrations/20261009000100_vault_score_core.sql`): `set_lineup()` saves
+  the draft (5 owned players, captain, card added by the previous Eastern day, 20 saves a day),
+  `lock_due_game_days()` (pg_cron every 5 minutes) freezes drafts into `lineups` at
+  `game_days.first_tip_at`, `score_game_day()` (end of job-stats) writes `lineup_scores` with
+  the weights of `fantasy_scoring`; only `fantasy_seasons` regular-season days count.
 - Scheduled jobs run in UTC at both Eastern offsets; functions gate on the local hour and are
   idempotent per Eastern day via `job_runs` (`_shared/jobs.ts`).
 - Website: ISR (1h) + on-demand revalidation (`/api/revalidate`, tags `prices`, `catalog`,
