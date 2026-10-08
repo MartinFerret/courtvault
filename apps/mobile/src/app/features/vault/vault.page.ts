@@ -95,8 +95,9 @@ export class VaultPage {
     if (value === 'all' || value === 'rookies' || value === 'numbered' || value === 'graded') this.filter.set(value);
   }
 
+  /** From the gains column and the "See gains and losses" chip. */
   openPaywall(): void {
-    void this.paywall.open('cards');
+    void this.paywall.open('gains');
   }
 
   gradeOf(value: string): Grade {

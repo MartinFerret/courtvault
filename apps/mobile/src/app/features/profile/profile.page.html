@@ -27,10 +27,12 @@
 
         <ion-segment
           class="cv-chips"
-          [value]="plan.profile()?.digest_frequency ?? 'daily'"
+          [value]="effectiveDigest()"
           (ionChange)="setDigest($any($event).detail.value)"
         >
-          <ion-segment-button value="daily"><ion-label>Daily</ion-label></ion-segment-button>
+          <ion-segment-button value="daily" [disabled]="!plan.isPremium()"
+            ><ion-label>{{ plan.isPremium() ? 'Daily' : 'Daily · Premium' }}</ion-label></ion-segment-button
+          >
 
           <ion-segment-button value="weekly"><ion-label>Weekly</ion-label></ion-segment-button>
 

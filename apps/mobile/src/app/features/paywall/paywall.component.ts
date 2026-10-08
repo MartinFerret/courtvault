@@ -24,6 +24,8 @@ const REASONS: Record<string, string> = {
   photos: 'You reached the free limit of card photos.',
   full_export: 'The full export with values is a Premium feature.',
   history: 'Full price history is a Premium feature.',
+  gains: 'Gains and losses are a Premium feature.',
+  digest: 'The daily morning email is a Premium feature.',
 };
 
 /** Global paywall modal, opened by PaywallService (from LIMIT_REACHED errors or the profile). */
@@ -61,9 +63,11 @@ export class PaywallComponent {
 
   constructor() {
     // Load offerings (RevenueCat, or the mock list without keys) the first time the paywall opens.
+    // Each opening starts clean: a failed purchase from an earlier visit must not greet the user.
     effect(() => {
-      if (this.paywall.isOpen() && this.billing.offerings().length === 0)
-        void this.billing.configure();
+      if (!this.paywall.isOpen()) return;
+      this.message.set(null);
+      if (this.billing.offerings().length === 0) void this.billing.configure();
     });
   }
 

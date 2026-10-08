@@ -122,9 +122,20 @@ export class BillingService {
     this.busy.set(true);
     try {
       if (this.isWeb) {
-        const { url } = await this.supabase.invoke<{ url: string }>('create-checkout', {
-          plan: offering.identifier,
-        });
+        let url: string;
+        try {
+          ({ url } = await this.supabase.invoke<{ url: string }>('create-checkout', {
+            plan: offering.identifier,
+          }));
+        } catch (err) {
+          // The function's wording is for the logs; the user gets one sentence they can act on.
+          console.error('create-checkout failed:', err);
+          throw new Error(
+            err instanceof Error && /already|closed/i.test(err.message)
+              ? err.message
+              : 'Checkout is not available right now. Please try again in a moment.',
+          );
+        }
         location.assign(url);
         return false;
       }

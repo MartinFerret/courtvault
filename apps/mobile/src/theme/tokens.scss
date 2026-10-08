@@ -295,10 +295,17 @@ ion-button {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding-bottom: 2px;
+  /* Room for the foil ring of a parallel chip: a scroller clips on both axes, so the ring
+     needs a few pixels inside it. The negative margin keeps the layout where it was. */
+  padding: 3px 3px 5px;
+  margin: -3px -3px -3px;
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+  /* The ring follows the host's radius (`border-radius: inherit`): give the host the pill. */
+  > ion-button.cv-foil {
+    border-radius: var(--cv-radius-pill);
   }
 }
 ion-segment.cv-chips {
@@ -676,6 +683,36 @@ ion-alert {
   .alert-button {
     font-family: var(--cv-font);
     color: var(--cv-text);
+  }
+}
+
+/* Action sheets (Profile > Export my collection). Ionic colours the buttons with the primary
+   colour, which here is the lime accent: unreadable on the white sheet. The buttons take the
+   text colour, like the alert buttons above; the accent stays on the page behind.
+   The mode class is part of the selector so this outranks Ionic's own host rule. */
+ion-action-sheet.ios,
+ion-action-sheet.md {
+  --background: var(--cv-surface-high);
+  --color: var(--cv-text-muted);
+  --button-color: var(--cv-text);
+  --button-color-hover: var(--cv-text);
+  --button-color-focused: var(--cv-text);
+  --button-color-activated: var(--cv-text);
+  --button-color-selected: var(--cv-text);
+  --button-background-selected: var(--cv-surface-high);
+  font-family: var(--cv-font);
+  .action-sheet-title,
+  .action-sheet-button {
+    font-family: var(--cv-font);
+  }
+  .action-sheet-button {
+    font-weight: 500;
+  }
+  .action-sheet-cancel {
+    font-weight: 600;
+  }
+  .action-sheet-destructive {
+    color: var(--cv-color-loss);
   }
 }
 

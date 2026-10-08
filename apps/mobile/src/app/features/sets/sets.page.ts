@@ -30,7 +30,10 @@ export class SetsPage {
   }
 
   async toggle(set: SetRow, event: Event): Promise<void> {
+    // The row is a router link (Ionic renders it as an anchor): stopping the bubble is not
+    // enough, the anchor's own navigation has to be cancelled too.
     event.stopPropagation();
+    event.preventDefault();
     this.error.set(null);
     try {
       if (set.is_followed) await this.follows.unfollowSet(set.set_id);

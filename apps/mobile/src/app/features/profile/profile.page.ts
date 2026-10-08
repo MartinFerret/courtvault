@@ -92,7 +92,21 @@ export class ProfilePage {
     void this.paywall.open(null);
   }
 
+  /**
+   * The frequency the user actually receives. The database sends free accounts the weekly
+   * digest whatever is stored, so the chips show that rather than a "daily" they never get.
+   */
+  effectiveDigest(): 'daily' | 'weekly' | 'off' {
+    const stored = this.plan.profile()?.digest_frequency ?? 'daily';
+    if (stored === 'off') return 'off';
+    return this.plan.isPremium() && stored === 'daily' ? 'daily' : 'weekly';
+  }
+
   async setDigest(value: string | number | undefined): Promise<void> {
+    if (value === 'daily' && !this.plan.isPremium()) {
+      void this.paywall.open('digest');
+      return;
+    }
     if (value === 'daily' || value === 'weekly' || value === 'off') {
       await this.plan.updateEmailPreferences({ digest_frequency: value });
       this.message.set(

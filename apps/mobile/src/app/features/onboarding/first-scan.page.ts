@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonButton, IonContent, IonIcon } from '@ionic/angular';
+import { IonButton, IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'cv-first-scan',
-  imports: [IonContent, IonButton, IonIcon],
+  imports: [IonContent, IonButton],
   template: `
     <ion-content>
       <div class="cv-hero">

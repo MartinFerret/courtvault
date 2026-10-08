@@ -53,6 +53,11 @@ export function serve(handler: (req: Request) => Promise<Response>): void {
     } catch (err) {
       if (err instanceof HttpError) return error(err.message, err.status);
       console.error(err);
+      // A missing secret is our configuration problem, not something to show a customer:
+      // the name of the variable stays in the log, the client gets a sentence it can act on.
+      if (err instanceof Error && err.message.startsWith('Missing environment variable')) {
+        return error('This feature is not available yet. Please try again later.', 503);
+      }
       return error(err instanceof Error ? err.message : 'Internal error', 500);
     }
   });

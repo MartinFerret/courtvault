@@ -25,7 +25,7 @@ import {
   type ParsedCsv,
 } from '../../core/import/import.service';
 import { PlanService } from '../../core/plan/plan.service';
-import { CentsPipe, GradePipe } from '../../shared/pipes';
+import { GradePipe } from '../../shared/pipes';
 
 type Step = 'upload' | 'map' | 'preview' | 'done';
 
@@ -59,7 +59,6 @@ const FIELD_LABELS: Record<ImportField, string> = {
     IonButton,
     IonIcon,
     IonNote,
-    CentsPipe,
     GradePipe,
   ],
   templateUrl: './import.page.html',
