@@ -9,8 +9,9 @@ const config: CapacitorConfig = {
   },
   android: {
     // Local development only: the app (https://localhost) calls Supabase over http on the host.
-    // Set to false for production builds.
-    allowMixedContent: true,
+    // Off by default (store builds); `CAP_ALLOW_MIXED_CONTENT=true npx cap sync android` for
+    // the emulator against the local Supabase stack.
+    allowMixedContent: process.env['CAP_ALLOW_MIXED_CONTENT'] === 'true',
   },
   plugins: {
     SplashScreen: {

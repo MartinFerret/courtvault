@@ -88,7 +88,7 @@ cd android && ./gradlew assembleDebug
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-`capacitor.config.ts` sets `android.allowMixedContent: true` so the https app shell can call the
+`capacitor.config.ts` enables `android.allowMixedContent` only when `CAP_ALLOW_MIXED_CONTENT=true` is set at `cap sync` time, so the https app shell can call the
 local http Supabase. Turn it off for production builds. Use a hardware GPU for the emulator
 (`-gpu host`): the software renderer shows ghosted layouts.
 
