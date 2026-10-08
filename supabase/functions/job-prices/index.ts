@@ -44,6 +44,13 @@ serve(
       const budget = Number(env('PRICE_CALL_BUDGET') ?? budgetValue ?? 3500);
 
       const provider = createPriceProvider(day);
+      // Mock prices are for local development only: they must never reach a database that
+      // feeds the public website (2026-10-08: a cloud run wrote 1,000 invented prices). The
+      // local stack sets ALLOW_MOCK_PRICES=true in supabase/functions/.env.
+      if (provider.name === 'mock' && env('ALLOW_MOCK_PRICES') !== 'true') {
+        log('mock price provider without ALLOW_MOCK_PRICES: nothing written');
+        return { status: 'skipped', reason: 'mock price provider' };
+      }
       const capturedAt = new Date().toISOString();
       const coverage = new Map<string, Coverage>();
       const bump = (reason: string, key: keyof Coverage) => {
