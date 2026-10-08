@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { TextRecognition } from '@capacitor-mlkit/text-recognition';
 import { environment } from '../../../environments/environment';
+import type { Grade } from '@courtvault/shared';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export interface ScanCandidate {
@@ -32,6 +33,23 @@ export interface ScanResult {
     players: { id: string; name: string; confidence: number }[];
   };
   candidates: ScanCandidate[];
+}
+
+/** One quick add match (quick-add-match edge function): a card, its parallel and the grade read. */
+export interface QuickAddMatch {
+  cardId: string;
+  cardSlug: string;
+  number: string;
+  isRookie: boolean;
+  playerName: string;
+  setName: string;
+  season: string;
+  parallelId: string;
+  parallelName: string;
+  serialRun: number | null;
+  grade: Grade;
+  serialNumber: number | null;
+  score: number;
 }
 
 export interface CapturedPhoto {
@@ -134,6 +152,14 @@ export class ScanService {
 
   match(text: string): Promise<ScanResult> {
     return this.supabase.invoke<ScanResult>('scan-match', { text, limit: 5 });
+  }
+
+  /** Quick add by text ("2025 Chrome Flagg 251 gold /50"): the top 3 card + parallel matches. */
+  async quickAdd(text: string): Promise<QuickAddMatch[]> {
+    const result = await this.supabase.invoke<{ matches: QuickAddMatch[] }>('quick-add-match', {
+      text,
+    });
+    return result.matches ?? [];
   }
 
   /** Resizes to 600px max and compresses to JPEG until under ~100 KB. */

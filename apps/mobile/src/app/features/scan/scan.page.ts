@@ -20,7 +20,12 @@ import { CatalogService, type SearchResult } from '../../core/catalog/catalog.se
 import { CollectionService } from '../../core/collection/collection.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { PushService } from '../../core/push/push.service';
-import { ScanService, type CapturedPhoto, type ScanCandidate } from '../../core/scan/scan.service';
+import {
+  ScanService,
+  type CapturedPhoto,
+  type QuickAddMatch,
+  type ScanCandidate,
+} from '../../core/scan/scan.service';
 import {
   CentsPipe,
   FoilClassPipe,
@@ -87,6 +92,17 @@ export class ScanPage {
   readonly sessionCount = signal(0);
   readonly sessionCents = signal(0);
   readonly sessionItems = signal<{ label: string; cents: number | null }[]>([]);
+
+  // Quick add by text (web): one input, the top 3 matches, one click to add.
+  readonly quickQuery = signal('');
+  readonly quickResults = signal<QuickAddMatch[]>([]);
+  readonly quickBusy = signal(false);
+  readonly quickAdded = signal<string | null>(null);
+  readonly quickExamples = [
+    '2025 Chrome Flagg 251 gold /50',
+    'Wemby chrome refractor',
+    'SGA topps 115 PSA 10',
+  ];
 
   // Manual search fallback
   readonly manualQuery = signal('');
@@ -228,6 +244,36 @@ export class ScanPage {
       }
       this.error.set(err instanceof Error ? err.message : 'Could not add the card.');
     }
+  }
+
+  async quickSearch(text: string): Promise<void> {
+    this.quickQuery.set(text);
+    this.quickAdded.set(null);
+    this.error.set(null);
+    if (text.trim().length < 3) {
+      this.quickResults.set([]);
+      return;
+    }
+    this.quickBusy.set(true);
+    try {
+      const results = await this.scan.quickAdd(text);
+      if (this.quickQuery() === text) this.quickResults.set(results);
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'Search failed.');
+    } finally {
+      this.quickBusy.set(false);
+    }
+  }
+
+  quickLabel(m: QuickAddMatch): string {
+    return `#${m.number} ${m.playerName}, ${m.season} ${m.setName}, ${formatParallel(m.parallelName, m.serialRun)}`;
+  }
+
+  async addQuick(m: QuickAddMatch): Promise<void> {
+    this.grade = m.grade;
+    this.serialNumber = m.serialNumber;
+    await this.addParallel(m.parallelId, this.quickLabel(m));
+    if (!this.error()) this.quickAdded.set(m.parallelId);
   }
 
   resetForNext(): void {

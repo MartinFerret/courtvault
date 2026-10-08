@@ -22,8 +22,9 @@
   <ion-note class="cv-error" role="alert">{{ message }}</ion-note>
   } @switch (step()) { @case ('idle') {
   <div class="cv-cols cv-cols--main">
-    <section [class.cv-section]="scan.isNative" [style.order]="scan.isNative ? 2 : 1">
-      <h2>{{ scan.isNative ? 'Or search manually' : 'Search the catalog' }}</h2>
+    @if (scan.isNative) {
+    <section class="cv-section" style="order: 2">
+      <h2>Or search manually</h2>
       <p class="cv-caption" style="margin: 6px 0 12px">
         Player, set or card number. Pick the parallel and grade next.
       </p>
@@ -45,6 +46,72 @@
         }
       </ion-list>
     </section>
+    } @else {
+    <section class="cv-quickadd" style="order: 1">
+      <h2>Type your card</h2>
+      <p class="cv-caption" style="margin: 6px 0 12px">
+        Like a text to a friend: year, set, player, number, parallel, print run, grade.
+      </p>
+      <ion-searchbar
+        class="cv-quickadd__input"
+        placeholder="2025 Chrome Flagg 251 gold /50"
+        debounce="300"
+        data-shortcut="search"
+        aria-label="Type a card"
+        [value]="quickQuery()"
+        (ionInput)="quickSearch($any($event).detail.value ?? '')"
+      ></ion-searchbar>
+      @if (quickQuery().length < 3) {
+      <div class="cv-quickadd__examples" aria-label="Examples">
+        @for (example of quickExamples; track example) {
+        <button type="button" class="cv-quickadd__example" (click)="quickSearch(example)">
+          {{ example }}
+        </button>
+        }
+      </div>
+      } @if (quickBusy()) {
+      <ion-spinner class="cv-quickadd__spinner" aria-label="Searching"></ion-spinner>
+      }
+      <ol class="cv-quickadd__results" aria-live="polite">
+        @for (m of quickResults(); track m.parallelId; let first = $first) {
+        <li class="cv-quickadd__row" [class.cv-quickadd__row--best]="first">
+          <div class="cv-quickadd__card">
+            <strong
+              >#{{ m.number }} {{ m.playerName }} @if (m.isRookie) {
+              <span class="cv-badge">RC</span> }</strong
+            >
+            <span class="cv-caption">{{ m.season }} {{ m.setName }}</span>
+            <span class="cv-quickadd__meta">
+              <span
+                class="cv-quickadd__parallel"
+                [class]="'cv-quickadd__parallel ' + (m.parallelName | foilClass: m.serialRun)"
+                [style.--foil-hue]="m.parallelName | foilHue: m.serialRun"
+                [style.--foil-sat]="m.parallelName | foilSat: m.serialRun"
+                >{{ m.parallelName | parallel: m.serialRun }}</span
+              >
+              @if (m.grade !== 'RAW') {
+              <span class="cv-quickadd__tag">{{ m.grade | grade }}</span> } @if (m.serialNumber) {
+              <span class="cv-quickadd__tag">{{ m.serialNumber }}/{{ m.serialRun }}</span> }
+            </span>
+          </div>
+          <ion-button
+            class="cv-quickadd__add"
+            [fill]="first ? 'solid' : 'outline'"
+            [disabled]="quickAdded() === m.parallelId"
+            (click)="addQuick(m)"
+            [attr.aria-label]="'Add ' + quickLabel(m)"
+            >{{ quickAdded() === m.parallelId ? 'Added' : 'Add' }}</ion-button
+          >
+        </li>
+        }
+      </ol>
+      @if (!quickBusy() && quickQuery().length >= 3 && quickResults().length === 0) {
+      <p class="cv-quickadd__empty">
+        No match yet. Add the player's last name and the card number, for example "Flagg 251".
+      </p>
+      }
+    </section>
+    }
 
     <div [style.order]="scan.isNative ? 1 : 2">
       @if (scan.isNative) {
