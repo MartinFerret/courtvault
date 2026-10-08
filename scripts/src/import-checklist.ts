@@ -10,7 +10,7 @@
  * import (merging an existing duplicate when needed). Everything that is not an exact match is
  * written to the set's *.anomalies.md under an "Import" section for review.
  */
-import { existsSync, readFileSync, writeFileSync, appendFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, resolve } from 'node:path';
 import { parse } from 'csv-parse/sync';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';

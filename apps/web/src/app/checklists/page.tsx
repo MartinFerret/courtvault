@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import { listSets } from '@/lib/data';
+import { listSets, listUpcomingReleases } from '@/lib/data';
 import { checklistPath, PATHS } from '@/lib/paths';
 
 export const revalidate = 3600;
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SetsPage() {
-  const sets = await listSets();
+  const [sets, upcoming] = await Promise.all([listSets(), listUpcomingReleases().catch(() => [])]);
   const latest = sets.reduce(
     (best, s, i) =>
       s.release_date && (best < 0 || s.release_date > (sets[best]?.release_date ?? '')) ? i : best,
@@ -52,6 +52,23 @@ export default async function SetsPage() {
           </Link>
         ))}
       </div>
+      {upcoming.length > 0 ? (
+        <section className="section">
+          <h2>Coming next</h2>
+          <ul className="hub-list">
+            {upcoming.map((r) => (
+              <li key={r.slug}>
+                <Link href={checklistPath(r.public_slug)}>
+                  {r.season} {r.name} checklist
+                </Link>
+                <span className="muted small">
+                  {r.release_date ? `releases ${r.release_date}` : 'release date to be announced'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
       <AppCta context="your sets" />
     </>
   );

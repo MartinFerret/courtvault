@@ -198,7 +198,7 @@ export function variationNameOf(section: string): string | null {
  * "BASE COMMON" / "BASE RARE" (Finest tiers) or by theme ("HIGHLIGHTS", "ALL STARS" in Hoops).
  * Insert groups are never base.
  */
-export function isBaseScope(group: string, section: string): boolean {
+export function isBaseScope(group: string): boolean {
   if (group !== 'BASE') return false;
   return true;
 }
@@ -307,7 +307,7 @@ export function buildCards(parsed: ReturnType<typeof parseChecklistText>): Conve
   let baseSections = 0;
   let variationSections = 0;
 
-  const inScope = parsed.sections.filter((s) => isBaseScope(s.group, s.section));
+  const inScope = parsed.sections.filter((s) => isBaseScope(s.group));
   for (const s of parsed.sections) if (!inScope.includes(s)) skipped.push(s);
 
   // Pass 1: base sections. "BASE CARDS" is always base. Any other BASE-group subset whose

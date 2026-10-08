@@ -25,6 +25,39 @@ function eitherSlug(slug: string): string | null {
 }
 
 /** True once at least one price has been recorded: pages show price columns only then. */
+/** Highest median asking prices right now, any parallel, raw (values hub). */
+export async function topValues(limit = 12) {
+  const { data, error } = await supabase()
+    .from('current_prices')
+    .select(
+      'price_cents, sample_size, grade, parallels!inner(name, serial_run, cards!inner(number, public_slug, is_rookie, players(name, public_slug), card_sets(name, season, public_slug)))',
+    )
+    .eq('grade', 'RAW')
+    .order('price_cents', { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []).map((row) => {
+    const parallel = row.parallels as unknown as {
+      name: string;
+      serial_run: number | null;
+      cards: {
+        number: string;
+        public_slug: string;
+        is_rookie: boolean;
+        players: { name: string; public_slug: string } | null;
+        card_sets: { name: string; season: string; public_slug: string } | null;
+      };
+    };
+    return {
+      price_cents: row.price_cents,
+      sample_size: row.sample_size,
+      parallel_name: parallel.name,
+      serial_run: parallel.serial_run,
+      card: parallel.cards,
+    };
+  });
+}
+
 export async function pricesAvailable(): Promise<boolean> {
   const { data, error } = await supabase().from('current_prices').select('parallel_id').limit(1);
   if (error) throw error;
@@ -57,6 +90,39 @@ export async function listSets(): Promise<SetSummary[]> {
     release_date: s.release_date,
     card_count: (s.cards as unknown as { count: number }[])[0]?.count ?? 0,
   }));
+}
+
+export interface SetRelease {
+  slug: string;
+  public_slug: string;
+  name: string;
+  season: string;
+  release_date: string | null;
+  box_config: string | null;
+  status: 'announced' | 'imported';
+}
+
+/** Announced sets whose checklist is not imported yet (placeholder pages, audit item 7). */
+export async function listUpcomingReleases(): Promise<SetRelease[]> {
+  const { data, error } = await supabase()
+    .from('set_releases')
+    .select('slug, public_slug, name, season, release_date, box_config, status')
+    .eq('status', 'announced')
+    .order('release_date', { ascending: true, nullsFirst: false });
+  if (error) throw error;
+  return (data ?? []) as SetRelease[];
+}
+
+export async function getRelease(publicSlug: string): Promise<SetRelease | null> {
+  if (!SLUG.test(publicSlug)) return null;
+  const { data, error } = await supabase()
+    .from('set_releases')
+    .select('slug, public_slug, name, season, release_date, box_config, status')
+    .eq('public_slug', publicSlug)
+    .eq('status', 'announced')
+    .maybeSingle();
+  if (error) throw error;
+  return (data as SetRelease | null) ?? null;
 }
 
 export async function getSet(slug: string) {
@@ -416,6 +482,31 @@ async function basePricesForCards(cardIds: string[]): Promise<Map<string, number
   return result;
 }
 
+/** The player's lowest print runs across his cards (audit item 9). */
+export async function rarestParallels(playerId: string, limit = 6) {
+  const { data, error } = await supabase()
+    .from('parallels')
+    .select(
+      'name, serial_run, cards!inner(number, public_slug, is_rookie, player_id, card_sets(name, season))',
+    )
+    .eq('cards.player_id', playerId)
+    .not('serial_run', 'is', null)
+    .order('serial_run', { ascending: true })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []).map((p) => ({
+    name: p.name,
+    serial_run: p.serial_run as number,
+    card: p.cards as unknown as {
+      number: string;
+      public_slug: string;
+      is_rookie: boolean;
+      card_sets: { name: string; season: string } | null;
+    },
+  }));
+}
+
+/** Every box score of the player this season, newest first (audit item 9: a season game log). */
 async function recentLines(playerId: string) {
   const { data, error } = await supabase()
     .from('player_game_lines')
@@ -423,7 +514,7 @@ async function recentLines(playerId: string) {
       'points, rebounds, assists, steals, blocks, minutes, games(game_day, home_team, away_team, home_score, away_score)',
     )
     .eq('player_id', playerId)
-    .limit(10);
+    .limit(100);
   if (error) throw error;
   return (data ?? [])
     .map((l) => ({
@@ -436,8 +527,7 @@ async function recentLines(playerId: string) {
         away_score: number | null;
       } | null,
     }))
-    .sort((a, b) => (b.game?.game_day ?? '').localeCompare(a.game?.game_day ?? ''))
-    .slice(0, 5);
+    .sort((a, b) => (b.game?.game_day ?? '').localeCompare(a.game?.game_day ?? ''));
 }
 
 function chunk<T>(items: T[], size: number): T[][] {

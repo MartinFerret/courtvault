@@ -47,6 +47,18 @@ export default async function MethodPage() {
       a: 'The player averaged at least 15% more points, rebounds and assists over his last 5 games than over the season. Cold form is the opposite. It uses stats only, never prices, and needs 10 tracked games.',
     },
     {
+      q: 'Where do the checklists come from?',
+      a: 'From the official Topps checklists, set by set, converted by hand and checked. Each checklist page lists every base card with its number, the rookie cards and every parallel with its print run.',
+    },
+    {
+      q: 'What does a player page show?',
+      a: 'The player’s cards in every Topps set with their numbers, the rarest parallels with their print runs, his current team, his game log for the season and, once priced, the median asking price of each card.',
+    },
+    {
+      q: 'Which sets and seasons are covered?',
+      a: 'Topps basketball sets from the 2025-26 season onward, and 2026-27 sets as Topps releases them. Older sets and other brands are not in the catalog.',
+    },
+    {
       q: 'Does a good game raise a card price?',
       a: 'Sometimes, and sometimes not. We show the box score and the asking prices side by side, before tip-off and the next morning, and we never claim that one caused the other.',
     },

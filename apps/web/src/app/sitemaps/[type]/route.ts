@@ -1,4 +1,4 @@
-import { listIndexable } from '@/lib/data';
+import { listIndexable, pricesAvailable } from '@/lib/data';
 import { listLastNightDays } from '@/lib/last-night';
 import { PATHS, cardPath, checklistPath, moversPath, playerPath } from '@/lib/paths';
 import { absoluteUrl } from '@/lib/site';
@@ -36,14 +36,18 @@ export async function GET(
     ? new Date(`${nights[0].game_day}T13:00:00Z`).toISOString()
     : null;
   switch (kind) {
-    case 'pages':
+    case 'pages': {
+      const priced = await pricesAvailable().catch(() => false);
       return xml([
         { loc: '/', lastmod: latest },
         { loc: PATHS.checklists, lastmod: latest },
         { loc: PATHS.players, lastmod: latest },
-        { loc: PATHS.rookies, lastmod: latest },
+        // Ranking and hub live on prices: in the sitemap once the first prices are in (R49).
+        ...(priced ? [{ loc: PATHS.rookies, lastmod: latest }] : []),
         { loc: PATHS.method, lastmod: METHOD_UPDATED },
+        ...(priced ? [{ loc: PATHS.values, lastmod: latest }] : []),
       ]);
+    }
     case 'checklists':
       return xml(
         (await listIndexable('checklist')).map((p) => ({

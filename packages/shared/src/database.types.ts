@@ -773,6 +773,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      set_releases: {
+        Row: {
+          box_config: string | null;
+          created_at: string;
+          name: string;
+          notes: string | null;
+          public_slug: string;
+          release_date: string | null;
+          season: string;
+          slug: string;
+          source_url: string | null;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          box_config?: string | null;
+          created_at?: string;
+          name: string;
+          notes?: string | null;
+          public_slug: string;
+          release_date?: string | null;
+          season: string;
+          slug: string;
+          source_url?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          box_config?: string | null;
+          created_at?: string;
+          name?: string;
+          notes?: string | null;
+          public_slug?: string;
+          release_date?: string | null;
+          season?: string;
+          slug?: string;
+          source_url?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       waitlist: {
         Row: {
           created_at: string;

@@ -17,6 +17,7 @@ import {
   listPlayers,
   playerAliasTarget,
   playerCurrentTeam,
+  rarestParallels,
 } from '@/lib/data';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { getPlayerForm } from '@/lib/player-form';
@@ -70,9 +71,10 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
   }
   const publicSlug = player.public_slug ?? player.slug;
   if (publicSlug !== slug) permanentRedirect(playerPath(publicSlug));
-  const [form, currentTeam] = await Promise.all([
+  const [form, currentTeam, rarest] = await Promise.all([
     getPlayerForm(player.id).catch(() => null),
     playerCurrentTeam(player.id).catch(() => player.team),
+    rarestParallels(player.id).catch(() => []),
   ]);
   const chartable = form && form.games.length >= 3;
   const rookie = player.cards.some((c) => c.is_rookie);
@@ -153,7 +155,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
         ) : null}
       </header>
 
-      <h2>Recent games</h2>
+      <h2>Season game log</h2>
       {player.lines.length > 0 ? (
         <div className="table-wrap">
           <table>
@@ -233,6 +235,27 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
               ? `Points per game, and the median asking price of ${form.price.season} ${form.price.set_name} #${form.price.card_number} Base raw the morning after each game.`
               : 'Points per game. The value track appears once one of his cards has price history.'}
           </p>
+        </section>
+      ) : null}
+
+      {rarest.length > 0 ? (
+        <section>
+          <h2>Rarest parallels</h2>
+          <ul className="rarest">
+            {rarest.map((p) => (
+              <li key={`${p.card.public_slug}-${p.name}`}>
+                <Link href={cardPath(p.card.public_slug)}>
+                  <strong>
+                    {p.name} /{p.serial_run}
+                  </strong>
+                  <span className="muted small">
+                    #{p.card.number} {p.card.card_sets?.season} {p.card.card_sets?.name}
+                    {p.card.is_rookie ? ' RC' : ''}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       ) : null}
 

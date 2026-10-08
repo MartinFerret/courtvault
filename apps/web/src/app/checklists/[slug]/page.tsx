@@ -10,7 +10,8 @@ import { SetVisual } from '@/components/set-visual';
 import { SetGallery } from '@/components/set-gallery';
 import { ListFilter } from '@/components/list-filter';
 import { Price, PriceNote } from '@/components/price';
-import { getSet, indexStatus, listSets, topRookiesOfSet } from '@/lib/data';
+import { getRelease, getSet, indexStatus, listSets, topRookiesOfSet } from '@/lib/data';
+import { UpcomingChecklist } from '@/components/upcoming-checklist';
 import { cardImage } from '@/lib/images';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
@@ -51,7 +52,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const set = await getSet(slug);
-  if (!set) return { title: 'Checklist not found' };
+  if (!set) {
+    // Announced set (audit item 7): the final URL answers before the import, noindex until then.
+    const release = await getRelease(slug).catch(() => null);
+    if (release) {
+      return {
+        robots: { index: false, follow: true },
+        title: seoTitle(keyword(release), 'coming soon'),
+        description: `${release.season} ${release.name} basketball checklist: the full card list, rookie cards and parallels with print runs, published here the day Topps releases it.`,
+        alternates: { canonical: checklistPath(release.public_slug) },
+      };
+    }
+    return { title: 'Checklist not found' };
+  }
   const status = await indexStatus('checklist', set.public_slug ?? set.slug);
   const rookies = set.cards.filter((c) => c.is_rookie).length;
   return {
@@ -66,7 +79,11 @@ export async function generateMetadata({
 export default async function ChecklistPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const set = await getSet(slug);
-  if (!set) notFound();
+  if (!set) {
+    const release = await getRelease(slug).catch(() => null);
+    if (release) return <UpcomingChecklist release={release} />;
+    notFound();
+  }
   // Old or internal slug: one canonical URL per page (R22).
   if (set.public_slug !== slug) permanentRedirect(checklistPath(set.public_slug));
   const rookies = set.cards.filter((c) => c.is_rookie);
