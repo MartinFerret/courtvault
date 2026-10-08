@@ -1,7 +1,8 @@
 /**
- * HoopTicker mark: a basketball whose horizontal seam is a rising ticker line. Ink seams on a
- * lime ball by default; `tone="ink"` draws a lime ball with ink seams on dark surfaces too
- * (same drawing), `tone="mono"` is a single-colour version for small or printed uses.
+ * HoopTicker mark: a basketball drawn in line art with its classic eight-panel seams (vertical
+ * seam, two side arcs) and the horizontal seam lifting off into a rising ticker line. Lime
+ * strokes by default, meant for the dark header and footer; `tone="mono"` draws it in
+ * currentColor for small or printed uses.
  */
 export function LogoMark({
   size = 32,
@@ -12,8 +13,7 @@ export function LogoMark({
   tone?: 'lime' | 'mono';
   className?: string;
 }) {
-  const ball = tone === 'lime' ? '#e9ff5f' : 'currentColor';
-  const seam = tone === 'lime' ? '#121417' : 'var(--cv-bg, #edeff1)';
+  const stroke = tone === 'lime' ? '#e9ff5f' : 'currentColor';
   return (
     <svg
       width={size}
@@ -23,11 +23,12 @@ export function LogoMark({
       aria-label="HoopTicker"
       className={className}
     >
-      <circle cx="32" cy="32" r="29" fill={ball} />
-      <g fill="none" stroke={seam} strokeWidth="4.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6.5 19.5C19 24 19 40 6.5 44.5" />
-        <path d="M57.5 19.5C45 24 45 40 57.5 44.5" />
-        <path d="M4.5 38.5h11l7-9.5 8 14 9.5-19.5 7 8.5 11.5-14" />
+      <g fill="none" stroke={stroke} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="32" cy="32" r="27.5" />
+        <path d="M32 4.5v55" />
+        <path d="M13.5 12.5C25 21 25 43 13.5 51.5" />
+        <path d="M50.5 12.5C39 21 39 43 50.5 51.5" />
+        <path d="M4.5 32h18l6-8 5 5 13.5-12.5" />
       </g>
     </svg>
   );
