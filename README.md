@@ -237,22 +237,25 @@ only when the config lives there and the deploy runs from the root with `--filte
 ### 2b. Cloudflare Pages (web app, vault.hoopticker.com)
 
 The Angular app is also served in the browser as a single-page app. Cloudflare Pages Free has
-unlimited bandwidth and 500 builds/month, which Netlify's credit model cannot offer for an app.
+unlimited bandwidth, which Netlify's credit model cannot offer for an app.
 
-1. Cloudflare dashboard > Workers & Pages > Create > Pages > connect the GitHub repo.
-   Production branch `main`. Build command `pnpm --filter @courtvault/mobile build`, build
-   output directory `apps/mobile/dist/mobile/browser`, root directory `/` (the workspace root,
-   so pnpm resolves `packages/shared`). Environment variable `NODE_VERSION=22`.
-2. Build variables (production): `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
-   `WEB_URL=https://hoopticker.com`, plus `GOOGLE_WEB_CLIENT_ID` and `APPLE_SIGN_IN_ENABLED`
-   once the providers exist. `tools/write-env.mjs` reads them from the process env at build time.
-3. `apps/mobile/public/_redirects` sends every path to `index.html` (client routing and
-   `/auth/callback`), `_headers` sets `noindex` and cache rules, `robots.txt` disallows all:
-   the web app is never indexed, only the website is.
-4. Custom domain `vault.hoopticker.com` in the Pages project (CNAME to
-   `<project>.pages.dev`), then add `https://vault.hoopticker.com/auth/callback` to the
-   Supabase Auth redirect URLs. Disable preview deployments for non-production branches if
-   builds pile up.
+Done 2026-10-08: Pages project `hoopticker-vault` (direct upload, no Git integration, account
+of mferret.pro@gmail.com), custom domain `vault.hoopticker.com` (CNAME to
+`hoopticker-vault.pages.dev` in the Netlify DNS zone of hoopticker.com), Supabase Auth
+redirect allow-list already includes `https://vault.hoopticker.com/**`.
+
+Deploy a new version from the repository root, after `npx wrangler login` once:
+
+```bash
+pnpm deploy:vault
+```
+
+`apps/mobile/tools/deploy-vault.mjs` builds with the cloud `SUPABASE_URL` / `SUPABASE_ANON_KEY`
+read from `apps/web/.env`, `WEB_URL=https://hoopticker.com`, and the provider keys from the
+process env when set (`GOOGLE_WEB_CLIENT_ID`, `APPLE_SIGN_IN_ENABLED`), then uploads
+`dist/mobile/browser`. `apps/mobile/public/_redirects` sends every path to `index.html` (client
+routing and `/auth/callback`), `_headers` sets `noindex` and cache rules, `robots.txt` disallows
+all: the web app is never indexed, only the website is.
 
 ### 3. Stripe (web checkout)
 
