@@ -119,7 +119,8 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
   };
   return (
     <>
-      <JsonLd data={product} />
+      {/* Product markup needs an offer to be valid (Rich Results Test, audit item 10): only once priced. */}
+      {allPrices.length > 0 ? <JsonLd data={product} /> : null}
       <Breadcrumbs
         items={[
           { name: 'Home', href: '/' },
