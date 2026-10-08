@@ -48,9 +48,9 @@ export function SiteFooter() {
             Card values updated every night, next to how the players played.
           </p>
           <p className="muted small">
-            Values come from eBay sales and listings through CardSight AI: recent auction sales when there
-            are enough, otherwise current asking prices, each labelled. Set and player names are used
-            for identification only.
+            Values come from eBay sales and listings through CardSight AI: recent auction sales when
+            there are enough, otherwise current asking prices, each labelled. Set and player names
+            are used for identification only.
             {hasOfficialImages() ? ` ${IMAGE_CREDIT}` : ''}
           </p>
           <p className="muted small">{DISCLAIMER}</p>
@@ -76,6 +76,7 @@ export function SiteFooter() {
         <nav aria-label="Company">
           <p className="site-footer__title">Company</p>
           <Link href={PATHS.method}>How we price cards</Link>
+          <Link href={PATHS.scoring}>Fantasy scoring rules</Link>
           <Link href="/waitlist">Waitlist</Link>
         </nav>
         <div>

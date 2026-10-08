@@ -20,6 +20,7 @@ const PAGES: Record<string, { title: string; paragraphs: string[] }> = {
       `Values come from eBay sales and listings supplied by ${PRICE_SOURCE_NAME}: the median of recent auction sales when there are enough, the last auction sale otherwise, or the current asking price. Each value says which. They are not appraisals or offers to buy, and a sale can close at another price. Buy links may be affiliate links.`,
       'Price data is licensed to us for display in this app and on our website. You may use it for your personal collection only. You may not scrape, copy, extract, store in bulk, resell or redistribute prices or catalog data, nor access the service by automated means. Accounts that do so may be closed.',
       'Premium subscriptions are purchased through the App Store or Google Play and governed by their terms. Cancel anytime from your store account.',
+      'Vault Score is a free game: no entry fee, no cash, no card and no gift prize of any kind. Rewards are badges only. Points come only from real box scores; card value, rarity and Premium never change a score. Collections are self-declared. Rankings show your username, never your email, and you can leave the global ranking. We may correct a score after a box score correction and remove usernames, league names or accounts that abuse the game. Vault Score is not affiliated with or endorsed by the NBA, the NBPA, any team or Topps.',
       OPERATOR,
     ],
   },

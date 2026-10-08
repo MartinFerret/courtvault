@@ -2,7 +2,7 @@ import { listIndexable, pricesAvailable } from '@/lib/data';
 import { listLastNightDays } from '@/lib/last-night';
 import { PATHS, cardPath, checklistPath, moversPath, playerPath } from '@/lib/paths';
 import { absoluteUrl } from '@/lib/site';
-import { METHOD_UPDATED } from '@/lib/content-dates';
+import { METHOD_UPDATED, SCORING_UPDATED } from '@/lib/content-dates';
 
 export const revalidate = 3600;
 
@@ -45,6 +45,7 @@ export async function GET(
         // Ranking and hub live on prices: in the sitemap once the first prices are in (R49).
         ...(priced ? [{ loc: PATHS.rookies, lastmod: latest }] : []),
         { loc: PATHS.method, lastmod: METHOD_UPDATED },
+        { loc: PATHS.scoring, lastmod: SCORING_UPDATED },
         ...(priced ? [{ loc: PATHS.values, lastmod: latest }] : []),
       ]);
     }

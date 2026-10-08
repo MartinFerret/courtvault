@@ -343,7 +343,6 @@ th.num {
   white-space: nowrap;
 }
 
-
 form.stack {
   display: flex;
   flex-direction: column;
@@ -3247,4 +3246,34 @@ form.stack input {
 }
 .upcoming .lead {
   max-width: 60ch;
+}
+
+/* Vault Score rules page */
+.scoring-table {
+  width: 100%;
+  max-width: 420px;
+  margin: 12px 0 16px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.scoring-table th,
+.scoring-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--cv-line, rgba(18, 20, 23, 0.08));
+}
+.scoring-table td {
+  text-align: right;
+  font-weight: 600;
+}
+.scoring-table thead th {
+  color: var(--cv-text-muted, #6a7078);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+.scoring-table thead th:last-child {
+  text-align: right;
+}
+.scoring-table__neg {
+  color: var(--cv-color-loss, #d9433a);
 }

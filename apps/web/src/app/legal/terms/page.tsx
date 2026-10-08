@@ -25,9 +25,9 @@ export default function TermsPage() {
       <p>
         {SITE_NAME} is operated by {LEGAL_ENTITY.name}, sole trader registered in France (SIREN{' '}
         {LEGAL_ENTITY.siren}), {LEGAL_ENTITY.addressLines.join(', ')}. Contact:{' '}
-        <a href={`mailto:${LEGAL_ENTITY.contactEmail}`}>{LEGAL_ENTITY.contactEmail}</a>. The
-        website is hosted by Netlify, Inc. (San Francisco, USA), the web app by Cloudflare, Inc.
-        (San Francisco, USA), and account data by Supabase, Inc. (Singapore) in the European Union.
+        <a href={`mailto:${LEGAL_ENTITY.contactEmail}`}>{LEGAL_ENTITY.contactEmail}</a>. The website
+        is hosted by Netlify, Inc. (San Francisco, USA), the web app by Cloudflare, Inc. (San
+        Francisco, USA), and account data by Supabase, Inc. (Singapore) in the European Union.
       </p>
       <h2>Service</h2>
       <p>
@@ -56,6 +56,18 @@ export default function TermsPage() {
         Premium subscriptions are purchased through the Apple App Store or Google Play and are
         governed by their terms. You can cancel at any time from your store account. You can delete
         your account from the app.
+      </p>
+      <h2 id="vault-score">Vault Score and Leagues</h2>
+      <p>
+        Vault Score is a free game. There is no entry fee, no cash, no card and no gift prize of any
+        kind: rewards are badges only. Points come only from real box scores, with the rules
+        published on the <a href="/fantasy-basketball-scoring">fantasy basketball scoring</a> page;
+        card value, rarity and Premium status never change a score. Collections are self-declared.
+        Rankings show the username you choose, never your email, and you can leave the global
+        ranking at any time. We may correct a score after a box score correction, and we may remove
+        a username, a league name or an account that abuses the game (fake accounts, automated play,
+        offensive names). Vault Score is not affiliated with or endorsed by the NBA, the NBPA, any
+        team or Topps.
       </p>
       <h2>Content</h2>
       <p>

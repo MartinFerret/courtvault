@@ -6,6 +6,7 @@ export const PATHS = {
   rookies: '/most-valuable-basketball-rookie-cards',
   movers: '/trending-basketball-cards',
   method: '/how-we-price-cards',
+  scoring: '/fantasy-basketball-scoring',
   values: '/basketball-card-values',
 } as const;
 

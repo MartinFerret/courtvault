@@ -1,6 +1,11 @@
 import { assertEquals, assertMatch } from '@std/assert';
 import { brevoPayload, LogEmailProvider, parseSender } from '../providers/email.ts';
-import { buildDigest, digestSubject } from '../../job-morning/digest.ts';
+import {
+  buildDigest,
+  digestSubject,
+  movementText,
+  vaultScoreLines,
+} from '../../job-morning/digest.ts';
 
 Deno.test('parseSender reads "Name <email>" and bare addresses', () => {
   assertEquals(parseSender('HoopTicker <hello@hoopticker.com>'), {
@@ -95,4 +100,33 @@ Deno.test('log provider counts every message as sent', async () => {
   const r = await p.send([buildDigest(input)]);
   assertEquals(r, { sent: 1, failed: 0, invalid: [] });
   assertEquals(p.sent.length, 1);
+});
+
+const vaultScore = {
+  total: 184.5,
+  counts: true,
+  top: { name: 'Victor Wembanyama', fpts: 65.3, captain: false },
+  rank: 12,
+  movement: 4,
+  leagues: [{ name: 'Friday Night Hoops', rank: 1, movement: 0 }],
+};
+
+Deno.test('Vault Score leads the subject and the email when the user had a lineup', () => {
+  const withScore = { ...input, vaultScore };
+  assertEquals(
+    digestSubject(withScore),
+    'Last night: your lineup scored 184.5 pts, your cards +$64.80',
+  );
+  const m = buildDigest(withScore);
+  assertMatch(m.html, /184\.5 pts/);
+  assertMatch(m.html, /Player of the game: Victor Wembanyama, 65\.3 pts\./);
+  assertMatch(m.text, /Week rank 12, up 4\./);
+  assertMatch(m.text, /Friday Night Hoops: rank 1, same place\./);
+});
+
+Deno.test('preseason scores say they are not counted', () => {
+  const lines = vaultScoreLines({ ...vaultScore, counts: false, rank: null, movement: null });
+  assertEquals(lines[2], 'Preseason night: not counted in the standings.');
+  assertEquals(movementText(-2), 'down 2');
+  assertEquals(movementText(null), null);
 });

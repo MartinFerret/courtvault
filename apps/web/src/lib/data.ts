@@ -341,7 +341,9 @@ export async function getCard(slug: string): Promise<CardPage | null> {
   if (!player || !set) return null;
   const { data: prices, error: pricesError } = await client
     .from('latest_prices')
-    .select('parallel_id, grade, price_cents, sample_size, captured_at, buy_url, price_kind, sale_at')
+    .select(
+      'parallel_id, grade, price_cents, sample_size, captured_at, buy_url, price_kind, sale_at',
+    )
     .in(
       'parallel_id',
       parallels.map((p) => p.id),
@@ -540,4 +542,19 @@ function chunk<T>(items: T[], size: number): T[][] {
   const out: T[][] = [];
   for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
   return out;
+}
+
+/** Vault Score weights in force today (latest valid_from per stat), for the public rules page. */
+export async function fantasyWeights(): Promise<{ stat: string; weight: number }[]> {
+  const { data, error } = await supabase()
+    .from('fantasy_scoring')
+    .select('stat, weight, valid_from')
+    .order('valid_from', { ascending: false });
+  if (error) throw error;
+  const seen = new Set<string>();
+  const order = ['points', 'rebounds', 'assists', 'steals', 'blocks', 'turnovers'];
+  return (data ?? [])
+    .filter((r) => !seen.has(r.stat) && seen.add(r.stat))
+    .map((r) => ({ stat: r.stat, weight: Number(r.weight) }))
+    .sort((a, b) => order.indexOf(a.stat) - order.indexOf(b.stat));
 }
