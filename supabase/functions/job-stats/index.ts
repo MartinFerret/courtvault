@@ -104,7 +104,12 @@ serve(
         p_day: day,
       });
       if (scoreError) throw scoreError;
-      log('vault score', { lineups: scored });
+      // Standings snapshots, badges and abuse flags (no-ops before the regular season).
+      const { data: after, error: afterError } = await supabase.rpc('after_scoring', {
+        p_day: day,
+      });
+      if (afterError) throw afterError;
+      log('vault score', { lineups: scored, after });
 
       return {
         provider: provider.name,
@@ -112,6 +117,7 @@ serve(
         lines: linesUpserted,
         idsLearned,
         lineupsScored: scored,
+        vaultScore: after,
       };
     },
   ),

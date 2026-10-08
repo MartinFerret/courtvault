@@ -3,6 +3,36 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      abuse_flags: {
+        Row: {
+          created_at: string;
+          day: string;
+          details: Json | null;
+          id: number;
+          reason: string;
+          reviewed_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          day: string;
+          details?: Json | null;
+          id?: never;
+          reason: string;
+          reviewed_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          day?: string;
+          details?: Json | null;
+          id?: never;
+          reason?: string;
+          reviewed_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       app_settings: {
         Row: {
           description: string | null;
@@ -21,6 +51,33 @@ export type Database = {
           key?: string;
           updated_at?: string;
           value?: NonNullable<Json>;
+        };
+        Relationships: [];
+      };
+      badges: {
+        Row: {
+          awarded_at: string;
+          kind: string;
+          period_key: string;
+          scope: string;
+          scope_id: string;
+          user_id: string;
+        };
+        Insert: {
+          awarded_at?: string;
+          kind: string;
+          period_key: string;
+          scope?: string;
+          scope_id?: string;
+          user_id: string;
+        };
+        Update: {
+          awarded_at?: string;
+          kind?: string;
+          period_key?: string;
+          scope?: string;
+          scope_id?: string;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -45,6 +102,21 @@ export type Database = {
           received_at?: string;
           type?: string;
           user_id?: string | null;
+        };
+        Relationships: [];
+      };
+      blocked_words: {
+        Row: {
+          match: string;
+          word: string;
+        };
+        Insert: {
+          match?: string;
+          word: string;
+        };
+        Update: {
+          match?: string;
+          word?: string;
         };
         Relationships: [];
       };
@@ -591,6 +663,59 @@ export type Database = {
         };
         Relationships: [];
       };
+      league_members: {
+        Row: {
+          joined_at: string;
+          joined_day: string;
+          league_id: string;
+          role: string;
+          user_id: string;
+        };
+        Insert: {
+          joined_at?: string;
+          joined_day?: string;
+          league_id: string;
+          role?: string;
+          user_id: string;
+        };
+        Update: {
+          joined_at?: string;
+          joined_day?: string;
+          league_id?: string;
+          role?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'league_members_league_id_fkey';
+            columns: ['league_id'];
+            isOneToOne: false;
+            referencedRelation: 'leagues';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      leagues: {
+        Row: {
+          created_at: string;
+          id: string;
+          invite_code: string;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          invite_code: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          invite_code?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
       lifetime_purchases: {
         Row: {
           amount_cents: number | null;
@@ -1090,9 +1215,12 @@ export type Database = {
           premium_source: string | null;
           premium_until: string | null;
           push_token: string | null;
+          ranking_opt_out: boolean;
           stripe_customer_id: string | null;
           stripe_subscription_id: string | null;
           unsubscribe_token: string;
+          username: string | null;
+          username_changed_at: string | null;
         };
         Insert: {
           created_at?: string;
@@ -1105,9 +1233,12 @@ export type Database = {
           premium_source?: string | null;
           premium_until?: string | null;
           push_token?: string | null;
+          ranking_opt_out?: boolean;
           stripe_customer_id?: string | null;
           stripe_subscription_id?: string | null;
           unsubscribe_token?: string;
+          username?: string | null;
+          username_changed_at?: string | null;
         };
         Update: {
           created_at?: string;
@@ -1120,9 +1251,12 @@ export type Database = {
           premium_source?: string | null;
           premium_until?: string | null;
           push_token?: string | null;
+          ranking_opt_out?: boolean;
           stripe_customer_id?: string | null;
           stripe_subscription_id?: string | null;
           unsubscribe_token?: string;
+          username?: string | null;
+          username_changed_at?: string | null;
         };
         Relationships: [];
       };
@@ -1165,6 +1299,39 @@ export type Database = {
           source_url?: string | null;
           status?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      standings_snapshots: {
+        Row: {
+          day: string;
+          period: string;
+          period_key: string;
+          points: number;
+          rank: number;
+          scope: string;
+          scope_id: string;
+          user_id: string;
+        };
+        Insert: {
+          day: string;
+          period: string;
+          period_key: string;
+          points: number;
+          rank: number;
+          scope: string;
+          scope_id?: string;
+          user_id: string;
+        };
+        Update: {
+          day?: string;
+          period?: string;
+          period_key?: string;
+          points?: number;
+          rank?: number;
+          scope?: string;
+          scope_id?: string;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -1290,6 +1457,8 @@ export type Database = {
       };
     };
     Functions: {
+      after_scoring: { Args: { p_day: string }; Returns: Json };
+      award_badges: { Args: { p_day: string }; Returns: number };
       cardsight_targets: {
         Args: { p_mode?: string };
         Returns: {
@@ -1355,6 +1524,8 @@ export type Database = {
           deleted_weekly: number;
         }[];
       };
+      create_league: { Args: { p_name: string }; Returns: Json };
+      current_season_id: { Args: Record<PropertyKey, never>; Returns: string };
       eastern_day: { Args: { p_at?: string }; Returns: string };
       eligible_player_ids: { Args: { p_day: string; p_user_id: string }; Returns: string[] };
       fantasy_points: {
@@ -1379,6 +1550,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      flag_abuse: { Args: { p_day: string }; Returns: number };
       founders_lifetime_status: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1419,8 +1591,13 @@ export type Database = {
       };
       import_set_key: { Args: { p_name: string }; Returns: string };
       invoke_job: { Args: { p_body?: Json; p_job: string }; Returns: number };
+      is_league_member: { Args: { p_league_id: string; p_user_id?: string }; Returns: boolean };
+      is_name_allowed: { Args: { p_text: string }; Returns: boolean };
       is_premium: { Args: { uid?: string }; Returns: boolean };
       is_regular_season_day: { Args: { p_day: string }; Returns: boolean };
+      join_league: { Args: { p_invite_code: string }; Returns: Json };
+      league_page: { Args: { p_league_id: string }; Returns: Json };
+      leave_league: { Args: { p_league_id: string }; Returns: undefined };
       lock_due_game_days: { Args: Record<PropertyKey, never>; Returns: number };
       match_import_rows: {
         Args: { p_rows: Json };
@@ -1491,8 +1668,13 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      my_badges: { Args: Record<PropertyKey, never>; Returns: Json };
+      my_leagues: { Args: Record<PropertyKey, never>; Returns: Json };
       my_lineup: { Args: Record<PropertyKey, never>; Returns: Json };
+      my_scores: { Args: { p_limit?: number }; Returns: Json };
+      new_invite_code: { Args: Record<PropertyKey, never>; Returns: string };
       next_lineup_day: { Args: Record<PropertyKey, never>; Returns: string };
+      normalize_name_for_filter: { Args: { p_text: string }; Returns: string };
       parallels_to_price: {
         Args: { p_rookie_limit?: number };
         Returns: {
@@ -1593,6 +1775,12 @@ export type Database = {
         Returns: undefined;
       };
       refresh_public_slugs: { Args: Record<PropertyKey, never>; Returns: undefined };
+      refresh_standings: { Args: { p_day: string }; Returns: number };
+      regenerate_league_code: { Args: { p_league_id: string }; Returns: string };
+      remove_league_member: {
+        Args: { p_league_id: string; p_user_id: string };
+        Returns: undefined;
+      };
       resolve_player_names: {
         Args: { p_names: string[] };
         Returns: {
@@ -1624,6 +1812,7 @@ export type Database = {
         }[];
       };
       score_game_day: { Args: { p_day: string }; Returns: number };
+      scoring_streak: { Args: { p_user_id: string }; Returns: number };
       search_catalog: {
         Args: { p_limit?: number; q: string };
         Returns: {
@@ -1648,6 +1837,8 @@ export type Database = {
           total_cards: number;
         }[];
       };
+      set_ranking_opt_out: { Args: { p_opt_out: boolean }; Returns: boolean };
+      set_username: { Args: { p_username: string }; Returns: string };
       showcase_pairs: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1658,6 +1849,31 @@ export type Database = {
         }[];
       };
       site_freshness: { Args: Record<PropertyKey, never>; Returns: Json };
+      standings: {
+        Args: {
+          p_key?: string;
+          p_league_id?: string;
+          p_limit?: number;
+          p_period?: string;
+          p_scope?: string;
+        };
+        Returns: Json;
+      };
+      standings_rows: {
+        Args: {
+          p_key: string;
+          p_league_id: string;
+          p_period: string;
+          p_scope: string;
+          p_until?: string;
+        };
+        Returns: {
+          days: number;
+          points: number;
+          rank: number;
+          user_id: string;
+        }[];
+      };
       start_job_run: { Args: { p_job: string; p_run_key: string }; Returns: boolean };
       top_players_recent: {
         Args: { p_limit?: number; p_window_days?: number };
@@ -1680,6 +1896,7 @@ export type Database = {
       };
       vault_score_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
       web_scanner_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
+      week_start: { Args: { p_day: string }; Returns: string };
       within_photo_cap: { Args: { uid: string }; Returns: boolean };
     };
     Enums: {
