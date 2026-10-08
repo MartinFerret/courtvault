@@ -63,7 +63,7 @@ store builds.
 
 ## 5. Code steps once the items above exist (in order)
 
-1. Domains `hoopticker.com` and `vault.hoopticker.com` live (deep link files must be served
+1. Domains `hoopticker.com` and `app.hoopticker.com` live (deep link files must be served
    from the final host).
 2. Set `APPLE_TEAM_ID` and `ANDROID_SHA256_FINGERPRINTS` on Netlify and redeploy: the
    association files go live (paths in `APP_LINK_PATHS`, `packages/shared`). Native side, in the

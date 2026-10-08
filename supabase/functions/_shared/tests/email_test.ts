@@ -76,7 +76,7 @@ const input = {
     },
   ],
   unsubscribeUrl: 'https://x.supabase.co/functions/v1/unsubscribe?token=t&scope=digest',
-  webAppUrl: 'https://vault.hoopticker.com',
+  webAppUrl: 'https://app.hoopticker.com',
   siteUrl: 'https://hoopticker.com',
   postalAddress: 'HoopTicker, somewhere',
 };

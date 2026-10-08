@@ -9,7 +9,7 @@ The product is **HoopTicker** (`BRAND_NAME` in `packages/shared`). `courtvault` 
 
 - **Backend**: Supabase only (Postgres, Auth, Storage, Edge Functions, pg_cron). No custom server.
 - **Website**: Next.js (App Router) on Netlify Free (hoopticker.com). The app also runs in the
-  browser at vault.hoopticker.com on Cloudflare Pages Free.
+  browser at app.hoopticker.com on Cloudflare Pages Free.
 - **App**: Angular + Ionic + Capacitor (iOS and Android).
 - **Shared**: generated database types and domain helpers in `packages/shared`.
 
@@ -195,7 +195,7 @@ no-op), far below the 500k/month free quota. App traffic (scan-match, export, de
    `hello@hoopticker.com` on a verified domain. Add the Google provider (web client id, also
    set as `GOOGLE_WEB_CLIENT_ID` in the app) and the Apple provider (Services ID, team id,
    key id, private key; then `APPLE_SIGN_IN_ENABLED=true` in the app). Redirect URLs:
-   `https://vault.hoopticker.com/auth/callback`, the website origin and `hoopticker://auth/callback`.
+   `https://app.hoopticker.com/auth/callback`, the website origin and `hoopticker://auth/callback`.
 6. Functions: `supabase functions deploy`, then
    `supabase secrets set --env-file supabase/functions/.env` with the production values.
    `JOB_SECRET` must equal the Vault `job_secret`.
@@ -234,23 +234,25 @@ only when the config lives there and the deploy runs from the root with `--filte
    `X-Robots-Tag: noindex, nofollow`; canonical tags already point to the primary domain.
    Then Search Console: verify the domain (DNS TXT) and submit `https://hoopticker.com/sitemap.xml`.
 
-### 2b. Cloudflare Pages (web app, vault.hoopticker.com)
+### 2b. Cloudflare Pages (web app, app.hoopticker.com)
 
 The Angular app is also served in the browser as a single-page app. Cloudflare Pages Free has
 unlimited bandwidth, which Netlify's credit model cannot offer for an app.
 
 Done 2026-10-08: Pages project `hoopticker-vault` (direct upload, no Git integration, account
-of mferret.pro@gmail.com), custom domain `vault.hoopticker.com` (CNAME to
+of mferret.pro@gmail.com), custom domain `app.hoopticker.com` (CNAME to
 `hoopticker-vault.pages.dev` in the Netlify DNS zone of hoopticker.com), Supabase Auth
-redirect allow-list already includes `https://vault.hoopticker.com/**`.
+redirect allow-list includes `https://app.hoopticker.com/**`. The web app lived at
+`vault.hoopticker.com` until 2026-10-08: that host is now a domain alias of the Netlify site
+whose only job is a 301 to `app.hoopticker.com` (rule in the root `netlify.toml`).
 
 Deploy a new version from the repository root, after `npx wrangler login` once:
 
 ```bash
-pnpm deploy:vault
+pnpm deploy:app
 ```
 
-`apps/mobile/tools/deploy-vault.mjs` builds with the cloud `SUPABASE_URL` / `SUPABASE_ANON_KEY`
+`apps/mobile/tools/deploy-app.mjs` builds with the cloud `SUPABASE_URL` / `SUPABASE_ANON_KEY`
 read from `apps/web/.env`, `WEB_URL=https://hoopticker.com`, and the provider keys from the
 process env when set (`GOOGLE_WEB_CLIENT_ID`, `APPLE_SIGN_IN_ENABLED`), then uploads
 `dist/mobile/browser`. `apps/mobile/public/_redirects` sends every path to `index.html` (client

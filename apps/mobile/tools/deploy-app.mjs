@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Builds the web app for vault.hoopticker.com against the cloud Supabase project and uploads it to
+// Builds the web app for app.hoopticker.com against the cloud Supabase project and uploads it to
 // the Cloudflare Pages project `hoopticker-vault` (direct upload, no Git integration). Needs a
 // `wrangler login` session and apps/web/.env for the cloud URL and anon key (both public).
-// Usage, from the repository root: pnpm deploy:vault
+// Usage, from the repository root: pnpm deploy:app
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';

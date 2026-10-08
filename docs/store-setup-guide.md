@@ -130,7 +130,7 @@ G6. **Google sign-in** (through Supabase):
   `hoopticker.com`, privacy and terms URLs from the table above. Publish the app (production)
   so any Google account can sign in.
 - https://console.cloud.google.com/apis/credentials > Create credentials > OAuth client ID >
-  Web application, name `Supabase`. Authorized JavaScript origins: `https://vault.hoopticker.com`,
+  Web application, name `Supabase`. Authorized JavaScript origins: `https://app.hoopticker.com`,
   `https://hoopticker.com`. Authorized redirect URI:
   `https://lufpytmtwocqgooxedfx.supabase.co/auth/v1/callback`. Copy the client ID and secret.
 - Supabase > Auth > Providers > Google: enable, paste client ID and secret, save.

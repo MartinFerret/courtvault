@@ -99,7 +99,7 @@ async function sendDigests(
 
   const provider = createEmailProvider();
   const supabaseUrl = requireEnv('SUPABASE_URL');
-  const webAppUrl = env('WEB_APP_URL') ?? 'https://vault.hoopticker.com';
+  const webAppUrl = env('WEB_APP_URL') ?? 'https://app.hoopticker.com';
   const siteUrl = env('SITE_URL') ?? 'https://hoopticker.com';
   const postalAddress = env('EMAIL_POSTAL_ADDRESS') ??
     'HoopTicker (Martin Ferret), 9 rue des Érables, 45250 Briare, France';

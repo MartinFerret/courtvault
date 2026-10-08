@@ -95,7 +95,7 @@ Rules enforced in SQL:
   and removed within 48 h around lineups, eligibility churn on the same players, lineup saves
   hitting the rate limit several days in a row, several accounts joining the same leagues
   together within minutes.
-- Ranking and league pages exist only in the web app (vault.hoopticker.com, already noindex
+- Ranking and league pages exist only in the web app (app.hoopticker.com, already noindex
   and robots disallow). The public "How scoring works" page is on hoopticker.com, indexable.
 
 ## 5. Quick add by text (replaces the scan on the web)

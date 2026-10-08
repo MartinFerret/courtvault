@@ -16,3 +16,11 @@
 
 [context.branch-deploy]
   ignore = "exit 0"
+
+# The web app moved from vault.hoopticker.com to app.hoopticker.com on 2026-10-08. The old host
+# is a domain alias of this site only to answer this permanent redirect.
+[[redirects]]
+  from = "https://vault.hoopticker.com/*"
+  to = "https://app.hoopticker.com/:splat"
+  status = 301
+  force = true

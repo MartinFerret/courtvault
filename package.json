@@ -35,7 +35,7 @@
     "job:compact": "node ./scripts/run-job.mjs job-compact",
     "job:map": "node ./scripts/run-job.mjs job-catalog-map",
     "job:schedule": "node ./scripts/run-job.mjs job-schedule",
-    "deploy:vault": "node ./apps/mobile/tools/deploy-vault.mjs",
+    "deploy:app": "node ./apps/mobile/tools/deploy-app.mjs",
     "convert:checklist": "pnpm --filter @courtvault/scripts convert:checklist"
   },
   "devDependencies": {

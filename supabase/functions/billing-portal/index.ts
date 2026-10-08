@@ -13,7 +13,7 @@ serve(async (req) => {
     user.id,
   ).maybeSingle();
   if (!profile?.stripe_customer_id) return error('No web subscription on this account.', 404);
-  const appUrl = env('WEB_APP_URL') ?? 'https://vault.hoopticker.com';
+  const appUrl = env('WEB_APP_URL') ?? 'https://app.hoopticker.com';
   const session = await stripePost<{ url: string }>('/billing_portal/sessions', {
     customer: profile.stripe_customer_id,
     return_url: `${appUrl}/tabs/profile`,

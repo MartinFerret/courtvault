@@ -29,8 +29,8 @@ A catalog website + mobile app for basketball trading card collectors in the Uni
 Product name: **HoopTicker** (`BRAND_NAME` in `packages/shared`, the only place it is spelled;
 tagline `BRAND_TAGLINE`). Codename `courtvault` stays in package names, database objects,
 env variable names and the GitHub repo. Bundle id `app.hoopticker.mobile`, scheme `hoopticker://`.
-Domains (to be confirmed by Martin): `hoopticker.com` for the website, `vault.hoopticker.com`
-for the web app. Never use "NBA", a team name, "Topps" or any trademark in the product name,
+Domains (live): `hoopticker.com` for the website, `app.hoopticker.com` for the web app (moved
+from `vault.hoopticker.com` on 2026-10-08, which now answers a 301 from the Netlify site). Never use "NBA", a team name, "Topps" or any trademark in the product name,
 logo, domain or branding.
 
 ## Two surfaces, one codebase per surface (plan of 2026-10-07)
@@ -38,7 +38,7 @@ logo, domain or branding.
 | Surface                      | Host                   | Code                                                  | Indexed                         |
 | ---------------------------- | ---------------------- | ----------------------------------------------------- | ------------------------------- |
 | Public website (acquisition) | `hoopticker.com`       | `apps/web`, Next.js on Netlify                        | Yes                             |
-| Web app (logged-in product)  | `vault.hoopticker.com` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
+| Web app (logged-in product)  | `app.hoopticker.com` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
 
 Same account, data and Premium everywhere. Never a third codebase. The SEO standard is
 `docs/seo-rules.md` (rules R1 to R117, mandatory, referenced by number in commits and PRs;

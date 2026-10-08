@@ -12,7 +12,7 @@ Written 2026-10-07, decisions recorded the same day. Rules are referenced by num
 2. Keyword volumes: Martin sends a Google Keyword Planner export. Volumes stay `TBD` until
    then.
 3. Slugs: proposals accepted as pending; frozen only after the volumes are in.
-4. Web app hosting: **Cloudflare Pages** for `vault.hoopticker.com`; Netlify credits stay
+4. Web app hosting: **Cloudflare Pages** for `app.hoopticker.com`; Netlify credits stay
    with the public website.
 5. Email: **Brevo** (300/day free) for login codes and digests, with the rule "daily digest
    for Premium, weekly for free".
@@ -81,14 +81,14 @@ a portfolio.'` and the differentiator line next to it. Website, app, emails, leg
 | Surface | Host                  | Code                                           | Indexed |
 | ------- | --------------------- | ---------------------------------------------- | ------- |
 | Website | `hoopticker.com`       | `apps/web`                                     | Yes     |
-| Web app | `vault.hoopticker.com` | `apps/mobile` built with the web configuration | No      |
+| Web app | `app.hoopticker.com` | `apps/mobile` built with the web configuration | No      |
 
 - `.app` is an HTTPS-only TLD (HSTS preloaded): one canonical host, no www, no redirect
   chain (R56, R57). Trailing slash policy: none (R58).
 - Web app: `<meta name="robots" content="noindex, nofollow">` in its `index.html` and a
   `robots.txt` with `Disallow: /` on the subdomain. The website's robots.txt cannot block
   another host, so the subdomain carries its own.
-- Supabase Auth: `site_url` and redirect allow-list get `https://vault.hoopticker.com/auth/callback`
+- Supabase Auth: `site_url` and redirect allow-list get `https://app.hoopticker.com/auth/callback`
   and the localhost equivalents. Referral cookie is set on `.hoopticker.com` so the website
   can store it and the web app can read it.
 - Hosting of the web app: a static SPA (no functions). Netlify Free credits are shared by

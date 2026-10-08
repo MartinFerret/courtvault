@@ -9,7 +9,7 @@ formats decided them. Pages derive from `docs/keyword-map.csv` (R7): no page wit
 | Host                  | What                               | Indexed                                        |
 | --------------------- | ---------------------------------- | ---------------------------------------------- |
 | `hoopticker.com`       | Public website, Next.js, Netlify   | Yes                                            |
-| `vault.hoopticker.com` | Web app, Angular, Cloudflare Pages | No: `noindex` meta, `robots.txt` `Disallow: /` |
+| `app.hoopticker.com` | Web app, Angular, Cloudflare Pages | No: `noindex` meta, `robots.txt` `Disallow: /` |
 
 One canonical host, HTTPS only (`.app` is HSTS-preloaded), no `www`, no trailing slash
 (R56 to R58). The website links to the web app with plain action buttons (R43); the web app
@@ -21,7 +21,7 @@ links back to the card, player and checklist pages it shows.
 | ----------- | ------------------------------------------------- | -------------------------------------------------------------------------------- |
 | Card values | Players, Checklists, Rookie rankings, Card movers | `/players`, `/checklists`, `/most-valuable-basketball-rookie-cards`, movers page |
 | Guides      | Learn, Grade and sell, Protect and insure         | `/guides` plus one hub per step                                                  |
-| App         | Pricing, Open the web app                         | `/pricing`, `vault.hoopticker.com`                                                |
+| App         | Pricing, Open the web app                         | `/pricing`, `app.hoopticker.com`                                                |
 
 Header: brand, the three menus, one action button "Open HoopTicker". Footer identical on
 every page (R46): Card values, Guides (hubs), Company (About, Trust, How we price cards,
