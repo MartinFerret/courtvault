@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { LEGAL_ENTITY } from '@courtvault/shared';
 
 export const metadata: Metadata = {
   title: 'Account deletion',
@@ -23,8 +24,9 @@ export default function AccountDeletionPage() {
         subscriptions must be cancelled from your Apple or Google account.
       </p>
       <p>
-        If you can no longer access the app, contact us from the email address of your account and
-        we will delete it.
+        If you can no longer access the app, write to{' '}
+        <a href={`mailto:${LEGAL_ENTITY.contactEmail}`}>{LEGAL_ENTITY.contactEmail}</a> from the
+        email address of your account and we will delete it.
       </p>
     </article>
   );

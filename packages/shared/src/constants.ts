@@ -13,6 +13,20 @@ export const APP_SCHEME = 'hoopticker://';
 /** Shown in the website footer and the app's About screen. Required by the brief. */
 export const AFFILIATION_DISCLAIMER = 'Not affiliated with the NBA, NBPA or Topps.';
 
+/**
+ * Legal operator of the service (French sole trader), given by Martin on 2026-10-08. The only
+ * place these details are spelled: legal pages, About screen, email footers and store listings
+ * import them. The contact mailbox is the sender address of the digest emails.
+ */
+export const LEGAL_ENTITY = {
+  name: 'Martin Ferret',
+  addressLines: ['9 rue des Érables', '45250 Briare', 'France'],
+  siren: '999 111 438',
+  contactEmail: 'hello@hoopticker.com',
+} as const;
+/** One-line postal address for email footers (CAN-SPAM) and short legal notices. */
+export const LEGAL_POSTAL_ADDRESS = `${BRAND_NAME} (${LEGAL_ENTITY.name}), ${LEGAL_ENTITY.addressLines.join(', ')}`;
+
 /** Certified condition grades supported by the MVP. Mirrors the `grade` Postgres enum. */
 export const GRADES = ['RAW', 'PSA9', 'PSA10'] as const;
 export type Grade = (typeof GRADES)[number];

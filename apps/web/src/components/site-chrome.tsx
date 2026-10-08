@@ -3,6 +3,7 @@ import { PATHS } from '@/lib/paths';
 import { SiteNav } from './nav-links';
 import { LogoMark } from './logo';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
+import { LEGAL_ENTITY } from '@courtvault/shared';
 import { IMAGE_CREDIT, hasOfficialImages } from '@/lib/images';
 
 const NAV = [
@@ -53,6 +54,10 @@ export function SiteFooter() {
             {hasOfficialImages() ? ` ${IMAGE_CREDIT}` : ''}
           </p>
           <p className="muted small">{DISCLAIMER}</p>
+          <p className="muted small">
+            Operated by {LEGAL_ENTITY.name}, {LEGAL_ENTITY.addressLines[1]}, France. SIREN{' '}
+            {LEGAL_ENTITY.siren}. <Link href="/legal/terms#operator">Legal notice</Link>
+          </p>
         </div>
         <nav aria-label="Card values">
           <p className="site-footer__title">Card values</p>

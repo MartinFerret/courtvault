@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import { PRICE_SOURCE_NAME } from '@courtvault/shared';
+import { LEGAL_ENTITY, PRICE_SOURCE_NAME } from '@courtvault/shared';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -21,6 +21,14 @@ export default function TermsPage() {
       />
       <h1>Terms of service</h1>
       <p className="muted small">Draft. To be reviewed by counsel before launch.</p>
+      <h2 id="operator">Operator and legal notice</h2>
+      <p>
+        {SITE_NAME} is operated by {LEGAL_ENTITY.name}, sole trader registered in France (SIREN{' '}
+        {LEGAL_ENTITY.siren}), {LEGAL_ENTITY.addressLines.join(', ')}. Contact:{' '}
+        <a href={`mailto:${LEGAL_ENTITY.contactEmail}`}>{LEGAL_ENTITY.contactEmail}</a>. The
+        website is hosted by Netlify, Inc. (San Francisco, USA), the web app by Cloudflare, Inc.
+        (San Francisco, USA), and account data by Supabase, Inc. (Singapore) in the European Union.
+      </p>
       <h2>Service</h2>
       <p>
         {SITE_NAME} provides a catalog of basketball trading cards and tools to track a personal
