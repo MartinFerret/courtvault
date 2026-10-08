@@ -1,0 +1,91 @@
+<ion-header class="cv-arena-toolbar">
+  <ion-toolbar>
+    <ion-buttons slot="start"
+      ><ion-back-button defaultHref="/tabs/game"></ion-back-button
+    ></ion-buttons>
+    <ion-title>Leagues</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="cv-arena">
+  <div class="cv-arena-body" style="padding-top: 8px">
+    <p class="cv-caption">
+      Play against your friends: same lineups, a private table by week and by season.
+    </p>
+
+    @if (loading()) {
+    <ion-spinner aria-label="Loading your leagues"></ion-spinner>
+    } @else if (game.leagues().length > 0) {
+    <ul class="cv-league-list" aria-label="Your leagues">
+      @for (l of game.leagues(); track l.id) {
+      <li>
+        <a class="cv-league-item" [routerLink]="['/leagues', l.id]">
+          <div>
+            <strong>{{ l.name }}</strong>
+            <span
+              >{{ l.members }} {{ l.members === 1 ? 'member' : 'members' }}@if (l.role === 'owner')
+              {, you run it}</span
+            >
+          </div>
+          @if (l.my_rank) {
+          <span class="cv-league-item__rank"
+            ><span class="cv-led cv-led--m" [attr.aria-label]="'Rank ' + l.my_rank + ' this week'"
+              >{{ l.my_rank }}</span
+            ></span
+          >
+          }
+          <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+        </a>
+      </li>
+      }
+    </ul>
+    }
+
+    <section class="cv-arena-panel" style="margin-top: 20px" aria-labelledby="join-title">
+      <h2 id="join-title">Join with a code</h2>
+      <p class="cv-caption" style="margin: 6px 0 12px">
+        Your friend finds the 8-character code on the league page.
+      </p>
+      <form class="cv-form-row" (ngSubmit)="join()">
+        <label class="cv-visually-hidden" for="league-code">League code</label>
+        <input
+          id="league-code"
+          name="code"
+          [(ngModel)]="code"
+          placeholder="8-character code"
+          autocapitalize="characters"
+          autocomplete="off"
+          maxlength="8"
+        />
+        <ion-button type="submit" [disabled]="busy() !== null || code.trim().length < 8"
+          >{{ busy() === 'join' ? 'Joining' : 'Join league' }}</ion-button
+        >
+      </form>
+    </section>
+
+    <section class="cv-arena-panel" style="margin-top: 12px" aria-labelledby="create-title">
+      <h2 id="create-title">Start a league</h2>
+      <p class="cv-caption" style="margin: 6px 0 12px">
+        Free accounts can be in one private league. Premium has no limit.
+      </p>
+      <form class="cv-form-row" (ngSubmit)="create()">
+        <label class="cv-visually-hidden" for="league-name">League name</label>
+        <input
+          id="league-name"
+          name="name"
+          [(ngModel)]="newName"
+          placeholder="League name"
+          maxlength="40"
+        />
+        <ion-button
+          type="submit"
+          fill="outline"
+          [disabled]="busy() !== null || newName.trim().length < 3"
+          >{{ busy() === 'create' ? 'Creating' : 'Create league' }}</ion-button
+        >
+      </form>
+    </section>
+    @if (error()) {
+    <p class="cv-arena-error" role="alert">{{ error() }}</p>
+    }
+  </div>
+</ion-content>

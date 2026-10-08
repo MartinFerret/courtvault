@@ -1,0 +1,119 @@
+<ion-header class="cv-arena-toolbar">
+  <ion-toolbar>
+    <ion-buttons slot="start"
+      ><ion-back-button defaultHref="/tabs/game"></ion-back-button
+    ></ion-buttons>
+    <ion-title>Standings</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="cv-arena">
+  <div class="cv-arena-body" style="padding-top: 8px">
+    <div class="cv-tabs-row">
+      <label class="cv-visually-hidden" for="standings-scope">Ranking</label>
+      <select
+        id="standings-scope"
+        class="cv-arena-select"
+        [value]="scope()"
+        (change)="setScope($any($event.target).value)"
+      >
+        <option value="global">Everyone</option>
+        @for (l of game.leagues(); track l.id) {
+        <option [value]="l.id">{{ l.name }}</option>
+        }
+      </select>
+      <ion-segment
+        [value]="period()"
+        (ionChange)="setPeriod($any($event).detail.value)"
+        aria-label="Period"
+      >
+        <ion-segment-button value="week">Week</ion-segment-button>
+        <ion-segment-button value="season">Season</ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="cv-tabs-row" style="justify-content: space-between">
+      <p class="cv-caption">
+        {{ periodLabel() }}@if (data(); as d) {, {{ d.total }} {{ d.total === 1 ? 'player' :
+        'players' }}}
+      </p>
+      @if (period() === 'week' && data(); as d) { @if (d.key === d.current_week) {
+      <button type="button" class="cv-arena-link" (click)="previousWeek()">
+        <ion-icon name="chevron-back" aria-hidden="true"></ion-icon>Previous week
+      </button>
+      } @else {
+      <button type="button" class="cv-arena-link" (click)="thisWeek()">Back to this week</button>
+      } }
+    </div>
+
+    @if (loading()) {
+    <ion-spinner aria-label="Loading standings"></ion-spinner>
+    } @else if (error()) {
+    <p class="cv-arena-error" role="alert">{{ error() }}</p>
+    } @else if (data(); as d) { @if (d.rows.length === 0) {
+    <div class="cv-arena-panel" style="margin-top: 16px">
+      <h2>No points yet</h2>
+      <p class="cv-caption" style="margin-top: 6px">
+        Standings fill up the morning after the first regular-season night. Set your lineup so your
+        name is on the board.
+      </p>
+      <a class="cv-arena-link" routerLink="/tabs/game" style="margin-top: 14px">Set my lineup</a>
+    </div>
+    } @else {
+    <ol class="cv-board" aria-label="Leaderboard">
+      @for (r of d.rows; track r.username + r.rank) {
+      <ng-container *ngTemplateOutlet="row; context: { $implicit: r }"></ng-container>
+      }
+    </ol>
+    @if (meOutside() && d.me; as m) {
+    <p class="cv-board__gap" aria-hidden="true">Your place</p>
+    <ol class="cv-board" [attr.start]="m.rank">
+      <ng-container *ngTemplateOutlet="row; context: { $implicit: m }"></ng-container>
+    </ol>
+    } }
+    <p class="cv-caption" style="margin-top: 16px">
+      Points are the same for every plan. Usernames only, never emails. You can leave the global
+      ranking from your profile.
+    </p>
+    }
+  </div>
+
+  <ng-template #row let-r>
+    <li
+      class="cv-board__row"
+      [class.cv-board__row--me]="r.is_me"
+      [class.cv-board__row--top]="r.rank === 1"
+    >
+      <span class="cv-board__rank" [attr.aria-label]="'Rank ' + r.rank">{{ r.rank }}</span>
+      <span class="cv-board__name">
+        <strong
+          >{{ r.username }}@if (r.is_me) { <span class="cv-visually-hidden">(you)</span> }</strong
+        >
+        <span>
+          @if (r.movement !== null && r.movement !== 0) {
+          <span
+            class="cv-move"
+            [class.cv-move--up]="r.movement > 0"
+            [class.cv-move--down]="r.movement < 0"
+          >
+            <ion-icon
+              [name]="r.movement > 0 ? 'caret-up' : 'caret-down'"
+              aria-hidden="true"
+            ></ion-icon
+            >{{ r.movement > 0 ? r.movement : -r.movement }}
+            <span class="cv-visually-hidden"
+              >{{ r.movement > 0 ? 'places up' : 'places down' }}</span
+            >
+          </span>
+          } @else if (r.movement === 0) { <span class="cv-move cv-move--same">Same place</span> }
+          @else { {{ r.days }} {{ r.days === 1 ? 'night' : 'nights' }} }
+        </span>
+      </span>
+      @if (r.streak > 1) {
+      <span class="cv-board__streak" [attr.aria-label]="r.streak + ' nights in a row'"
+        ><ion-icon name="flame" aria-hidden="true"></ion-icon>{{ r.streak }}</span
+      >
+      } @else { <span></span> }
+      <span class="cv-board__points" [attr.aria-label]="r.points + ' points'">{{ r.points }}</span>
+    </li>
+  </ng-template>
+</ion-content>

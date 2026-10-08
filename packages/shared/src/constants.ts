@@ -59,6 +59,7 @@ export const PLAN_LIMIT_KEYS = [
   'checklist_follows',
   'price_history_days',
   'photos',
+  'private_leagues',
 ] as const;
 export type PlanLimitKey = (typeof PLAN_LIMIT_KEYS)[number];
 

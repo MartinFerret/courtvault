@@ -1,5 +1,18 @@
 import { addIcons } from 'ionicons';
 import {
+  add,
+  basketballOutline,
+  caretDown,
+  caretUp,
+  chevronBack,
+  chevronForward,
+  exitOutline,
+  flame,
+  lockClosed,
+  peopleOutline,
+  podiumOutline,
+  shareOutline,
+  trophy,
   addOutline,
   alertCircleOutline,
   albumsOutline,
@@ -38,6 +51,19 @@ import {
 /** Registers the icons used across the app once. */
 export function registerIcons(): void {
   addIcons({
+    add,
+    basketballOutline,
+    caretDown,
+    caretUp,
+    chevronBack,
+    chevronForward,
+    exitOutline,
+    flame,
+    lockClosed,
+    peopleOutline,
+    podiumOutline,
+    shareOutline,
+    trophy,
     addOutline,
     alertCircleOutline,
     albumsOutline,

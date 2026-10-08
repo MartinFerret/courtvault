@@ -1,0 +1,217 @@
+<ion-content class="cv-arena">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($any($event))"
+    ><ion-refresher-content></ion-refresher-content
+  ></ion-refresher>
+
+  <header class="cv-arena-head">
+    <div>
+      <h1>Vault Score</h1>
+      <p>
+        Five players from your cards, one captain who scores double. Points come from real box
+        scores.
+      </p>
+    </div>
+  </header>
+
+  <div class="cv-arena-body">
+    @if (loading()) {
+    <ion-spinner aria-label="Loading your lineup"></ion-spinner>
+    } @else if (error() && !state()) {
+    <div class="cv-arena-note" role="alert">
+      <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>{{ error() }}
+    </div>
+    } @else if (state(); as s) {
+    <div class="cv-stack" style="gap: 8px">
+      @if (!s.enabled) {
+      <div class="cv-arena-note">
+        <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>Scoring opens
+        soon. Set your lineup now, it will be ready.
+      </div>
+      } @else if (!s.counts) {
+      <div class="cv-arena-note">
+        <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>Preseason: lineups
+        score, standings start with the regular season.
+      </div>
+      } @if (noGamesTonight()) {
+      <div class="cv-arena-note">
+        <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>No games tonight.
+        Your lineup carries over to {{ dayName(s.next_day) }}.
+      </div>
+      } @if (!username()) {
+      <a class="cv-arena-note" routerLink="/tabs/profile" style="text-decoration: none">
+        <ion-icon name="person-circle-outline" aria-hidden="true"></ion-icon>Pick a username to
+        appear in the rankings.
+      </a>
+      }
+    </div>
+
+    <div style="margin-top: 16px">
+      <cv-scoreboard
+        [lastTotal]="lastScore()?.total ?? null"
+        [lastNote]="lastScore() ? (lastScore()!.counts ? null : 'Not counted') : 'No game yet'"
+        [lockAt]="s.next_lock_at"
+        [locked]="lockedTonight() && !editTomorrow()"
+        [games]="s.next_games"
+        [rank]="me()?.rank ?? null"
+        [movement]="me()?.movement ?? null"
+        [rankNote]="me() ? (me()!.streak > 1 ? me()!.streak + '-night streak' : null) : (username() ? 'After your first night' : 'Needs a username')"
+      ></cv-scoreboard>
+    </div>
+
+    <nav class="cv-arena-links" style="margin-top: 12px" aria-label="Game">
+      <a class="cv-arena-link" routerLink="/game/standings"
+        ><ion-icon name="podium-outline" aria-hidden="true"></ion-icon>Standings</a
+      >
+      <a class="cv-arena-link" routerLink="/leagues"
+        ><ion-icon name="people-outline" aria-hidden="true"></ion-icon>Leagues</a
+      >
+      <a class="cv-arena-link" routerLink="/game/rules"
+        ><ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>How scoring
+        works</a
+      >
+    </nav>
+
+    @if (roster().length < 5) {
+    <div class="cv-arena-panel" style="margin-top: 16px">
+      <h2>Your bench needs five players</h2>
+      <p class="cv-caption" style="margin-top: 6px">
+        You own cards of {{ roster().length }} {{ roster().length === 1 ? 'player' : 'players' }}.
+        Add cards of {{ 5 - roster().length }} more to field a lineup. Any card counts, base or 1/1:
+        rarity never changes points.
+      </p>
+      <ion-button routerLink="/tabs/scan" style="margin-top: 14px">Add cards</ion-button>
+    </div>
+    } @else {
+    <div class="cv-game-grid">
+      <div>
+        @if (lockedTonight()) {
+        <div class="cv-tabs-row" style="margin: 0 0 12px">
+          <button
+            type="button"
+            class="cv-arena-link"
+            [attr.aria-pressed]="!editTomorrow()"
+            (click)="editTomorrow.set(false)"
+            [style.background]="!editTomorrow() ? 'var(--cv-arena-surface-2)' : null"
+          >
+            Tonight
+          </button>
+          <button
+            type="button"
+            class="cv-arena-link"
+            [attr.aria-pressed]="editTomorrow()"
+            (click)="editTomorrow.set(true)"
+            [style.background]="editTomorrow() ? 'var(--cv-arena-surface-2)' : null"
+          >
+            Edit tomorrow
+          </button>
+        </div>
+        } @if (viewingLocked()) {
+        <cv-court
+          [slots]="lockedSlots()"
+          [captainId]="s.locked?.captain_id ?? null"
+          [locked]="true"
+          lockLabel="Locked for tonight"
+        ></cv-court>
+        } @else {
+        <cv-court
+          [slots]="slots()"
+          [captainId]="captainId()"
+          [selected]="selected()"
+          [seated]="seated()"
+          (spotTap)="onSpotTap($event)"
+          (playerDrop)="onDrop($event)"
+        ></cv-court>
+
+        @if (selectedPlayer(); as p) {
+        <div class="cv-slot-panel" style="margin-top: 12px">
+          <strong>{{ p.name }}</strong>
+          <ion-button size="small" [disabled]="p.player_id === captainId()" (click)="makeCaptain()"
+            >{{ p.player_id === captainId() ? 'Captain' : 'Make captain' }}</ion-button
+          >
+          <ion-button size="small" class="cv-arena-secondary" (click)="removeSelected()"
+            >Take off the court</ion-button
+          >
+          <span class="cv-caption">Or pick a bench player to swap.</span>
+        </div>
+        } @else if (picked()) {
+        <p class="cv-caption" style="margin-top: 12px">
+          Tap a spot on the court to put {{ rosterById().get(picked()!)?.name }} there.
+        </p>
+        } @else if (selected() !== null) {
+        <p class="cv-caption" style="margin-top: 12px">Now pick a player from your bench.</p>
+        } @if (dirty() || filled() < 5 || !captainId()) {
+        <div class="cv-save-bar">
+          <p aria-live="polite">{{ saveHint() }}</p>
+          <ion-button [disabled]="!canSave()" (click)="save()"
+            >{{ saving() ? 'Saving' : 'Save lineup' }}</ion-button
+          >
+        </div>
+        } @else {
+        <p class="cv-caption" style="margin-top: 12px" aria-live="polite">
+          <ion-icon
+            name="checkmark-circle"
+            aria-hidden="true"
+            style="color: var(--cv-accent); vertical-align: -3px"
+          ></ion-icon>
+          {{ saveHint() }} Tap a spot to change it.
+        </p>
+        } @if (message()) {
+        <p class="cv-caption" role="status" style="margin-top: 10px">{{ message() }}</p>
+        }
+        <p class="cv-visually-hidden" role="status" aria-live="polite" aria-atomic="true">
+          {{ announce() }}
+        </p>
+        @if (error()) {
+        <p class="cv-arena-error" role="alert">{{ error() }}</p>
+        } @if (pendingNames().length > 0) {
+        <p class="cv-caption" style="margin-top: 8px">
+          {{ pendingNames().join(', ') }}: card added today, counts from tomorrow.
+        </p>
+        } }
+      </div>
+
+      <section class="cv-bench" aria-label="Your bench">
+        <div class="cv-bench__head">
+          <h2>Bench</h2>
+          <span class="cv-caption">{{ roster().length }} players you own</span>
+        </div>
+        <ul class="cv-bench__list">
+          @for (p of roster(); track p.player_id) {
+          <li>
+            <button
+              type="button"
+              class="cv-bench__item"
+              [class.cv-bench__item--on]="onCourt().has(p.player_id) && !viewingLocked()"
+              [class.cv-bench__item--picked]="picked() === p.player_id"
+              [disabled]="viewingLocked()"
+              draggable="true"
+              (dragstart)="onDragStart($event, p)"
+              (click)="onBenchTap(p)"
+              [attr.aria-label]="p.name + (onCourt().has(p.player_id) ? ', on the court' : '') + (p.eligible ? '' : ', counts from tomorrow')"
+            >
+              <span
+                class="cv-bench__chip"
+                [class]="'cv-bench__chip ' + ((p.card?.parallel ?? 'Base') | foilClass: (p.card?.serial_run ?? null))"
+                [style.--foil-hue]="(p.card?.parallel ?? 'Base') | foilHue: (p.card?.serial_run ?? null)"
+                [style.--foil-sat]="(p.card?.parallel ?? 'Base') | foilSat: (p.card?.serial_run ?? null)"
+                aria-hidden="true"
+              ></span>
+              <span class="cv-bench__text">
+                <strong>{{ p.name }}</strong>
+                <span>
+                  @if (!p.eligible) { Counts tomorrow } @else if (p.avg_fpts !== null) { {{
+                  p.avg_fpts }} pts a night } @else { No games yet }
+                </span>
+              </span>
+            </button>
+          </li>
+          }
+        </ul>
+        <p class="cv-caption">
+          Card value and rarity never change points. Only the box score does.
+        </p>
+      </section>
+    </div>
+    } }
+  </div>
+</ion-content>

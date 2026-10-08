@@ -1,0 +1,70 @@
+<ion-header class="cv-arena-toolbar">
+  <ion-toolbar>
+    <ion-buttons slot="start"
+      ><ion-back-button defaultHref="/tabs/game"></ion-back-button
+    ></ion-buttons>
+    <ion-title>How scoring works</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="cv-arena">
+  <div class="cv-arena-body cv-rules" style="padding-top: 8px">
+    <p>
+      Pick five players you own a card of and name a captain. Every night, they score from their
+      real box score. Your captain's points count double.
+    </p>
+
+    <h2>Points per stat</h2>
+    <dl class="cv-weights">
+      @for (w of weights(); track w.stat) {
+      <div>
+        <dt>{{ labels[w.stat] ?? w.stat }}</dt>
+        <dd>
+          <span class="cv-led cv-led--m" [class.cv-led--clock]="w.weight < 0"
+            >{{ format(w.weight) }}</span
+          >
+        </dd>
+      </div>
+      }
+    </dl>
+    <p>
+      Example: 25 points, 8 rebounds, 6 assists, 2 steals, 1 block and 3 turnovers make 25 + 9.6 + 9
+      + 6 + 3 - 3 = 49.6. As captain, 99.2.
+    </p>
+
+    <h2>The lock</h2>
+    <ul>
+      <li>Your lineup locks at the first tip-off of the day, US Eastern time.</li>
+      <li>Changes made after the lock count from the next game day.</li>
+      <li>A player who does not play scores 0. There are no automatic substitutions.</li>
+      <li>A card added today counts from tomorrow.</li>
+    </ul>
+
+    <h2>Seasons and rankings</h2>
+    <ul>
+      <li>
+        Weeks run Monday to Sunday. The season follows the regular season; preseason and playoff
+        nights do not count.
+      </li>
+      <li>
+        Rankings show your username, never your email. You can leave the global ranking from your
+        profile.
+      </li>
+      <li>Private leagues count from the day you join.</li>
+    </ul>
+
+    <h2>Fair play</h2>
+    <ul>
+      <li>
+        Free to play. No entry fee, no cash, no cards and no gift prizes: rewards are badges only.
+      </li>
+      <li>
+        Collections are self-declared. Card value, rarity and Premium never change a single point.
+      </li>
+      <li>Premium adds leagues, past weeks and player details, nothing else.</li>
+    </ul>
+
+    <p class="cv-caption" style="margin-top: 24px">
+      {{ disclaimer }} Player names and statistics are factual information.
+    </p>
+  </div>
+</ion-content>

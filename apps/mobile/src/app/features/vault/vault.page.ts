@@ -1,8 +1,21 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-  IonButton, IonContent, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel,
-  IonList, IonNote, IonRefresher, IonRefresherContent, IonSearchbar, IonSegment, IonSegmentButton,
+  IonButton,
+  IonContent,
+  IonIcon,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonRefresher,
+  IonRefresherContent,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
 } from '@ionic/angular';
 import { PRICE_LABEL, type Grade } from '@courtvault/shared';
 import { CollectionService } from '../../core/collection/collection.service';
@@ -10,16 +23,45 @@ import { PlanService } from '../../core/plan/plan.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { LayoutService } from '../../core/layout/layout.service';
 import { VaultTableComponent } from './vault-table.component';
-import { CentsPipe, DeltaPipe, FoilClassPipe, FoilHuePipe, FoilSatPipe, GradePipe, ParallelPipe } from '../../shared/pipes';
+import {
+  CentsPipe,
+  DeltaPipe,
+  FoilClassPipe,
+  FoilHuePipe,
+  FoilSatPipe,
+  GradePipe,
+  ParallelPipe,
+} from '../../shared/pipes';
 
 type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
 
 @Component({
   selector: 'cv-vault',
   imports: [
-    RouterLink, IonButton, IonContent, IonList, IonItem, IonItemSliding, IonItemOptions,
-    IonItemOption, IonLabel, IonNote, IonIcon, IonSearchbar, IonSegment, IonSegmentButton, IonRefresher, IonRefresherContent,
-    CentsPipe, DeltaPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe, VaultTableComponent,
+    RouterLink,
+    IonButton,
+    IonContent,
+    IonList,
+    IonItem,
+    IonItemSliding,
+    IonItemOptions,
+    IonItemOption,
+    IonLabel,
+    IonNote,
+    IonIcon,
+    IonSearchbar,
+    IonSegment,
+    IonSegmentButton,
+    IonRefresher,
+    IonRefresherContent,
+    CentsPipe,
+    DeltaPipe,
+    ParallelPipe,
+    GradePipe,
+    FoilClassPipe,
+    FoilHuePipe,
+    FoilSatPipe,
+    VaultTableComponent,
   ],
   templateUrl: './vault.page.html',
 })
@@ -41,7 +83,13 @@ export class VaultPage {
       if (f === 'rookies' && !i.is_rookie) return false;
       if (f === 'numbered' && !i.serial_run) return false;
       if (f === 'graded' && i.grade === 'RAW') return false;
-      if (q && !`${i.player_name} ${i.set_name} ${i.parallel_name} ${i.card_number}`.toLowerCase().includes(q)) return false;
+      if (
+        q &&
+        !`${i.player_name} ${i.set_name} ${i.parallel_name} ${i.card_number}`
+          .toLowerCase()
+          .includes(q)
+      )
+        return false;
       return true;
     });
   });
@@ -72,7 +120,9 @@ export class VaultPage {
 
   async changeGrade(change: { ids: string[]; grade: Grade }): Promise<void> {
     await this.collection.updateGrade(change.ids, change.grade);
-    this.message.set(`Grade updated on ${change.ids.length} card${change.ids.length > 1 ? 's' : ''}.`);
+    this.message.set(
+      `Grade updated on ${change.ids.length} card${change.ids.length > 1 ? 's' : ''}.`,
+    );
   }
 
   async exportCsv(): Promise<void> {
@@ -92,7 +142,8 @@ export class VaultPage {
   }
 
   onFilter(value: string | number | undefined): void {
-    if (value === 'all' || value === 'rookies' || value === 'numbered' || value === 'graded') this.filter.set(value);
+    if (value === 'all' || value === 'rookies' || value === 'numbered' || value === 'graded')
+      this.filter.set(value);
   }
 
   /** From the gains column and the "See gains and losses" chip. */

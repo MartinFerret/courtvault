@@ -23,6 +23,8 @@ export class SidebarComponent {
   readonly links = [
     { path: '/tabs/last-night', label: 'Last night', icon: 'sunny-outline' },
     { path: '/tabs/vault', label: 'Vault', icon: 'albums-outline' },
+    { path: '/tabs/game', label: 'Vault Score', icon: 'basketball-outline' },
+    { path: '/leagues', label: 'Leagues', icon: 'people-outline' },
     { path: '/tabs/sets', label: 'Sets', icon: 'card-outline' },
     { path: '/tabs/scan', label: 'Search and add', icon: 'search-outline' },
     { path: '/tabs/profile', label: 'Profile', icon: 'person-circle-outline' },

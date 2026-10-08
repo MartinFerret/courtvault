@@ -31,7 +31,9 @@
           (ionChange)="setDigest($any($event).detail.value)"
         >
           <ion-segment-button value="daily" [disabled]="!plan.isPremium()"
-            ><ion-label>{{ plan.isPremium() ? 'Daily' : 'Daily · Premium' }}</ion-label></ion-segment-button
+            ><ion-label
+              >{{ plan.isPremium() ? 'Daily' : 'Daily · Premium' }}</ion-label
+            ></ion-segment-button
           >
 
           <ion-segment-button value="weekly"><ion-label>Weekly</ion-label></ion-segment-button>
@@ -84,7 +86,8 @@
       </section>
     </div>
     <div>
-      <section class="cv-section" style="margin-top: 0">
+      <cv-game-profile></cv-game-profile>
+      <section class="cv-section">
         <ion-list>
           <ion-item routerLink="/legal/terms" [detail]="true"
             ><ion-label><h2>Terms of service</h2></ion-label></ion-item

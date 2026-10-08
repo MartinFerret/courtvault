@@ -1,0 +1,121 @@
+<ion-header class="cv-arena-toolbar">
+  <ion-toolbar>
+    <ion-buttons slot="start"
+      ><ion-back-button defaultHref="/leagues"></ion-back-button
+    ></ion-buttons>
+    <ion-title>{{ league()?.name ?? 'League' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="cv-arena">
+  <div class="cv-arena-body" style="padding-top: 8px">
+    @if (loading()) {
+    <ion-spinner aria-label="Loading the league"></ion-spinner>
+    } @else if (error()) {
+    <p class="cv-arena-error" role="alert">{{ error() }}</p>
+    } @else if (league(); as l) {
+    <div class="cv-invite">
+      <div style="flex: 1 1 180px">
+        <p class="cv-caption">Invite code</p>
+        <span class="cv-invite__code">{{ l.invite_code }}</span>
+      </div>
+      <ion-button (click)="share()"
+        ><ion-icon slot="start" name="share-outline" aria-hidden="true"></ion-icon>{{ copied() ?
+        'Link copied' : 'Invite friends' }}</ion-button
+      >
+      @if (l.my_role === 'owner') {
+      <ion-button class="cv-arena-secondary" (click)="newCode()">New code</ion-button>
+      }
+    </div>
+
+    @if (l.members.length === 1) {
+    <div class="cv-arena-note" style="margin-top: 12px">
+      <ion-icon name="people-outline" aria-hidden="true"></ion-icon>You are the only one here. Send
+      the code to a few friends: a league gets fun from three players.
+    </div>
+    }
+
+    <div class="cv-tabs-row">
+      <h2 style="flex: 1; font: var(--cv-text-heading)">Table</h2>
+      <ion-segment
+        [value]="period()"
+        (ionChange)="setPeriod($any($event).detail.value)"
+        aria-label="Period"
+      >
+        <ion-segment-button value="week">Week</ion-segment-button>
+        <ion-segment-button value="season">Season</ion-segment-button>
+      </ion-segment>
+    </div>
+
+    @if (standings(); as s) { @if (justWon()) {
+    <div class="cv-arena-note cv-win-burst" style="margin-top: 12px">
+      <ion-icon name="trophy" aria-hidden="true"></ion-icon>You lead the league this week. Hold on
+      until Sunday for the badge.
+    </div>
+    }
+    <ol class="cv-board" aria-label="League table">
+      @for (r of s.rows; track r.username) {
+      <li
+        class="cv-board__row"
+        [class.cv-board__row--me]="r.is_me"
+        [class.cv-board__row--top]="r.rank === 1"
+      >
+        <span class="cv-board__rank" [attr.aria-label]="'Rank ' + r.rank">{{ r.rank }}</span>
+        <span class="cv-board__name">
+          <strong
+            >{{ r.username }}@if (r.is_me) { <span class="cv-visually-hidden">(you)</span> }</strong
+          >
+          <span>
+            @if (r.movement !== null && r.movement !== 0) {
+            <span
+              class="cv-move"
+              [class.cv-move--up]="r.movement > 0"
+              [class.cv-move--down]="r.movement < 0"
+            >
+              <ion-icon
+                [name]="r.movement > 0 ? 'caret-up' : 'caret-down'"
+                aria-hidden="true"
+              ></ion-icon
+              >{{ r.movement > 0 ? r.movement : -r.movement }}
+            </span>
+            } @else { {{ r.days }} {{ r.days === 1 ? 'night' : 'nights' }} }
+          </span>
+        </span>
+        @if (r.streak > 1) {
+        <span class="cv-board__streak" [attr.aria-label]="r.streak + ' nights in a row'"
+          ><ion-icon name="flame" aria-hidden="true"></ion-icon>{{ r.streak }}</span
+        >
+        } @else { <span></span> }
+        <span class="cv-board__points">{{ r.points }}</span>
+      </li>
+      }
+    </ol>
+    }
+
+    <h2 style="margin-top: 24px; font: var(--cv-text-heading)">Last night</h2>
+    <ul class="cv-league-list" aria-label="Members' latest scores">
+      @for (m of l.members; track m.username) {
+      <li class="cv-league-item" style="cursor: default">
+        <div>
+          <strong>{{ m.username }}@if (m.is_me) { <span class="cv-caption"> (you)</span> }</strong>
+          <span>{{ memberLine(m) }}</span>
+        </div>
+        <span
+          class="cv-league-item__rank cv-led cv-led--m"
+          [class.cv-led--dim]="m.last_total === null"
+          >{{ m.last_total ?? '--' }}</span
+        >
+      </li>
+      }
+    </ul>
+
+    <div class="cv-arena-links" style="margin-top: 20px">
+      <a class="cv-arena-link" routerLink="/game/standings" [queryParams]="{ league: l.id }"
+        ><ion-icon name="podium-outline" aria-hidden="true"></ion-icon>Full standings</a
+      >
+      <button type="button" class="cv-arena-link" (click)="leave()">
+        <ion-icon name="exit-outline" aria-hidden="true"></ion-icon>Leave league
+      </button>
+    </div>
+    }
+  </div>
+</ion-content>

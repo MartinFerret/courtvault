@@ -1,0 +1,66 @@
+<section class="cv-jumbotron" aria-label="Scoreboard">
+  <div class="cv-jumbotron__cell">
+    <span class="cv-jumbotron__label">{{ lastLabel() }}</span>
+    @if (lastTotal() !== null) {
+      <span class="cv-led cv-led--l" [attr.aria-label]="lastTotal() + ' points'">{{
+        lastTotal()
+      }}</span>
+    } @else {
+      <span class="cv-led cv-led--l cv-led--dim" aria-label="No score yet">--</span>
+    }
+    @if (lastNote()) {
+      <span class="cv-jumbotron__sub">{{ lastNote() }}</span>
+    }
+  </div>
+
+  <div class="cv-jumbotron__cell cv-jumbotron__cell--clock">
+    @if (countdown(); as c) {
+      <span class="cv-jumbotron__label">Lineup locks in</span>
+      <span
+        class="cv-led cv-led--l cv-led--clock"
+        role="timer"
+        [attr.aria-label]="'Locks at ' + lockTime()"
+        >{{ c.value }}</span
+      >
+      <span class="cv-jumbotron__sub"
+        >{{ lockTime() }}, {{ games() }} {{ games() === 1 ? 'game' : 'games' }}</span
+      >
+    } @else if (locked()) {
+      <span class="cv-jumbotron__label">Tonight</span>
+      <span class="cv-led cv-led--l cv-led--clock" aria-hidden="true">00:00</span>
+      <span class="cv-jumbotron__sub">Locked at tip-off</span>
+    } @else {
+      <span class="cv-jumbotron__label">Next lock</span>
+      <span class="cv-led cv-led--l cv-led--dim" aria-hidden="true">--:--</span>
+      <span class="cv-jumbotron__sub">At the first tip-off</span>
+    }
+  </div>
+
+  <div class="cv-jumbotron__cell cv-jumbotron__cell--right">
+    <span class="cv-jumbotron__label">Week rank</span>
+    @if (rank() !== null) {
+      <span class="cv-led cv-led--l" [attr.aria-label]="'Rank ' + rank()">{{ rank() }}</span>
+      @if (movement() !== null && movement() !== 0) {
+        <span
+          class="cv-move"
+          [class.cv-move--up]="movement()! > 0"
+          [class.cv-move--down]="movement()! < 0"
+        >
+          <ion-icon
+            [name]="movement()! > 0 ? 'caret-up' : 'caret-down'"
+            aria-hidden="true"
+          ></ion-icon>
+          {{ movement()! > 0 ? movement() : -movement()! }}
+          <span class="cv-visually-hidden">{{
+            movement()! > 0 ? 'places up' : 'places down'
+          }}</span>
+        </span>
+      } @else if (rankNote()) {
+        <span class="cv-jumbotron__sub">{{ rankNote() }}</span>
+      }
+    } @else {
+      <span class="cv-led cv-led--l cv-led--dim" aria-label="Not ranked yet">--</span>
+      <span class="cv-jumbotron__sub">{{ rankNote() ?? 'Not ranked yet' }}</span>
+    }
+  </div>
+</section>

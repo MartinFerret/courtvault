@@ -467,7 +467,7 @@ $$;
 revoke execute on function public.scoring_streak from public, anon, authenticated;
 
 -- One call for a leaderboard: rows with username, movement (vs the previous snapshot) and
--- streak; the caller's row pinned. Past periods are Premium (LIMIT_REACHED:history).
+-- streak; the caller's row pinned. Past periods are Premium (LIMIT_REACHED:game_history).
 create or replace function public.standings(
   p_scope text default 'global',
   p_league_id uuid default null,
@@ -508,7 +508,7 @@ begin
   end if;
   v_key := coalesce(p_key, v_default_key);
   if v_key <> v_default_key and not public.is_premium(v_uid) then
-    raise exception 'LIMIT_REACHED:history';
+    raise exception 'LIMIT_REACHED:game_history';
   end if;
   v_scope_id := coalesce(p_league_id, '00000000-0000-0000-0000-000000000000');
   if p_scope = 'global' then
@@ -591,7 +591,11 @@ begin
         'game_day', d.game_day,
         'total', d.total,
         'counts', d.counts,
-        'per_player', case when v_premium or d.n = 1 then d.per_player else null end
+        'per_player', case when v_premium or d.n = 1 then (
+          select jsonb_agg(e || jsonb_build_object('name', pl.name, 'slug', pl.slug) order by (e ->> 'slot')::integer)
+          from jsonb_array_elements(d.per_player) e
+          left join public.players pl on pl.id = (e ->> 'player_id')::uuid
+        ) else null end
       ) order by d.game_day desc)
       from (
         select ls.*, row_number() over (order by ls.game_day desc) as n

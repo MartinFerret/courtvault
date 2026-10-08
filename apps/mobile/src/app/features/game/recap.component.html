@@ -1,0 +1,119 @@
+@if (day(); as d) {
+  <section class="cv-recap" aria-labelledby="recap-title">
+    <div class="cv-recap__final">
+      <div>
+        <h2 class="cv-recap__title" id="recap-title">Your lineup, {{ dayLabel() }}</h2>
+        <p class="cv-recap__sub">
+          @if (!d.counts) {
+            Preseason night: not counted in the standings.
+          } @else if (me(); as m) {
+            Week rank {{ m.rank }}
+            @if (m.movement !== null && m.movement !== 0) {
+              <span
+                class="cv-move"
+                [class.cv-move--up]="m.movement > 0"
+                [class.cv-move--down]="m.movement < 0"
+              >
+                <ion-icon
+                  [name]="m.movement > 0 ? 'caret-up' : 'caret-down'"
+                  aria-hidden="true"
+                ></ion-icon
+                >{{ m.movement > 0 ? m.movement : -m.movement }}
+                <span class="cv-visually-hidden">{{
+                  m.movement > 0 ? 'places up' : 'places down'
+                }}</span>
+              </span>
+            }
+          } @else {
+            Final score
+          }
+        </p>
+      </div>
+      <span class="cv-led cv-led--xl" [attr.aria-label]="d.total + ' points'">{{ shown() }}</span>
+    </div>
+
+    @if (potg(); as p) {
+      <div class="cv-potg cv-potg--sweep">
+        <span class="cv-potg__avatar" aria-hidden="true">{{ initials(p.name) }}</span>
+        <div class="cv-potg__text">
+          <span>Player of the game</span>
+          <strong>{{ p.name }}</strong>
+          <p>{{ statLine(p) }}</p>
+        </div>
+        <span
+          class="cv-led cv-led--m cv-potg__fpts"
+          [attr.aria-label]="p.fpts + ' fantasy points'"
+          >{{ p.fpts }}</span
+        >
+      </div>
+    }
+
+    @if (rows().length > 0) {
+      <div class="cv-boxscore-wrap">
+        <table class="cv-boxscore">
+          <caption class="cv-visually-hidden">
+            Box score of your lineup
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Player</th>
+              <th scope="col" class="cv-bs-opt"><abbr title="Minutes">MIN</abbr></th>
+              <th scope="col"><abbr title="Points">PTS</abbr></th>
+              <th scope="col"><abbr title="Rebounds">REB</abbr></th>
+              <th scope="col"><abbr title="Assists">AST</abbr></th>
+              <th scope="col" class="cv-bs-opt"><abbr title="Steals">STL</abbr></th>
+              <th scope="col" class="cv-bs-opt"><abbr title="Blocks">BLK</abbr></th>
+              <th scope="col"><abbr title="Turnovers">TO</abbr></th>
+              <th scope="col"><abbr title="Fantasy points">FPTS</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of rows(); track r.slot) {
+              <tr [class.cv-boxscore__dnp]="!r.played">
+                <th scope="row" style="font-weight: 500; color: var(--cv-arena-text)">
+                  {{ r.name ?? 'Empty spot' }}
+                  @if (r.captain) {
+                    <span class="cv-tag-c" aria-label="captain, points doubled">C</span>
+                  }
+                </th>
+                @if (r.played) {
+                  <td class="cv-bs-opt">{{ r.minutes }}</td>
+                  <td>{{ r.points }}</td>
+                  <td>{{ r.rebounds }}</td>
+                  <td>{{ r.assists }}</td>
+                  <td class="cv-bs-opt">{{ r.steals }}</td>
+                  <td class="cv-bs-opt">{{ r.blocks }}</td>
+                  <td>{{ r.turnovers ?? '-' }}</td>
+                } @else {
+                  <td colspan="7" class="cv-dnp-cell" style="text-align: left">Did not play</td>
+                }
+                <td class="cv-boxscore__fpts">{{ r.fpts }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    <nav class="cv-arena-links" style="margin-top: 16px" aria-label="Vault Score">
+      <a class="cv-arena-link" routerLink="/tabs/game"
+        ><ion-icon name="basketball-outline" aria-hidden="true"></ion-icon>Tonight's lineup</a
+      >
+      <a class="cv-arena-link" routerLink="/game/standings"
+        ><ion-icon name="podium-outline" aria-hidden="true"></ion-icon>Standings</a
+      >
+    </nav>
+  </section>
+} @else if (loaded()) {
+  <section class="cv-recap" aria-labelledby="recap-empty-title">
+    <h2 class="cv-recap__title" id="recap-empty-title">Your lineup could be on the board</h2>
+    <p class="cv-recap__sub">
+      Pick five players from your cards before tonight's first tip-off. Tomorrow morning, their box
+      scores become your score.
+    </p>
+    <nav class="cv-arena-links" style="margin-top: 14px" aria-label="Vault Score">
+      <a class="cv-arena-link" routerLink="/tabs/game"
+        ><ion-icon name="basketball-outline" aria-hidden="true"></ion-icon>Set my lineup</a
+      >
+    </nav>
+  </section>
+}

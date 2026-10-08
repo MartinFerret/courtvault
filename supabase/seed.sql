@@ -329,3 +329,97 @@ insert into public.waitlist (email, source) values ('early-bird@example.com', 's
 -- docs/legal/highlightly-terms.md).
 -- ---------------------------------------------------------------------------
 update public.app_settings set value = jsonb_set(value, '{enabled}', 'true') where key = 'vault_score';
+
+-- Local demo for the game screens: a demo season before the real opening night, six played
+-- nights, nine rivals with usernames, a private league and the demo user's lineup. The last
+-- two nights are scored from the seeded box scores with the real rules (score_game_day).
+do $$
+declare
+  demo uuid := '00000000-0000-0000-0000-000000000001';
+  d date := public.eastern_day();
+  names text[] := array['DeepThree', 'GlassCleaner', 'FastBreak', 'SkyHook', 'AndOne', 'PickAndRoll', 'Fadeaway', 'ShotClock', 'BankShot'];
+  rivals uuid[] := '{}';
+  stars uuid[];
+  played uuid[];
+  rid uuid;
+  i integer;
+  v_day date;
+  league uuid;
+  lineup uuid[];
+begin
+  if d <= '2026-10-17' then
+    insert into public.fantasy_seasons (id, label, regular_start, regular_end)
+    values ('local-demo', 'Local demo season', d - 30, '2026-10-18') on conflict do nothing;
+  end if;
+
+  update public.player_game_lines set turnovers = abs(hashtext(id::text)) % 5 where turnovers is null;
+  update public.profiles set username = 'VaultRunner' where id = demo;
+
+  for i in 1 .. array_length(names, 1) loop
+    rid := ('00000000-0000-0000-0000-0000000001' || lpad(i::text, 2, '0'))::uuid;
+    insert into auth.users (id, instance_id, aud, role, email, created_at, updated_at)
+    values (rid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+            'rival-' || i || '@courtvault.local', now() - interval '20 days', now())
+    on conflict do nothing;
+    update public.profiles set username = names[i] where id = rid;
+    rivals := rivals || rid;
+  end loop;
+
+  select array_agg(id order by slug) into stars from public.players
+  where slug in ('cooper-flagg', 'victor-wembanyama', 'nikola-jokic', 'dylan-harper', 'anthony-edwards',
+                 'stephen-curry', 'jayson-tatum', 'shai-gilgeous-alexander', 'ace-bailey', 'vj-edgecombe');
+
+  -- Played nights (scored) and tonight (not locked yet: first tip at 7 PM Eastern).
+  for i in 1 .. 6 loop
+    v_day := d - i;
+    insert into public.game_days (day, first_tip_at, games, locked_at, scored_at)
+    values (v_day, (v_day::timestamp + interval '19 hours') at time zone 'America/New_York', 4 + i % 3,
+            (v_day::timestamp + interval '19 hours') at time zone 'America/New_York', now())
+    on conflict (day) do nothing;
+  end loop;
+  insert into public.game_days (day, first_tip_at, games)
+  values (d, (d::timestamp + interval '19 hours') at time zone 'America/New_York', 7)
+  on conflict (day) do nothing;
+
+  -- The demo lineup: Flagg (captain), Wembanyama, Jokic, Harper, Edwards. Curry on the bench.
+  select array_agg(id order by array_position(array['cooper-flagg', 'victor-wembanyama', 'nikola-jokic', 'dylan-harper', 'anthony-edwards'], slug))
+  into lineup from public.players
+  where slug in ('cooper-flagg', 'victor-wembanyama', 'nikola-jokic', 'dylan-harper', 'anthony-edwards');
+  insert into public.lineup_drafts (user_id, player_ids, captain_id) values (demo, lineup, lineup[1])
+  on conflict (user_id) do nothing;
+
+  perform setseed(0.42);
+  for i in reverse 6 .. 1 loop
+    v_day := d - i;
+    if i <= 2 then
+      -- Real box scores exist for these nights: lineups scored by the real rules.
+      select array_agg(distinct l.player_id) into played
+      from public.player_game_lines l join public.games g on g.id = l.game_id where g.game_day = v_day;
+      insert into public.lineups (user_id, game_day, player_ids, captain_id, locked_at)
+      values (demo, v_day, lineup, lineup[1], now()) on conflict do nothing;
+      for rid in select unnest(rivals) loop
+        insert into public.lineups (user_id, game_day, player_ids, captain_id, locked_at)
+        select rid, v_day, x.ids, x.ids[1 + floor(random() * 5)::integer], now()
+        from (select array(select s from unnest(stars) s order by random() limit 5) as ids) x
+        on conflict do nothing;
+      end loop;
+      perform public.score_game_day(v_day);
+    else
+      insert into public.lineup_scores (user_id, game_day, total, counts, per_player)
+      select u, v_day, round((110 + random() * 170)::numeric, 1), public.is_regular_season_day(v_day), '[]'::jsonb
+      from unnest(rivals || demo) u
+      on conflict do nothing;
+    end if;
+    perform public.refresh_standings(v_day);
+    perform public.award_badges(v_day);
+  end loop;
+
+  insert into public.leagues (name, invite_code) values ('Friday Night Hoops', 'HOOPS234') returning id into league;
+  insert into public.league_members (league_id, user_id, role, joined_at, joined_day)
+  values (league, demo, 'owner', now() - interval '10 days', d - 10);
+  insert into public.league_members (league_id, user_id, joined_at, joined_day)
+  select league, r, now() - interval '9 days', d - 9 from unnest(rivals[1:5]) r;
+  for i in reverse 6 .. 1 loop
+    perform public.refresh_standings(d - i);
+  end loop;
+end $$;

@@ -3,6 +3,12 @@ select plan(27);
 
 -- Game on for this transaction, 3 saves a day to test the rate limit quickly.
 update public.app_settings set value = '{"enabled": true, "lineup_saves_per_day": 3, "lineup_size": 5}' where key = 'vault_score';
+-- Independent of the local demo seed.
+delete from public.fantasy_seasons where id <> '2026-27';
+delete from public.game_days;
+delete from public.lineup_scores;
+delete from public.lineups;
+delete from public.lineup_drafts;
 
 -- Weights and seasons
 select is(public.fantasy_points('2026-10-21', 20, 10, 5, 2, 1, 3), 45.5::numeric, 'default weights: 20 + 12 + 7.5 + 6 + 3 - 3');

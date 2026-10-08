@@ -26,6 +26,8 @@ const REASONS: Record<string, string> = {
   history: 'Full price history is a Premium feature.',
   gains: 'Gains and losses are a Premium feature.',
   digest: 'The daily morning email is a Premium feature.',
+  private_leagues: 'The free plan includes one private league. Premium unlocks as many as you want.',
+  game_history: 'Past weeks, full season history and player details are Premium. Points stay the same for everyone.',
 };
 
 /** Global paywall modal, opened by PaywallService (from LIMIT_REACHED errors or the profile). */

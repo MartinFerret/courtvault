@@ -23,9 +23,12 @@ import { PlanService } from '../../core/plan/plan.service';
 import { PushService } from '../../core/push/push.service';
 import { SupabaseService } from '../../core/supabase/supabase.service';
 
+import { GameProfileComponent } from '../game/game-profile.component';
+
 @Component({
   selector: 'cv-profile',
   imports: [
+    GameProfileComponent,
     RouterLink,
     IonContent,
     IonList,

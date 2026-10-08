@@ -41,6 +41,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/scan/scan.page').then((m) => m.ScanPage),
       },
       {
+        path: 'game',
+        loadComponent: () => import('./features/game/game.page').then((m) => m.GamePage),
+      },
+      {
         path: 'sets',
         loadComponent: () => import('./features/sets/sets.page').then((m) => m.SetsPage),
       },
@@ -70,6 +74,32 @@ export const routes: Routes = [
     path: 'players/:slug',
     canActivate: [authGuard],
     loadComponent: () => import('./features/players/player.page').then((m) => m.PlayerPage),
+  },
+  // Vault Score and Leagues (web app paths; never indexed, see public/_headers).
+  {
+    path: 'game/standings',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/game/standings.page').then((m) => m.StandingsPage),
+  },
+  {
+    path: 'game/rules',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/game/rules.page').then((m) => m.RulesPage),
+  },
+  {
+    path: 'leagues',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/leagues/leagues.page').then((m) => m.LeaguesPage),
+  },
+  {
+    path: 'leagues/join/:code',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/leagues/join.page').then((m) => m.LeagueJoinPage),
+  },
+  {
+    path: 'leagues/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/leagues/league.page').then((m) => m.LeaguePage),
   },
   {
     path: 'import',

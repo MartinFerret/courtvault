@@ -2,6 +2,15 @@ begin;
 select plan(43);
 
 update public.app_settings set value = '{"enabled": true, "lineup_saves_per_day": 20, "lineup_size": 5}' where key = 'vault_score';
+-- Independent of the local demo seed.
+delete from public.fantasy_seasons where id <> '2026-27';
+delete from public.game_days;
+delete from public.lineup_scores;
+delete from public.lineups;
+delete from public.leagues;
+delete from public.badges;
+delete from public.standings_snapshots;
+update public.profiles set username = null;
 
 insert into auth.users (id, instance_id, aud, role, email, created_at, updated_at) values
   ('00000000-0000-0000-0000-0000000000b1', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'b1@courtvault.local', now() - interval '30 days', now()),
@@ -86,7 +95,7 @@ select ok(public.refresh_standings('2026-10-22') > 0, 'snapshots for day 2');
 select is(public.refresh_standings('2026-10-12'), 0, 'preseason days never enter the standings');
 
 select tests.authenticate_as('00000000-0000-0000-0000-0000000000b1');
-select throws_like($$select public.standings('global', null, 'week', '2026-10-19')$$, 'LIMIT_REACHED:history%', 'free: past weeks are Premium');
+select throws_like($$select public.standings('global', null, 'week', '2026-10-19')$$, 'LIMIT_REACHED:game_history%', 'free: past weeks are Premium');
 
 select tests.authenticate_as('00000000-0000-0000-0000-0000000000b3');
 create temp table tmp_s as select public.standings('global', null, 'week', '2026-10-19') as s;
