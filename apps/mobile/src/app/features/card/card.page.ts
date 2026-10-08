@@ -5,7 +5,7 @@ import {
   IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonNote,
   IonTitle, IonToolbar,
 } from '@ionic/angular';
-import { GRADES, PRICE_LABEL, parseLimitReached, type Grade } from '@courtvault/shared';
+import { GRADES, PRICE_SOURCE_CREDIT, parseLimitReached, priceKindLabel, type Grade } from '@courtvault/shared';
 import { AlertsService } from '../../core/alerts/alerts.service';
 import { CatalogService, type CardDetail } from '../../core/catalog/catalog.service';
 import { CollectionService } from '../../core/collection/collection.service';
@@ -38,8 +38,17 @@ export class CardPage {
   readonly grade = input<string>();
   readonly item = input<string>();
 
-  readonly priceLabel = PRICE_LABEL;
+  readonly sourceCredit = PRICE_SOURCE_CREDIT;
   readonly grades = GRADES;
+
+  /** "Recent auction sales", "Last auction sale, Oct 2" or "Current asking price". */
+  kindLabel(p: { price_kind: string; sale_at: string | null }): string {
+    return priceKindLabel(p.price_kind, p.sale_at);
+  }
+  countLabel(p: { price_kind: string; sample_size: number }): string {
+    const unit = p.price_kind === 'ask_median' ? 'listing' : 'sale';
+    return `${p.sample_size} ${unit}${p.sample_size === 1 ? '' : 's'}`;
+  }
   readonly card = signal<CardDetail | null>(null);
   readonly selectedParallelId = signal<string | null>(null);
   readonly selectedGrade = signal<Grade>('RAW');

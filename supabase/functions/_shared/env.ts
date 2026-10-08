@@ -11,7 +11,7 @@ export function requireEnv(name: string): string {
 }
 
 export type StatsProviderName = 'mock' | 'highlightly';
-export type PriceProviderName = 'mock' | 'ebay';
+export type PriceProviderName = 'mock' | 'ebay' | 'cardsight';
 export type PushProviderName = 'log' | 'fcm';
 export type EmailProviderName = 'log' | 'brevo';
 
@@ -19,7 +19,8 @@ export function statsProviderName(): StatsProviderName {
   return env('STATS_PROVIDER') === 'highlightly' ? 'highlightly' : 'mock';
 }
 export function priceProviderName(): PriceProviderName {
-  return env('PRICE_PROVIDER') === 'ebay' ? 'ebay' : 'mock';
+  const name = env('PRICE_PROVIDER');
+  return name === 'cardsight' ? 'cardsight' : name === 'ebay' ? 'ebay' : 'mock';
 }
 export function pushProviderName(): PushProviderName {
   return env('PUSH_PROVIDER') === 'fcm' ? 'fcm' : 'log';

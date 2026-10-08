@@ -25,12 +25,12 @@ function eitherSlug(slug: string): string | null {
 }
 
 /** True once at least one price has been recorded: pages show price columns only then. */
-/** Highest median asking prices right now, any parallel, raw (values hub). */
+/** Highest market values right now, any parallel, raw (values hub). */
 export async function topValues(limit = 12) {
   const { data, error } = await supabase()
     .from('current_prices')
     .select(
-      'price_cents, sample_size, grade, parallels!inner(name, serial_run, cards!inner(number, public_slug, is_rookie, players(name, public_slug), card_sets(name, season, public_slug)))',
+      'price_cents, sample_size, grade, price_kind, sale_at, parallels!inner(name, serial_run, cards!inner(number, public_slug, is_rookie, players(name, public_slug), card_sets(name, season, public_slug)))',
     )
     .eq('grade', 'RAW')
     .order('price_cents', { ascending: false })
@@ -51,6 +51,8 @@ export async function topValues(limit = 12) {
     return {
       price_cents: row.price_cents,
       sample_size: row.sample_size,
+      price_kind: row.price_kind,
+      sale_at: row.sale_at,
       parallel_name: parallel.name,
       serial_run: parallel.serial_run,
       card: parallel.cards,
@@ -312,6 +314,8 @@ export interface CardPage {
       sample_size: number;
       captured_at: string;
       buy_url: string | null;
+      price_kind: string;
+      sale_at: string | null;
     }[];
   }[];
 }
@@ -337,7 +341,7 @@ export async function getCard(slug: string): Promise<CardPage | null> {
   if (!player || !set) return null;
   const { data: prices, error: pricesError } = await client
     .from('latest_prices')
-    .select('parallel_id, grade, price_cents, sample_size, captured_at, buy_url')
+    .select('parallel_id, grade, price_cents, sample_size, captured_at, buy_url, price_kind, sale_at')
     .in(
       'parallel_id',
       parallels.map((p) => p.id),
@@ -353,6 +357,8 @@ export async function getCard(slug: string): Promise<CardPage | null> {
       sample_size: p.sample_size ?? 0,
       captured_at: p.captured_at ?? '',
       buy_url: p.buy_url,
+      price_kind: p.price_kind ?? 'ask_median',
+      sale_at: p.sale_at ?? null,
     });
     byParallel.set(p.parallel_id, list);
   }
@@ -378,7 +384,7 @@ export async function getCard(slug: string): Promise<CardPage | null> {
   };
 }
 
-/** 90 days of the Base raw asking price of a card (public_price_history). */
+/** 90 days of the Base raw value of a card (public_price_history). */
 export async function getPriceHistory(publicSlug: string) {
   const { data, error } = await supabase().rpc('public_price_history', {
     p_card_slug: publicSlug,

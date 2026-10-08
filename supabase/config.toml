@@ -426,6 +426,8 @@ verify_jwt = false
 verify_jwt = false
 [functions.job-prices]
 verify_jwt = false
+[functions.job-catalog-map]
+verify_jwt = false
 [functions.job-alerts]
 verify_jwt = false
 [functions.job-morning]

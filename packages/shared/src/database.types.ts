@@ -140,6 +140,141 @@ export type Database = {
           },
         ];
       };
+      cardsight_cache: {
+        Row: {
+          body: NonNullable<Json>;
+          cache_key: string;
+          expires_at: string;
+          fetched_at: string;
+        };
+        Insert: {
+          body: NonNullable<Json>;
+          cache_key: string;
+          expires_at: string;
+          fetched_at?: string;
+        };
+        Update: {
+          body?: NonNullable<Json>;
+          cache_key?: string;
+          expires_at?: string;
+          fetched_at?: string;
+        };
+        Relationships: [];
+      };
+      cardsight_cards: {
+        Row: {
+          card_id: string;
+          cardsight_card_id: string;
+          mapped_at: string;
+          matched_by: string;
+        };
+        Insert: {
+          card_id: string;
+          cardsight_card_id: string;
+          mapped_at?: string;
+          matched_by?: string;
+        };
+        Update: {
+          card_id?: string;
+          cardsight_card_id?: string;
+          mapped_at?: string;
+          matched_by?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'cardsight_cards_card_id_fkey';
+            columns: ['card_id'];
+            isOneToOne: true;
+            referencedRelation: 'cards';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'cardsight_cards_card_id_fkey';
+            columns: ['card_id'];
+            isOneToOne: true;
+            referencedRelation: 'collection_items_detailed';
+            referencedColumns: ['card_id'];
+          },
+        ];
+      };
+      cardsight_parallels: {
+        Row: {
+          cardsight_parallel_id: string;
+          mapped_at: string;
+          name: string;
+          set_id: string;
+        };
+        Insert: {
+          cardsight_parallel_id: string;
+          mapped_at?: string;
+          name: string;
+          set_id: string;
+        };
+        Update: {
+          cardsight_parallel_id?: string;
+          mapped_at?: string;
+          name?: string;
+          set_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'cardsight_parallels_set_id_fkey';
+            columns: ['set_id'];
+            isOneToOne: false;
+            referencedRelation: 'card_sets';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'cardsight_parallels_set_id_fkey';
+            columns: ['set_id'];
+            isOneToOne: false;
+            referencedRelation: 'collection_items_detailed';
+            referencedColumns: ['set_id'];
+          },
+        ];
+      };
+      cardsight_sets: {
+        Row: {
+          base_set_card_count: number | null;
+          base_set_id: string;
+          mapped_at: string;
+          release_id: string;
+          release_name: string;
+          set_id: string;
+        };
+        Insert: {
+          base_set_card_count?: number | null;
+          base_set_id: string;
+          mapped_at?: string;
+          release_id: string;
+          release_name: string;
+          set_id: string;
+        };
+        Update: {
+          base_set_card_count?: number | null;
+          base_set_id?: string;
+          mapped_at?: string;
+          release_id?: string;
+          release_name?: string;
+          set_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'cardsight_sets_set_id_fkey';
+            columns: ['set_id'];
+            isOneToOne: true;
+            referencedRelation: 'card_sets';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'cardsight_sets_set_id_fkey';
+            columns: ['set_id'];
+            isOneToOne: true;
+            referencedRelation: 'collection_items_detailed';
+            referencedColumns: ['set_id'];
+          },
+        ];
+      };
       checklist_follows: {
         Row: {
           created_at: string;
@@ -222,6 +357,8 @@ export type Database = {
           grade: Database['public']['Enums']['grade'];
           parallel_id: string;
           price_cents: number;
+          price_kind: string;
+          sale_at: string | null;
           sample_size: number;
           source: string;
         };
@@ -232,6 +369,8 @@ export type Database = {
           grade: Database['public']['Enums']['grade'];
           parallel_id: string;
           price_cents: number;
+          price_kind?: string;
+          sale_at?: string | null;
           sample_size?: number;
           source: string;
         };
@@ -242,6 +381,8 @@ export type Database = {
           grade?: Database['public']['Enums']['grade'];
           parallel_id?: string;
           price_cents?: number;
+          price_kind?: string;
+          sale_at?: string | null;
           sample_size?: number;
           source?: string;
         };
@@ -690,12 +831,55 @@ export type Database = {
         };
         Relationships: [];
       };
+      price_listings: {
+        Row: {
+          fetched_at: string;
+          grade: Database['public']['Enums']['grade'];
+          id: number;
+          listed_at: string;
+          listing_type: string;
+          parallel_id: string;
+          price_cents: number;
+          source: string;
+        };
+        Insert: {
+          fetched_at?: string;
+          grade: Database['public']['Enums']['grade'];
+          id?: never;
+          listed_at: string;
+          listing_type: string;
+          parallel_id: string;
+          price_cents: number;
+          source: string;
+        };
+        Update: {
+          fetched_at?: string;
+          grade?: Database['public']['Enums']['grade'];
+          id?: never;
+          listed_at?: string;
+          listing_type?: string;
+          parallel_id?: string;
+          price_cents?: number;
+          source?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'price_listings_parallel_id_fkey';
+            columns: ['parallel_id'];
+            isOneToOne: false;
+            referencedRelation: 'parallels';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       price_points: {
         Row: {
           captured_at: string;
           grade: Database['public']['Enums']['grade'];
           parallel_id: string;
           price_cents: number;
+          price_kind: string;
+          sale_at: string | null;
           sample_size: number;
           source: string;
         };
@@ -704,6 +888,8 @@ export type Database = {
           grade: Database['public']['Enums']['grade'];
           parallel_id: string;
           price_cents: number;
+          price_kind?: string;
+          sale_at?: string | null;
           sample_size?: number;
           source: string;
         };
@@ -712,6 +898,8 @@ export type Database = {
           grade?: Database['public']['Enums']['grade'];
           parallel_id?: string;
           price_cents?: number;
+          price_kind?: string;
+          sale_at?: string | null;
           sample_size?: number;
           source?: string;
         };
@@ -886,6 +1074,8 @@ export type Database = {
           grade: Database['public']['Enums']['grade'] | null;
           parallel_id: string | null;
           price_cents: number | null;
+          price_kind: string | null;
+          sale_at: string | null;
           sample_size: number | null;
           source: string | null;
         };
@@ -896,6 +1086,8 @@ export type Database = {
           grade?: Database['public']['Enums']['grade'] | null;
           parallel_id?: string | null;
           price_cents?: number | null;
+          price_kind?: string | null;
+          sale_at?: string | null;
           sample_size?: number | null;
           source?: string | null;
         };
@@ -906,6 +1098,8 @@ export type Database = {
           grade?: Database['public']['Enums']['grade'] | null;
           parallel_id?: string | null;
           price_cents?: number | null;
+          price_kind?: string | null;
+          sale_at?: string | null;
           sample_size?: number | null;
           source?: string | null;
         };
@@ -931,6 +1125,27 @@ export type Database = {
       };
     };
     Functions: {
+      cardsight_targets: {
+        Args: { p_mode?: string };
+        Returns: {
+          card_id: string;
+          card_number: string;
+          cardsight_card_id: string;
+          cardsight_parallel_id: string;
+          current_cents: number;
+          current_kind: string;
+          grade: Database['public']['Enums']['grade'];
+          parallel_id: string;
+          parallel_name: string;
+          player_name: string;
+          priority: number;
+          reason: string;
+          season: string;
+          serial_run: number;
+          set_name: string;
+        }[];
+      };
+      cardsight_unmapped_count: { Args: { p_mode?: string }; Returns: number };
       change_24h_cents: {
         Args: { p_grade: Database['public']['Enums']['grade']; p_parallel_id: string };
         Returns: number;
@@ -994,6 +1209,15 @@ export type Database = {
           ends_at: string;
           remaining: number;
           sold: number;
+        }[];
+      };
+      full_pass_pairs: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          grade: Database['public']['Enums']['grade'];
+          parallel_id: string;
+          priority: number;
+          reason: string;
         }[];
       };
       grant_lifetime: {
@@ -1164,6 +1388,8 @@ export type Database = {
           p_grade: Database['public']['Enums']['grade'];
           p_parallel_id: string;
           p_price_cents: number;
+          p_price_kind?: string;
+          p_sale_at?: string;
           p_sample_size?: number;
           p_source: string;
         };

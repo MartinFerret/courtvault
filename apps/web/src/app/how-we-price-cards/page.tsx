@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { PRICE_LABEL, formatCents, formatEasternDay } from '@courtvault/shared';
+import { PRICE_SOURCE_NAME, formatCents, formatEasternDay } from '@courtvault/shared';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { FreshnessLine } from '@/components/freshness';
 import { JsonLd } from '@/components/json-ld';
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   // R32: institutional page, brand title, no commercial keyword.
   title: 'How we price cards',
   description:
-    'Median asking prices from live eBay listings, by parallel and grade, refreshed every night at 5:30 AM ET next to the box scores. Rules and limits.',
+    'Card values from eBay auction sales and asking prices via CardSight AI, by parallel and grade, refreshed every night at 5:30 AM ET next to the box scores. The three price states, rules and limits.',
   alternates: { canonical: PATHS.method },
 };
 
@@ -27,20 +27,24 @@ export default async function MethodPage() {
   const minPrice = formatCents(minPriceCents);
   const faq = [
     {
-      q: 'What is a median asking price?',
-      a: `The middle asking price of the active eBay listings for one exact card, parallel and grade. It is what sellers ask today, not what buyers paid. ${SITE_NAME} never shows sold prices.`,
+      q: 'Where do the card values come from?',
+      a: `From eBay sales and listings collected by ${PRICE_SOURCE_NAME}, a trading card data service. For one exact card, parallel and grade, ${SITE_NAME} reads the completed auction sales and the current Buy It Now listings of the last 90 days and turns them into one value, labelled with its state.`,
     },
     {
-      q: 'How often are basketball card values updated?',
-      a: 'Every night. Box scores arrive at 5:00 AM Eastern, prices refresh at 5:30 AM, and the morning report goes out at 8:00 AM. Public pages follow within the hour.',
+      q: 'What are the three price states?',
+      a: 'Recent auction sales: the median of completed eBay auction sales over 90 days, shown when there are at least 3. Last auction sale: the single latest auction sale with its date, shown when there are only 1 or 2. Current asking price: the median of what sellers ask right now, shown when no auction closed in the period. Most modern cards sell through fixed-price listings, so the asking price is the most common state.',
     },
     {
       q: 'Is the value what my card will sell for?',
-      a: 'No. It is what comparable copies ask right now. A sale can close lower, and a card with few listings shows no value at all.',
+      a: 'No. An auction median says what buyers recently paid for comparable copies; an asking price says what sellers want today. A sale can close lower or higher, and a card with no data shows no value at all.',
+    },
+    {
+      q: 'How often are basketball card values updated?',
+      a: 'Every night. Box scores arrive at 5:00 AM Eastern, prices refresh at 5:30 AM, and the morning report goes out at 8:00 AM. Public pages follow within the hour. Cards in collections, cards of players who played last night, rookies and the most watched players refresh daily; the whole catalog once a week.',
     },
     {
       q: 'Why does a card show no value?',
-      a: `A value needs at least ${minSample} active listings above ${minPrice}. Under that, the card page lists the parallel and its print run without a number.`,
+      a: `A value needs at least ${minSample} usable sales or listings above ${minPrice}. Under that, the card page lists the parallel and its print run without a number. A parallel the data source does not track is not priced either.`,
     },
     {
       q: 'What does the Hot form badge mean?',
@@ -52,7 +56,7 @@ export default async function MethodPage() {
     },
     {
       q: 'What does a player page show?',
-      a: 'The player’s cards in every Topps set with their numbers, the rarest parallels with their print runs, his current team, his game log for the season and, once priced, the median asking price of each card.',
+      a: 'The player\u2019s cards in every Topps set with their numbers, the rarest parallels with their print runs, his current team, his game log for the season and, once priced, the value of each card with its state.',
     },
     {
       q: 'Which sets and seasons are covered?',
@@ -60,7 +64,7 @@ export default async function MethodPage() {
     },
     {
       q: 'Does a good game raise a card price?',
-      a: 'Sometimes, and sometimes not. We show the box score and the asking prices side by side, before tip-off and the next morning, and we never claim that one caused the other.',
+      a: 'Sometimes, and sometimes not. We show the box score and the values side by side, before tip-off and the next morning, and we never claim that one caused the other.',
     },
   ];
   return (
@@ -105,26 +109,50 @@ export default async function MethodPage() {
         </nav>
         <div className="method__body">
           <p className="lead">
-            Every basketball card value on {SITE_NAME} is the median asking price of live eBay
-            listings for that exact card, parallel and grade, refreshed every night at 5:30 AM
-            Eastern and shown next to the box scores of the same night.
+            Every basketball card value on {SITE_NAME} comes from eBay sales and listings supplied by{' '}
+            {PRICE_SOURCE_NAME}, for that exact card, parallel and grade, refreshed every night at
+            5:30 AM Eastern and shown next to the box scores of the same night. Each value says
+            whether it is made of recent auction sales, one last auction sale, or current asking
+            prices.
           </p>
           <p className="muted small">Last updated {formatEasternDay(METHOD_UPDATED)}.</p>
           <FreshnessLine data={freshness} />
 
           <h2 id="source">Where does a card value come from?</h2>
           <p>
-            From active eBay listings only. The value is the{' '}
-            <strong>{PRICE_LABEL.toLowerCase()}</strong> of the listings for one card, one parallel
-            and one grade (raw, PSA 9, PSA 10). Asking prices are what sellers want today, not what
-            buyers paid: we label them as such everywhere and never present them as sold prices. A
-            value is published only when at least {minSample} listings back it and it is above{' '}
-            {minPrice}; under that, the card shows no value rather than a shaky one.
+            From the completed eBay auction sales and the current Buy It Now listings of the last 90
+            days for one card, one parallel and one grade (raw, PSA 9, PSA 10), as collected by{' '}
+            {PRICE_SOURCE_NAME}. We never read eBay ourselves. Out of those records we compute one
+            figure and label it with one of three states:
+          </p>
+          <ul>
+            <li>
+              <strong>Recent auction sales</strong>: the median of completed auction sales, shown
+              when there are at least 3 in the period. This is what buyers paid.
+            </li>
+            <li>
+              <strong>Last auction sale</strong>: the latest completed auction sale, with its date,
+              shown when there are only 1 or 2.
+            </li>
+            <li>
+              <strong>Current asking price</strong>: the median of what sellers ask right now, shown
+              when no auction closed in the period. Most modern cards sell through fixed-price
+              listings, so this is the most common state, and it is what sellers want, not what
+              buyers paid.
+            </li>
+          </ul>
+          <p>
+            Outliers beyond 1.5 times the interquartile range are dropped before a median. A value
+            is published only when at least {minSample} records back it and it is above {minPrice};
+            under that, the card shows no value rather than a shaky one. We keep only our own daily
+            figure per card, parallel and grade, never the listings themselves.
           </p>
           <p>
             Parallels are priced in the order collectors watch them: Base first, then the parallels
-            most listed for that set. A card page lists every parallel and print run from the
-            official Topps checklist, priced or not.
+            most listed for that set. Cards in collections, cards of players who played last night,
+            rookies and the most watched players refresh every day; the whole catalog once a week.
+            A card page lists every parallel and print run from the official Topps checklist, priced
+            or not.
           </p>
 
           <h2 id="schedule">When are values updated?</h2>
@@ -134,9 +162,9 @@ export default async function MethodPage() {
           </p>
           <UpdateTimeline />
           <p>
-            A price point is recorded only when the median moved, so the history behind a card is
-            made of real changes, not daily copies. Public pages refresh within the hour; the app
-            and the morning email read the same numbers.
+            A price point is recorded only when the value or its state moved, so the history behind
+            a card is made of real changes, not daily copies. Public pages refresh within the hour;
+            the app and the morning email read the same numbers.
           </p>
 
           <h2 id="form">What does the form badge mean?</h2>
@@ -152,12 +180,13 @@ export default async function MethodPage() {
           <h2 id="claims">What do we never claim?</h2>
           <ul>
             <li>
-              That a game moved a price. We show the box score and the asking prices side by side,
-              before tip-off and the next morning. Prices move for many reasons; the wording is
-              always &quot;after the game&quot;, never &quot;because of&quot;.
+              That a game moved a price. We show the box score and the values side by side, before
+              tip-off and the next morning. Prices move for many reasons; the wording is always
+              &quot;after the game&quot;, never &quot;because of&quot;.
             </li>
             <li>
-              That a value is what your card will sell for. It is what comparable copies ask today.
+              That a value is what your card will sell for. An auction median is what comparable
+              copies recently sold for; an asking price is what sellers want today.
             </li>
             <li>
               A number we do not have. A card without enough listings, a night without games, a
@@ -173,8 +202,12 @@ export default async function MethodPage() {
             </li>
             <li>No marketplace and no trading between users: we show listings, we do not sell.</li>
             <li>
-              No sold-price promises: asking prices from live listings, labelled as such, nothing
-              else.
+              No appraisals: every value is labelled with its state, auction sales or asking prices,
+              and an asking price is never presented as a sale.
+            </li>
+            <li>
+              Market data by {PRICE_SOURCE_NAME}, from eBay sales and listings. We display it; we do
+              not resell it, and our terms ask you not to scrape or redistribute it.
             </li>
             <li>
               Photos you take in the app stay private; official card images appear on the website

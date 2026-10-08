@@ -58,7 +58,7 @@ export function LastNightView({
     datePublished: `${day}T13:00:00Z`,
     dateModified: data.after_at,
     url: absoluteUrl(moversPath(day)),
-    description: `How basketball card asking prices moved after the ${data.games.length} games of ${formatEasternDay(day)}: biggest gainers, biggest losers, performances of the night.`,
+    description: `How basketball card values moved after the ${data.games.length} games of ${formatEasternDay(day)}: biggest gainers, biggest losers, performances of the night.`,
     about: data.performances.slice(0, 5).map((p) => ({ '@type': 'Person', name: p.player_name })),
   };
   return (
@@ -146,7 +146,7 @@ export function LastNightView({
           >
             {freshness?.priced_cards
               ? `A mover needs ${data.thresholds.min_sample_size} listings and a change since tip-off.`
-              : 'Box scores are in; asking prices are compared before tip-off and the next morning once cards are priced.'}
+              : 'Box scores are in; values are compared before tip-off and the next morning once cards are priced.'}
           </EmptyState>
         )}
       </section>

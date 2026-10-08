@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ...robotsFor(ranked.some((r) => r.price_cents !== null)),
     title: seoTitle('Most Valuable Basketball Rookie Cards', 'ranked'),
     description:
-      '2025-26 Topps basketball rookie cards ranked by median asking price, Base parallel raw, with the 7-day change, from live eBay listings.',
+      '2025-26 Topps basketball rookie cards ranked by market value, Base parallel raw, with the 7-day change, from eBay sales and listings.',
     alternates: { canonical: PATHS.rookies },
   };
 }
@@ -38,7 +38,7 @@ export default async function RookieRankingsPage() {
         />
         <h1>Most valuable basketball rookie cards</h1>
         <p className="lead">
-          The ranking appears once rookie cards have a median asking price from live eBay listings.
+          The ranking appears once rookie cards have a market value from eBay sales and listings.
           Until then, browse the <Link href={PATHS.checklists}>checklists</Link> and the{' '}
           <Link href={PATHS.players}>players</Link>.
         </p>

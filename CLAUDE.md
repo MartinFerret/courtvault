@@ -93,8 +93,8 @@ marketplace, sealed products.
 | ---------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | Catalog    | Official Topps checklists, CSV import (`scripts/src/import-checklist.ts`) | Format in `data/checklists/README.md`. `DEMO-*.csv` are hand-written demo files             |
 | Game stats | Highlightly (`https://nba.highlightly.net`, header `x-rapidapi-key`)      | Free plan: 100 requests/day, box scores included. One night costs ~16 requests              |
-| Prices     | eBay Browse API, active listings (OAuth client credentials, `EBAY_US`)    | Asking prices, not sold prices. Label them "Median asking price" everywhere (`PRICE_LABEL`) |
-| Buy links  | eBay Partner Network via `X-EBAY-C-ENDUSERCTX`                            | Optional, plain links when no campaign id                                                   |
+| Prices     | CardSight AI (`https://api.cardsight.ai`, header `X-API-Key`), eBay sales and listings | Free tier 750 calls/month, one bulk call = 100 cards. Three labelled states (`priceKindLabel`): auction median (90 d, 3+ sales), last auction sale with date, asking median. eBay Browse stays as the disabled fallback |
+| Buy links  | eBay search links (Partner Network campaign id when set)                   | Optional, plain links when no campaign id                                                   |
 
 Every external source goes through an interface in `supabase/functions/_shared/providers/`
 with a real and a deterministic mock implementation, selected by `STATS_PROVIDER`,
@@ -145,7 +145,7 @@ Netlify Free (Vercel excluded: its free plan forbids commercial use).
 Topps CSV ──► import script (service role) ──┐
                                              ▼
 pg_cron ──► job-stats   ◄── Highlightly
-        ──► job-prices  ◄── eBay Browse      ──► PostgreSQL (RLS, triggers, views, RPC)
+        ──► job-prices  ◄── CardSight AI     ──► PostgreSQL (RLS, triggers, views, RPC)
         ──► job-alerts  ──► FCM                     ▲            ▲
         ──► job-morning ──► FCM                     │            │
 RevenueCat ──► revenuecat-webhook ──────────────────┘            │
@@ -184,8 +184,16 @@ min_sample, min_price_cents)` builds the whole page as JSON from games, stat lin
   last night, then every rookie, then the top 60 players by recent game score (14-day window,
   +2 per follower). Per card: Base + 2 preferred parallels per set (listing counts re-rank them
   once known); Raw, plus PSA 10 for rookie Base cards. `showcase_pairs()` / `parallels_to_price()`
-  build the ordered work list, `price_call_budget()` caps calls per night (3,500 by default,
-  eBay Browse quota 5,000), `price_coverage` logs requested / priced / skipped per reason.
+  build the ordered work list, `price_coverage` logs requested / priced / skipped per reason.
+  With CardSight (`PRICE_PROVIDER=cardsight`, `supabase/functions/job-prices/cardsight-run.ts`):
+  `cardsight_targets(mode)` joins the mapping tables (`cardsight_sets/cards/parallels`, filled
+  by `job-catalog-map`, ids only, never their lists), the run reads the month's usage first and
+  plans bulk calls (one per parallel, grade and 100 cards) under the quota: last night's players
+  first, then collections and alerts, rookies, top players, the weekly full pass on Sunday;
+  80% of the quota = essential cards only, 95% = last night only plus an email to `EMAIL_ADMIN`.
+  Data policy until CardSight answers in writing: our own aggregates only, a 12-hour cache of
+  raw responses (`cardsight_cache`), raw listings behind `price_source.store_raw_listings`.
+  Details: `docs/price-source-cardsight.md`.
 - App: standalone components + signals, lazy routes, one Angular service per domain in
   `src/app/core/` (supabase, auth, plan, catalog, collection, scan, morning, follows, alerts,
   billing, push, deeplinks). Components never call Supabase directly. Routes mirror the
@@ -237,6 +245,6 @@ numbered parallels missing for seven sets, see `data/checklists/README.md`).
 
 Cloud: Supabase project live (migrations pushed, functions and secrets deployed in mock mode,
 catalog imported), Netlify site `hoopticker` created from the CLI for the website. Not yet:
-custom domains and DNS, Cloudflare Pages project for the web app, real provider keys (eBay,
+custom domains and DNS, Cloudflare Pages project for the web app, real provider keys (eBay fallback,
 Highlightly, Brevo, Stripe), iOS build (needs Xcode), native deep-link files, store assets,
 guides and trust pages (need the owner's bio and legal details).

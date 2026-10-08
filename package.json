@@ -33,6 +33,7 @@
     "job:alerts": "node ./scripts/run-job.mjs job-alerts",
     "job:morning": "node ./scripts/run-job.mjs job-morning",
     "job:compact": "node ./scripts/run-job.mjs job-compact",
+    "job:map": "node ./scripts/run-job.mjs job-catalog-map",
     "convert:checklist": "pnpm --filter @courtvault/scripts convert:checklist"
   },
   "devDependencies": {

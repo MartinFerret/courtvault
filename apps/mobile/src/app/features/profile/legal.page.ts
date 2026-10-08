@@ -7,7 +7,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
-import { AFFILIATION_DISCLAIMER, PRICE_LABEL } from '@courtvault/shared';
+import { AFFILIATION_DISCLAIMER, PRICE_SOURCE_NAME } from '@courtvault/shared';
 
 const PAGES: Record<string, { title: string; paragraphs: string[] }> = {
   terms: {
@@ -15,7 +15,8 @@ const PAGES: Record<string, { title: string; paragraphs: string[] }> = {
     paragraphs: [
       'Draft, to be reviewed by counsel before launch.',
       'The app provides a catalog of basketball trading cards and tools to track a personal collection. Values are estimates derived from public listings and are provided for information only.',
-      `Prices shown are ${PRICE_LABEL.toLowerCase()}s from active eBay listings. They are not sold prices, appraisals or offers to buy. Buy links may be affiliate links.`,
+      `Values come from eBay sales and listings supplied by ${PRICE_SOURCE_NAME}: the median of recent auction sales when there are enough, the last auction sale otherwise, or the current asking price. Each value says which. They are not appraisals or offers to buy, and a sale can close at another price. Buy links may be affiliate links.`,
+      'Price data is licensed to us for display in this app and on our website. You may use it for your personal collection only. You may not scrape, copy, extract, store in bulk, resell or redistribute prices or catalog data, nor access the service by automated means. Accounts that do so may be closed.',
       'Premium subscriptions are purchased through the App Store or Google Play and governed by their terms. Cancel anytime from your store account.',
     ],
   },

@@ -11,7 +11,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: 'NBA Player Cards: values by set and parallel',
   description:
-    'Every player with a 2025-26 Topps basketball card: rookie and base cards, parallels with print runs, asking prices by grade and the last box scores.',
+    'Every player with a 2025-26 Topps basketball card: rookie and base cards, parallels with print runs, market values by grade and the last box scores.',
   alternates: { canonical: PATHS.players },
 };
 

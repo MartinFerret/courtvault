@@ -65,8 +65,35 @@ export function formatUsd(amount: number): string {
   return Number.isInteger(amount) ? `$${amount}` : `$${amount.toFixed(2)}`;
 }
 
-/** Label the brief requires everywhere a price is shown: these are eBay asking prices. */
-export const PRICE_LABEL = 'Median asking price';
+/**
+ * Prices come from CardSight AI (eBay sales and listings) since 2026-10-08, in three states.
+ * Every figure says which one it is; the generic label covers sums and mixed tables.
+ */
+export type PriceKind = 'auction_median' | 'last_auction' | 'ask_median';
+export const PRICE_KIND_LABELS: Record<PriceKind, string> = {
+  auction_median: 'Recent auction sales',
+  last_auction: 'Last auction sale',
+  ask_median: 'Current asking price',
+};
+/** The label of one figure, with the sale date for a last auction sale ("Last auction sale, Oct 2"). */
+export function priceKindLabel(kind: string | null | undefined, saleAt?: string | null): string {
+  const label = PRICE_KIND_LABELS[(kind ?? 'ask_median') as PriceKind] ?? PRICE_KIND_LABELS.ask_median;
+  if (kind === 'last_auction' && saleAt) {
+    const d = new Date(saleAt);
+    if (!Number.isNaN(d.getTime())) {
+      return `${label}, ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' })}`;
+    }
+  }
+  return label;
+}
+/** Generic label for a total or a column that mixes the three states. */
+export const PRICE_LABEL = 'Market value';
+/** One sentence that explains the three states, shown next to tables and totals. */
+export const PRICE_LABEL_NOTE =
+  'The median of recent eBay auction sales when there are at least 3, the last auction sale with its date when there are 1 or 2, otherwise the median of current asking prices. Each value says which.';
+export const PRICE_SOURCE_NAME = 'CardSight AI';
+/** Credit line for the data source. CardSight requires none; we say where the numbers come from. */
+export const PRICE_SOURCE_CREDIT = 'Market data by CardSight AI, from eBay sales and listings.';
 
 /** Seasons in scope for the MVP. */
 export const SEASONS_IN_SCOPE = ['2025-26', '2026-27'] as const;

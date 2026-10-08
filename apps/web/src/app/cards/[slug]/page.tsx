@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
-import { GRADE_LABELS, formatParallel } from '@courtvault/shared';
+import { GRADE_LABELS, formatParallel, priceKindLabel } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
-import { Price, PriceNote } from '@/components/price';
+import { Price, PriceNote, PriceWithKind } from '@/components/price';
 import { CardVisual } from '@/components/card-visual';
 import { EmptyState } from '@/components/empty-state';
 import { ImageCredit } from '@/components/image-credit';
@@ -58,7 +58,7 @@ export async function generateMetadata({
   const base = card.parallels
     .find((p) => p.name === 'Base')
     ?.prices.find((pr) => pr.grade === 'RAW');
-  const description = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: ${card.parallels.length} parallels with print runs, median asking prices raw, PSA 9 and PSA 10${base ? `, Base raw at $${(base.price_cents / 100).toFixed(2)}` : ''}.`;
+  const description = `${card.player.name} ${card.set.season} ${card.set.name} #${card.number}: ${card.parallels.length} parallels with print runs, market values raw, PSA 9 and PSA 10${base ? `, Base raw at $${(base.price_cents / 100).toFixed(2)}` : ''}.`;
   return {
     ...robotsFor(status.indexable),
     // The keyword alone already fills the title (set, player, card number).
@@ -112,7 +112,7 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
               0,
             ),
             availability: 'https://schema.org/InStock',
-            description: 'Median asking prices from active eBay listings, by parallel and grade.',
+            description: 'Market values by parallel and grade: recent eBay auction sales when there are enough, otherwise current asking prices, each labelled. Data by CardSight AI.',
           },
         }
       : {}),
@@ -172,11 +172,13 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
             {baseRaw ? (
               <>
                 {' '}
-                Base asks <Price cents={baseRaw.price_cents} /> raw
+                Base: <Price cents={baseRaw.price_cents} /> raw (
+                {priceKindLabel(baseRaw.price_kind, baseRaw.sale_at).toLowerCase()})
                 {basePsa10 ? (
                   <>
                     {' '}
-                    and <Price cents={basePsa10.price_cents} /> in PSA 10
+                    and <Price cents={basePsa10.price_cents} /> in PSA 10 (
+                    {priceKindLabel(basePsa10.price_kind, basePsa10.sale_at).toLowerCase()})
                   </>
                 ) : null}
                 .
@@ -244,13 +246,25 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
                   {priced.length > 0 ? (
                     <>
                       <td className="num">
-                        <Price cents={byGrade.get('RAW')?.price_cents} />
+                        <PriceWithKind
+                          cents={byGrade.get('RAW')?.price_cents}
+                          kind={byGrade.get('RAW')?.price_kind}
+                          saleAt={byGrade.get('RAW')?.sale_at}
+                        />
                       </td>
                       <td className="num">
-                        <Price cents={byGrade.get('PSA9')?.price_cents} />
+                        <PriceWithKind
+                          cents={byGrade.get('PSA9')?.price_cents}
+                          kind={byGrade.get('PSA9')?.price_kind}
+                          saleAt={byGrade.get('PSA9')?.sale_at}
+                        />
                       </td>
                       <td className="num">
-                        <Price cents={byGrade.get('PSA10')?.price_cents} />
+                        <PriceWithKind
+                          cents={byGrade.get('PSA10')?.price_cents}
+                          kind={byGrade.get('PSA10')?.price_kind}
+                          saleAt={byGrade.get('PSA10')?.sale_at}
+                        />
                       </td>
                       <td>
                         {buy ? (
@@ -292,7 +306,7 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
         <PriceHistory points={history} />
       ) : (
         <EmptyState title="No price history yet.">
-          The Base raw asking price is recorded each night it changes; the chart starts after the
+          The Base raw value is recorded each night it changes; the chart starts after the
           second point.
         </EmptyState>
       )}

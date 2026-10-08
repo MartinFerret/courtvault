@@ -27,7 +27,7 @@ Google sign-in, Cloudflare Pages (web app comes with phase 2).
 
 1. `supabase db push` (migrations), production seed (plan limits, Vault secrets
    `functions_url` and `job_secret`), `supabase functions deploy`, `supabase secrets set
---env-file supabase/functions/.env` with `STATS_PROVIDER=highlightly`, `PRICE_PROVIDER=ebay`,
+--env-file supabase/functions/.env` with `STATS_PROVIDER=highlightly`, `PRICE_PROVIDER=cardsight` (`CARDSIGHT_API_KEY`; eBay stays the disabled fallback),
    `PUSH_PROVIDER=log`, `JOB_SECRET`, `WEB_REVALIDATE_URL`, `WEB_REVALIDATE_SECRET`.
 2. Catalog import of the two official 2025-26 checklists with the service role key.
 3. First runs by hand: `pnpm job:stats -- --force`, `pnpm job:prices -- --force`; check

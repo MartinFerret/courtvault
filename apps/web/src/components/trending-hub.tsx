@@ -42,7 +42,7 @@ export function TrendingHub({
                     ? `, ${latest.gainers[0]!.player_name} #${latest.gainers[0]!.card_number} up ${latest.gainers[0]!.change_pct.toFixed(1)}% since tip-off.`
                     : '.'
                 }`
-              : 'Box scores and asking prices, side by side, after each NBA night.'}
+              : 'Box scores and card values, side by side, after each NBA night.'}
           </p>
           <FreshnessLine data={freshness} className="board__fresh" />
         </div>

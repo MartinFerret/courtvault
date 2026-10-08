@@ -32,7 +32,7 @@ export default async function Image({ params }: { params: Promise<{ date: string
     : '';
   const move = top ? formatPercent(top.change_pct) : '';
   const prices = top
-    ? `${formatCents(top.before_cents)} → ${formatCents(top.after_cents)} median asking price`
+    ? `${formatCents(top.before_cents)} → ${formatCents(top.after_cents)} market value`
     : '';
   const moveColor = top && top.change_cents > 0 ? '#1f9d55' : '#d9433a';
   return new ImageResponse(

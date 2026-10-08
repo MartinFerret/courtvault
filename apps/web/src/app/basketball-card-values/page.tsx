@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ...robotsFor(priced),
     title: seoTitle('Basketball Card Values', 'by set, parallel and grade'),
     description:
-      'Basketball card values from live eBay asking prices: the highest priced cards right now, every Topps checklist with print runs, and the rookie ranking. Refreshed nightly.',
+      'Basketball card values from eBay sales and listings: the highest priced cards right now, every Topps checklist with print runs, and the rookie ranking. Refreshed nightly.',
     alternates: { canonical: PATHS.values },
   };
 }
@@ -42,14 +42,15 @@ export default async function ValuesHubPage() {
       />
       <h1>Basketball card values</h1>
       <p className="lead">
-        What Topps basketball cards ask on eBay right now, by set, parallel and grade. Values are
-        median asking prices from active listings, refreshed every night next to the box scores.
+        What Topps basketball cards are worth right now, by set, parallel and grade: recent eBay
+        auction sales when there are enough, otherwise current asking prices, each value labelled,
+        refreshed every night next to the box scores.
         Open a checklist for every card of a set, a player page for every card of a player.
       </p>
       <FreshnessLine data={freshness} />
 
       <section className="section">
-        <h2>Highest asking prices right now</h2>
+        <h2>Highest values right now</h2>
         {top.length > 0 ? (
           <>
             <PriceNote />
@@ -91,7 +92,7 @@ export default async function ValuesHubPage() {
           </>
         ) : (
           <EmptyState title="Values start with the regular season.">
-            The catalog is complete; asking prices are collected nightly once the price source is
+            The catalog is complete; values are collected nightly once the price source is
             live. Checklists and player pages already list every card and parallel.
           </EmptyState>
         )}
@@ -116,7 +117,7 @@ export default async function ValuesHubPage() {
         <ul className="hub-list">
           <li>
             <Link href={PATHS.rookies}>Most valuable basketball rookie cards</Link>
-            <span className="muted small">2025-26 rookies ranked by asking price</span>
+            <span className="muted small">2025-26 rookies ranked by market value</span>
           </li>
           <li>
             <Link href={PATHS.movers}>Trending basketball cards</Link>
@@ -128,7 +129,7 @@ export default async function ValuesHubPage() {
           </li>
           <li>
             <Link href={PATHS.method}>How we price cards</Link>
-            <span className="muted small">median asking prices, thresholds, update schedule</span>
+            <span className="muted small">auction sales, asking prices, thresholds, update schedule</span>
           </li>
         </ul>
       </section>

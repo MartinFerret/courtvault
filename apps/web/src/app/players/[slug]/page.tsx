@@ -131,7 +131,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
             in {sets.length} Topps set{sets.length > 1 ? 's' : ''}
             {top && top.base_cents !== null ? (
               <>
-                . The highest median asking price, Base raw, is <Price cents={top.base_cents} /> for
+                . The highest market value, Base raw, is <Price cents={top.base_cents} /> for
                 #{top.number} {top.set?.season} {top.set?.name}.
               </>
             ) : (
@@ -232,7 +232,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
           <FormPriceChart form={form} />
           <p className="muted small">
             {form.price
-              ? `Points per game, and the median asking price of ${form.price.season} ${form.price.set_name} #${form.price.card_number} Base raw the morning after each game.`
+              ? `Points per game, and the market value of ${form.price.season} ${form.price.set_name} #${form.price.card_number} Base raw the morning after each game.`
               : 'Points per game. The value track appears once one of his cards has price history.'}
           </p>
         </section>

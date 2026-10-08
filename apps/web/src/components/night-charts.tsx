@@ -159,7 +159,7 @@ export function PointsVsValue({ data, slugs }: { data: LastNight; slugs: SlugMap
   const x = (v: number) => SP.l + (v / maxPts) * (SW - SP.l - SP.r);
   const y = (v: number) => SP.t + (1 - (v + maxAbs) / (2 * maxAbs)) * (SH - SP.t - SP.b);
   const labelled = [...points].sort((a, b) => Math.abs(b.pct) - Math.abs(a.pct)).slice(0, 5);
-  const summary = `${points.length} players: points scored last night against the change of their reference card's asking price since tip-off. Largest move: ${labelled[0]!.p.player_name}, ${labelled[0]!.pct.toFixed(1)}%.`;
+  const summary = `${points.length} players: points scored last night against the change of their reference card's value since tip-off. Largest move: ${labelled[0]!.p.player_name}, ${labelled[0]!.pct.toFixed(1)}%.`;
   return (
     <figure className="pvv">
       <svg viewBox={`0 0 ${SW} ${SH}`} role="img" aria-label={summary} className="pvv__svg">
@@ -208,7 +208,7 @@ export function PointsVsValue({ data, slugs }: { data: LastNight; slugs: SlugMap
         ))}
       </svg>
       <figcaption className="muted small">
-        Each dot is a player who played: points scored, and how the asking price of his reference
+        Each dot is a player who played: points scored, and how the value of his reference
         card (Base raw when priced) moved between tip-off and this morning. Lime dots are rookies.{' '}
         {labelled.slice(0, 3).map((pt, i) => (
           <span key={pt.p.player_slug}>

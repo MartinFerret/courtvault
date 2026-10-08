@@ -9,7 +9,9 @@ export interface ParallelWithPrices {
   id: string;
   name: string;
   serial_run: number | null;
-  prices: Partial<Record<Grade, { price_cents: number; captured_at: string; buy_url: string | null; sample_size: number }>>;
+  prices: Partial<
+    Record<Grade, { price_cents: number; captured_at: string; buy_url: string | null; sample_size: number; price_kind: string; sale_at: string | null }>
+  >;
 }
 
 export interface CardDetail {
@@ -67,14 +69,21 @@ export class CatalogService {
     const parallels = data.parallels ?? [];
     const { data: prices, error: pricesError } = await this.supabase.client
       .from('latest_prices')
-      .select('parallel_id, grade, price_cents, captured_at, buy_url, sample_size')
+      .select('parallel_id, grade, price_cents, captured_at, buy_url, sample_size, price_kind, sale_at')
       .in('parallel_id', parallels.map((p) => p.id));
     if (pricesError) throw pricesError;
     const byParallel = new Map<string, ParallelWithPrices['prices']>();
     for (const p of prices ?? []) {
       if (!p.parallel_id || !p.grade || p.price_cents === null) continue;
       const entry = byParallel.get(p.parallel_id) ?? {};
-      entry[p.grade] = { price_cents: p.price_cents, captured_at: p.captured_at ?? '', buy_url: p.buy_url, sample_size: p.sample_size ?? 0 };
+      entry[p.grade] = {
+        price_cents: p.price_cents,
+        captured_at: p.captured_at ?? '',
+        buy_url: p.buy_url,
+        sample_size: p.sample_size ?? 0,
+        price_kind: p.price_kind ?? 'ask_median',
+        sale_at: p.sale_at ?? null,
+      };
       byParallel.set(p.parallel_id, entry);
     }
     return {

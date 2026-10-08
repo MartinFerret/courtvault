@@ -70,7 +70,7 @@ export async function generateMetadata({
   return {
     ...robotsFor(status.indexable),
     title: seoTitle(keyword(set), `${set.cards.length} cards`),
-    description: `Full ${set.season} ${set.name}${/basketball/i.test(set.name) ? '' : ' basketball'} checklist: ${set.cards.length} cards, ${rookies} rookie cards, every parallel with its print run and median asking prices by grade.`,
+    description: `Full ${set.season} ${set.name}${/basketball/i.test(set.name) ? '' : ' basketball'} checklist: ${set.cards.length} cards, ${rookies} rookie cards, every parallel with its print run and market values by grade.`,
     alternates: { canonical: checklistPath(set.public_slug ?? set.slug) },
     openGraph: { title: keyword(set), type: 'website' },
   };
@@ -159,7 +159,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
             {top && top.base_cents !== null ? (
               <>
                 {' '}
-                {priced.length} cards have a current median asking price for the Base parallel, raw;
+                {priced.length} cards have a current market value for the Base parallel, raw;
                 the highest is #{top.number} {top.player?.name} at <Price cents={top.base_cents} />.
               </>
             ) : null}{' '}

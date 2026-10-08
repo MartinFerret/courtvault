@@ -18,7 +18,7 @@ function shortDate(iso: string): string {
   }).format(new Date(iso));
 }
 
-/** 90 days of the Base raw asking price, one point per recorded change. Server-rendered SVG. */
+/** 90 days of the Base raw value, one point per recorded change. Server-rendered SVG. */
 export function PriceHistory({ points }: { points: PricePoint[] }) {
   if (points.length < 2) return null;
   const t0 = new Date(points[0]!.captured_at).getTime();
@@ -38,7 +38,7 @@ export function PriceHistory({ points }: { points: PricePoint[] }) {
   const first = points[0]!;
   const last = points[points.length - 1]!;
   const change = last.price_cents - first.price_cents;
-  const summary = `Base raw asking price from ${shortDate(first.captured_at)} (${formatCents(first.price_cents)}) to ${shortDate(last.captured_at)} (${formatCents(last.price_cents)}), ${points.length} recorded changes.`;
+  const summary = `Base raw value from ${shortDate(first.captured_at)} (${formatCents(first.price_cents)}) to ${shortDate(last.captured_at)} (${formatCents(last.price_cents)}), ${points.length} recorded changes.`;
   return (
     <figure className="ph">
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={summary} className="ph__svg">

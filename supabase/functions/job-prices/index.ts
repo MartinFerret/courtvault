@@ -1,5 +1,7 @@
 /**
- * job-prices: median asking price for every (parallel, grade) that matters, in priority order:
+ * job-prices: a price for every (parallel, grade) that matters, in priority order.
+ * With PRICE_PROVIDER=cardsight (the default since 2026-10-08) see cardsight-run.ts. Below, the
+ * original per-query loop for eBay Browse (disabled) and the mock: median asking price
  * collections and alerts first, then the showcase (players who played last night, rookies,
  * top players). Stops at the daily call budget (app_settings.showcase.daily_call_budget) and
  * logs coverage per reason. Target 5:30 AM New York. Writes through record_price(), which
@@ -8,7 +10,8 @@
 import { defineJob } from '../_shared/jobs.ts';
 import { serve, sleep } from '../_shared/http.ts';
 import { createPriceProvider } from '../_shared/providers/index.ts';
-import { env } from '../_shared/env.ts';
+import { env, priceProviderName } from '../_shared/env.ts';
+import { runCardSightPricing } from './cardsight-run.ts';
 
 interface Target {
   parallel_id: string;
@@ -33,7 +36,14 @@ interface Coverage {
 serve(
   defineJob(
     { name: 'job-prices', targetHourEt: 5, dayOffset: 0 },
-    async ({ supabase, day, log }) => {
+    async (ctx) => {
+      // CardSight (bulk, monthly quota) has its own run; eBay and the mock keep the per-query loop.
+      if (priceProviderName() === 'cardsight') {
+        const details = await runCardSightPricing(ctx);
+        await revalidateWebsite(['prices', 'last-night']);
+        return details;
+      }
+      const { supabase, day, log } = ctx;
       const { data: targets, error: targetsError } = await supabase.rpc('parallels_to_price', {
         p_rookie_limit: 50,
       });

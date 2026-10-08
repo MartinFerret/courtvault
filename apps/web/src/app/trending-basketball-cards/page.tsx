@@ -14,7 +14,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: seoTitle('Trending Basketball Cards', "last night's movers"),
   description:
-    'Basketball cards whose asking prices moved after the games: last night in short, the movers of the last seven nights, and every past night.',
+    'Basketball cards whose values moved after the games: last night in short, the movers of the last seven nights, and every past night.',
   alternates: { canonical: PATHS.movers },
 };
 

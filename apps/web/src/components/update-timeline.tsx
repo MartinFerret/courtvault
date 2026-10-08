@@ -7,7 +7,7 @@ const STEPS = [
   { at: '5:00 AM', what: 'Box scores come in: every stat line of the night, player by player.' },
   {
     at: '5:30 AM',
-    what: 'Prices refresh: median asking prices from live eBay listings, Base first, then the parallels collectors watch.',
+    what: 'Prices refresh: eBay auction sales and asking prices through CardSight AI, Base first, then the parallels collectors watch.',
   },
   {
     at: '8:00 AM',

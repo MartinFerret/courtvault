@@ -30,7 +30,7 @@ export async function generateMetadata({
   if (!DAY.test(date)) return { title: 'Not found' };
   return {
     title: lastNightTitle(date),
-    description: `Biggest basketball card movers and performances of ${formatEasternDay(date)}: how median asking prices moved after the games.`,
+    description: `Biggest basketball card movers and performances of ${formatEasternDay(date)}: how values moved after the games.`,
     alternates: { canonical: moversPath(date) },
     openGraph: { type: 'article', title: lastNightTitle(date) },
   };

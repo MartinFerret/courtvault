@@ -17,7 +17,8 @@
       <div class="cv-price-hero">
         @if (price(); as p) {
           <span class="cv-price-value">{{ p.price_cents | cents }}</span>
-          <span class="cv-caption">{{ priceLabel }} · {{ p.sample_size }} listings · {{ p.captured_at | slice: 0 : 10 }}</span>
+          <span class="cv-caption">{{ kindLabel(p) }} · {{ countLabel(p) }} · {{ p.captured_at | slice: 0 : 10 }}</span>
+          <span class="cv-caption">{{ sourceCredit }}</span>
         } @else {
           <span class="cv-muted">No price yet for this parallel and grade.</span>
         }
@@ -103,7 +104,7 @@
     @if (price()?.buy_url; as url) {
       <section class="cv-section">
         <ion-button expand="block" fill="outline" [href]="url" target="_blank" rel="sponsored noopener">Shop listings on eBay</ion-button>
-        <p class="cv-caption" style="margin-top: 8px">Affiliate link. Listings are asking prices.</p>
+        <p class="cv-caption" style="margin-top: 8px">Affiliate link to current eBay listings.</p>
       </section>
     }
     </div>

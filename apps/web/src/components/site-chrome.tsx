@@ -47,8 +47,9 @@ export function SiteFooter() {
             Card values updated every night, next to how the players played.
           </p>
           <p className="muted small">
-            Prices are median asking prices from active eBay listings, not sold prices. Set and
-            player names are used for identification only.
+            Values come from eBay sales and listings through CardSight AI: recent auction sales when there
+            are enough, otherwise current asking prices, each labelled. Set and player names are used
+            for identification only.
             {hasOfficialImages() ? ` ${IMAGE_CREDIT}` : ''}
           </p>
           <p className="muted small">{DISCLAIMER}</p>
