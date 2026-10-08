@@ -16,13 +16,13 @@ export const AFFILIATION_DISCLAIMER = 'Not affiliated with the NBA, NBPA or Topp
 /**
  * Legal operator of the service (French sole trader), given by Martin on 2026-10-08. The only
  * place these details are spelled: legal pages, About screen, email footers and store listings
- * import them. The contact mailbox is the sender address of the digest emails.
+ * import them. The contact mailbox is Martin's own address (given 2026-10-08); the digest sender stays hello@hoopticker.com.
  */
 export const LEGAL_ENTITY = {
   name: 'Martin Ferret',
   addressLines: ['9 rue des Érables', '45250 Briare', 'France'],
   siren: '999 111 438',
-  contactEmail: 'hello@hoopticker.com',
+  contactEmail: 'mferret.pro@gmail.com',
 } as const;
 /** One-line postal address for email footers (CAN-SPAM) and short legal notices. */
 export const LEGAL_POSTAL_ADDRESS = `${BRAND_NAME} (${LEGAL_ENTITY.name}), ${LEGAL_ENTITY.addressLines.join(', ')}`;
