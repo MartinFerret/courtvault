@@ -36,7 +36,8 @@
     "job:map": "node ./scripts/run-job.mjs job-catalog-map",
     "job:schedule": "node ./scripts/run-job.mjs job-schedule",
     "deploy:app": "node ./apps/mobile/tools/deploy-app.mjs",
-    "convert:checklist": "pnpm --filter @courtvault/scripts convert:checklist"
+    "convert:checklist": "pnpm --filter @courtvault/scripts convert:checklist",
+    "video:duet": "pnpm --filter @courtvault/social duet"
   },
   "devDependencies": {
     "prettier": "^3.9.9",

@@ -55,3 +55,6 @@ data/images/topps/**
 
 # Marketing visuals and their Remotion project live outside the repo (on the desktop).
 marketing/
+
+# Rendered social videos (pnpm video:duet), never committed.
+exports/

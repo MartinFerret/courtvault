@@ -35,9 +35,9 @@ logo, domain or branding.
 
 ## Two surfaces, one codebase per surface (plan of 2026-10-07)
 
-| Surface                      | Host                   | Code                                                  | Indexed                         |
-| ---------------------------- | ---------------------- | ----------------------------------------------------- | ------------------------------- |
-| Public website (acquisition) | `hoopticker.com`       | `apps/web`, Next.js on Netlify                        | Yes                             |
+| Surface                      | Host                 | Code                                                  | Indexed                         |
+| ---------------------------- | -------------------- | ----------------------------------------------------- | ------------------------------- |
+| Public website (acquisition) | `hoopticker.com`     | `apps/web`, Next.js on Netlify                        | Yes                             |
 | Web app (logged-in product)  | `app.hoopticker.com` | `apps/mobile` built for the browser, Cloudflare Pages | No (`noindex`, robots disallow) |
 
 Same account, data and Premium everywhere. Never a third codebase. The SEO standard is
@@ -235,7 +235,8 @@ min_sample, min_price_cents)` builds the whole page as JSON from games, stat lin
 Root: `pnpm dev`, `pnpm build`, `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm db:start`,
 `pnpm db:reset` (migrations + seed + `FREE_CARD_LIMIT_OVERRIDE`), `pnpm db:types`,
 `pnpm db:usage`, `pnpm import:checklist <file>`, `pnpm job:<stats|prices|alerts|morning|compact>`
-(`-- --force --day=YYYY-MM-DD`), `pnpm test:db` (pgTAP), `pnpm test:functions` (Deno).
+(`-- --force --day=YYYY-MM-DD`), `pnpm test:db` (pgTAP), `pnpm test:functions` (Deno), `pnpm video:duet <card-slug>` (TikTok
+Duet clip from real prices, `apps/social`, renders to git-ignored `exports/social/`).
 
 Local URLs: app http://localhost:4200, website http://localhost:3000, Studio
 http://127.0.0.1:54323, Mailpit (sign-in codes) http://127.0.0.1:54324.
