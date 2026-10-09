@@ -1205,6 +1205,7 @@ export type Database = {
       };
       profiles: {
         Row: {
+          acquisition: Json | null;
           created_at: string;
           digest_frequency: string;
           email: string | null;
@@ -1216,6 +1217,8 @@ export type Database = {
           premium_until: string | null;
           push_token: string | null;
           ranking_opt_out: boolean;
+          referral_code: string | null;
+          referred_by: string | null;
           stripe_customer_id: string | null;
           stripe_subscription_id: string | null;
           unsubscribe_token: string;
@@ -1223,6 +1226,7 @@ export type Database = {
           username_changed_at: string | null;
         };
         Insert: {
+          acquisition?: Json | null;
           created_at?: string;
           digest_frequency?: string;
           email?: string | null;
@@ -1234,6 +1238,8 @@ export type Database = {
           premium_until?: string | null;
           push_token?: string | null;
           ranking_opt_out?: boolean;
+          referral_code?: string | null;
+          referred_by?: string | null;
           stripe_customer_id?: string | null;
           stripe_subscription_id?: string | null;
           unsubscribe_token?: string;
@@ -1241,6 +1247,7 @@ export type Database = {
           username_changed_at?: string | null;
         };
         Update: {
+          acquisition?: Json | null;
           created_at?: string;
           digest_frequency?: string;
           email?: string | null;
@@ -1252,6 +1259,8 @@ export type Database = {
           premium_until?: string | null;
           push_token?: string | null;
           ranking_opt_out?: boolean;
+          referral_code?: string | null;
+          referred_by?: string | null;
           stripe_customer_id?: string | null;
           stripe_subscription_id?: string | null;
           unsubscribe_token?: string;
@@ -1299,6 +1308,30 @@ export type Database = {
           source_url?: string | null;
           status?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      shares: {
+        Row: {
+          code: string;
+          created_at: string;
+          kind: string;
+          payload: NonNullable<Json>;
+          user_id: string;
+        };
+        Insert: {
+          code: string;
+          created_at?: string;
+          kind: string;
+          payload: NonNullable<Json>;
+          user_id: string;
+        };
+        Update: {
+          code?: string;
+          created_at?: string;
+          kind?: string;
+          payload?: NonNullable<Json>;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -1525,6 +1558,7 @@ export type Database = {
         }[];
       };
       create_league: { Args: { p_name: string }; Returns: Json };
+      create_share: { Args: { p_kind: string; p_league_id?: string }; Returns: string };
       current_season_id: { Args: Record<PropertyKey, never>; Returns: string };
       eastern_day: { Args: { p_at?: string }; Returns: string };
       eligible_player_ids: { Args: { p_day: string; p_user_id: string }; Returns: string[] };
@@ -1671,6 +1705,7 @@ export type Database = {
       my_badges: { Args: Record<PropertyKey, never>; Returns: Json };
       my_leagues: { Args: Record<PropertyKey, never>; Returns: Json };
       my_lineup: { Args: Record<PropertyKey, never>; Returns: Json };
+      my_referral_code: { Args: Record<PropertyKey, never>; Returns: string };
       my_scores: { Args: { p_limit?: number }; Returns: Json };
       new_invite_code: { Args: Record<PropertyKey, never>; Returns: string };
       next_lineup_day: { Args: Record<PropertyKey, never>; Returns: string };
@@ -1729,6 +1764,7 @@ export type Database = {
           games: number;
         }[];
       };
+      public_league_invite: { Args: { p_code: string }; Returns: Json };
       public_movers_window: {
         Args: {
           p_days?: number;
@@ -1746,6 +1782,8 @@ export type Database = {
           sample_size: number;
         }[];
       };
+      public_referrer: { Args: { p_code: string }; Returns: Json };
+      public_share: { Args: { p_code: string }; Returns: Json };
       record_price: {
         Args: {
           p_buy_url?: string;
@@ -1824,6 +1862,7 @@ export type Database = {
           title: string;
         }[];
       };
+      set_acquisition: { Args: { p_attr: Json }; Returns: boolean };
       set_lineup: { Args: { p_captain_id: string; p_player_ids: string[] }; Returns: Json };
       set_progress: {
         Args: Record<PropertyKey, never>;
@@ -1895,6 +1934,13 @@ export type Database = {
         }[];
       };
       vault_score_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
+      vault_score_morning: {
+        Args: { p_day: string };
+        Returns: {
+          summary: Json;
+          user_id: string;
+        }[];
+      };
       web_scanner_enabled: { Args: Record<PropertyKey, never>; Returns: boolean };
       week_start: { Args: { p_day: string }; Returns: string };
       within_photo_cap: { Args: { uid: string }; Returns: boolean };
