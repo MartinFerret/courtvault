@@ -52,3 +52,6 @@ docs/img_2.png
 # Official image originals (optimised copies live in apps/web/public/img)
 data/images/topps/**
 !data/images/topps/README.md
+
+# Marketing visuals and their Remotion project live outside the repo (on the desktop).
+marketing/
