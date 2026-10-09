@@ -208,8 +208,8 @@ export function PointsVsValue({ data, slugs }: { data: LastNight; slugs: SlugMap
         ))}
       </svg>
       <figcaption className="muted small">
-        Each dot is a player who played: points scored, and how the value of his reference
-        card (Base raw when priced) moved between tip-off and this morning. Lime dots are rookies.{' '}
+        Each dot is a player who played: points scored, and how the value of his reference card
+        (Base raw when priced) moved between tip-off and this morning. Lime dots are rookies.{' '}
         {labelled.slice(0, 3).map((pt, i) => (
           <span key={pt.p.player_slug}>
             {i > 0 ? ', ' : ''}

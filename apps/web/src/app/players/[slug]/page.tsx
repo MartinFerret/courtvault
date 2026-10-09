@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { formatEasternDay } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
+import { ActionCta } from '@/components/session-cta';
+import { appLink } from '@/lib/app-link';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { CardVisual } from '@/components/card-visual';
 import { EmptyState } from '@/components/empty-state';
@@ -131,12 +133,19 @@ export default async function PlayerPage({ params }: { params: Promise<{ slug: s
             in {sets.length} Topps set{sets.length > 1 ? 's' : ''}
             {top && top.base_cents !== null ? (
               <>
-                . The highest market value, Base raw, is <Price cents={top.base_cents} /> for
-                #{top.number} {top.set?.season} {top.set?.name}.
+                . The highest market value, Base raw, is <Price cents={top.base_cents} /> for #
+                {top.number} {top.set?.season} {top.set?.name}.
               </>
             ) : (
               '. Values appear with the first nightly price update.'
             )}
+          </p>
+          <p className="hero-actions">
+            <ActionCta
+              href={appLink(`/players/${publicSlug}`, { campaign: 'player', action: 'lineup' })}
+              label="Put him in my lineup"
+              attr="cta-player-lineup"
+            />
           </p>
         </div>
         {best ? (

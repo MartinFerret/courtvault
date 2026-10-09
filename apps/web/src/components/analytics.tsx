@@ -20,6 +20,9 @@ export function Analytics() {
       capture_pageleave: true,
       capture_dead_clicks: true,
       person_profiles: 'identified_only',
+      // One visitor across hoopticker.com and app.hoopticker.com (funnel from visit to Premium).
+      cross_subdomain_cookie: true,
+      persistence: 'localStorage+cookie',
       session_recording: {
         maskAllInputs: true,
         maskTextSelector: '[data-ph-mask]',

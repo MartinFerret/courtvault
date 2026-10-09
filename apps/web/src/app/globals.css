@@ -3277,3 +3277,66 @@ form.stack input {
 .scoring-table__neg {
   color: var(--cv-color-loss, #d9433a);
 }
+
+/* Contextual action under a page title (opens the web app with the action prefilled). */
+.hero-actions {
+  margin-top: 16px;
+}
+
+/* Landings for social, invites and referrals (noindex): one promise, one action. */
+.landing {
+  max-width: 640px;
+  margin: 48px auto 80px;
+  padding: 0 4px;
+}
+.landing__kicker {
+  color: var(--cv-text-muted, #6a7078);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+.landing__title {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.landing__lead {
+  margin: 16px 0 24px;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+.landing__note {
+  margin-top: 12px;
+  color: var(--cv-text-muted, #6a7078);
+  font-size: 0.9rem;
+}
+.landing__points {
+  margin: 28px 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+.button--large {
+  min-height: 56px;
+  padding: 0 32px;
+  font-size: 1.1rem;
+}
+/* Landings keep the brand only: no menu, no header action, no footer navigation. */
+body:has([data-landing]) .site-header .nav,
+body:has([data-landing]) .site-header__cta,
+body:has([data-landing]) .site-footer nav {
+  display: none;
+}
+.share__list {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+.share__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--cv-line, rgba(18, 20, 23, 0.08));
+}
+.share__c {
+  margin-left: 8px;
+}

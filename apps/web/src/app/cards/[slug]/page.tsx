@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { GRADE_LABELS, formatParallel, priceKindLabel } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
+import { ActionCta } from '@/components/session-cta';
+import { appLink } from '@/lib/app-link';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { foilProps } from '@/components/foil';
 import { JsonLd } from '@/components/json-ld';
@@ -112,7 +114,8 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
               0,
             ),
             availability: 'https://schema.org/InStock',
-            description: 'Market values by parallel and grade: recent eBay auction sales when there are enough, otherwise current asking prices, each labelled. Data by CardSight AI.',
+            description:
+              'Market values by parallel and grade: recent eBay auction sales when there are enough, otherwise current asking prices, each labelled. Data by CardSight AI.',
           },
         }
       : {}),
@@ -193,6 +196,13 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
                 )} at <Price cents={top.max} />.
               </>
             ) : null}
+          </p>
+          <p className="hero-actions">
+            <ActionCta
+              href={appLink(`/cards/${card.public_slug}`, { campaign: 'card', action: 'add' })}
+              label="Add to my Vault"
+              attr="cta-card-add"
+            />
           </p>
           <ImageCredit />
         </div>
@@ -306,8 +316,8 @@ export default async function CardPage({ params }: { params: Promise<{ slug: str
         <PriceHistory points={history} />
       ) : (
         <EmptyState title="No price history yet.">
-          The Base raw value is recorded each night it changes; the chart starts after the
-          second point.
+          The Base raw value is recorded each night it changes; the chart starts after the second
+          point.
         </EmptyState>
       )}
 

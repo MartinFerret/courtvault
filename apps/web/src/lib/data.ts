@@ -558,3 +558,71 @@ export async function fantasyWeights(): Promise<{ stat: string; weight: number }
     .map((r) => ({ stat: r.stat, weight: Number(r.weight) }))
     .sort((a, b) => order.indexOf(a.stat) - order.indexOf(b.stat));
 }
+
+/** A share made in the web app (frozen snapshot, username only), or null. */
+export async function getShare(code: string): Promise<PublicShare | null> {
+  if (!/^[a-z2-9]{10}$/.test(code)) return null;
+  const { data, error } = await supabase().rpc('public_share', { p_code: code });
+  if (error) throw error;
+  return (data as PublicShare | null) ?? null;
+}
+
+export interface PublicShare {
+  code: string;
+  kind: 'lineup' | 'league' | 'vault';
+  created_at: string;
+  payload: {
+    username: string;
+    // lineup
+    game_day?: string;
+    total?: number;
+    counts?: boolean;
+    rank?: number | null;
+    players?: {
+      name: string;
+      slug: string | null;
+      fpts: number;
+      captain: boolean;
+      played: boolean;
+    }[];
+    // league
+    league?: string;
+    members?: number;
+    week_rank?: number | null;
+    week_points?: number | null;
+    season_rank?: number | null;
+    // vault
+    card_count?: number;
+    cards?: {
+      player: string;
+      set: string;
+      season: string;
+      number: string;
+      parallel: string;
+      serial_run: number | null;
+      grade: string;
+      rookie: boolean;
+      card_slug: string | null;
+      value_cents: number | null;
+      price_kind: string | null;
+    }[];
+  };
+}
+
+/** League invite landing: name and size only. */
+export async function getLeagueInvite(
+  code: string,
+): Promise<{ name: string; members: number; code: string } | null> {
+  if (!/^[A-Za-z2-9]{8}$/.test(code)) return null;
+  const { data, error } = await supabase().rpc('public_league_invite', { p_code: code });
+  if (error) throw error;
+  return (data as { name: string; members: number; code: string } | null) ?? null;
+}
+
+/** Referral landing: the referrer's username (may be null when not chosen yet). */
+export async function getReferrer(code: string): Promise<{ username: string | null } | null> {
+  if (!/^[A-Za-z2-9]{8}$/.test(code)) return null;
+  const { data, error } = await supabase().rpc('public_referrer', { p_code: code });
+  if (error) throw error;
+  return (data as { username: string | null } | null) ?? null;
+}

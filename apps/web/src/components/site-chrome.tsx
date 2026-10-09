@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { PATHS } from '@/lib/paths';
 import { SiteNav } from './nav-links';
 import { LogoMark } from './logo';
+import { HeaderCta } from './session-cta';
 import { DISCLAIMER, SITE_NAME } from '@/lib/site';
 import { LEGAL_ENTITY } from '@courtvault/shared';
 import { IMAGE_CREDIT, hasOfficialImages } from '@/lib/images';
@@ -22,13 +23,7 @@ export function SiteHeader() {
           <LogoMark size={30} className="brand__mark" />
           <span>{SITE_NAME}</span>
         </Link>
-        <Link
-          href="/waitlist"
-          className="button button--small site-header__cta"
-          data-attr="cta-navbar"
-        >
-          Join the waitlist
-        </Link>
+        <HeaderCta />
         <SiteNav items={NAV} />
       </div>
     </header>
@@ -77,7 +72,7 @@ export function SiteFooter() {
           <p className="site-footer__title">Company</p>
           <Link href={PATHS.method}>How we price cards</Link>
           <Link href={PATHS.scoring}>Fantasy scoring rules</Link>
-          <Link href="/waitlist">Waitlist</Link>
+          <Link href="/waitlist">iPhone and Android waitlist</Link>
         </nav>
         <div>
           <p className="site-footer__title">Community</p>

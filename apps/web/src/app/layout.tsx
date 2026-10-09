@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import '@fontsource-variable/outfit';
 import './globals.css';
 import { Analytics } from '@/components/analytics';
+import { Attribution } from '@/components/attribution';
 import { SiteFooter, SiteHeader } from '@/components/site-chrome';
 import { APPLE_APP_ID, SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
 
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to content
         </a>
         <Analytics />
+        <Attribution />
         <SiteHeader />
         <main id="main" className="container">
           {children}

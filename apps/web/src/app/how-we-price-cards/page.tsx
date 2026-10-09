@@ -109,9 +109,9 @@ export default async function MethodPage() {
         </nav>
         <div className="method__body">
           <p className="lead">
-            Every basketball card value on {SITE_NAME} comes from eBay sales and listings supplied by{' '}
-            {PRICE_SOURCE_NAME}, for that exact card, parallel and grade, refreshed every night at
-            5:30 AM Eastern and shown next to the box scores of the same night. Each value says
+            Every basketball card value on {SITE_NAME} comes from eBay sales and listings supplied
+            by {PRICE_SOURCE_NAME}, for that exact card, parallel and grade, refreshed every night
+            at 5:30 AM Eastern and shown next to the box scores of the same night. Each value says
             whether it is made of recent auction sales, one last auction sale, or current asking
             prices.
           </p>
@@ -150,8 +150,8 @@ export default async function MethodPage() {
           <p>
             Parallels are priced in the order collectors watch them: Base first, then the parallels
             most listed for that set. Cards in collections, cards of players who played last night,
-            rookies and the most watched players refresh every day; the whole catalog once a week.
-            A card page lists every parallel and print run from the official Topps checklist, priced
+            rookies and the most watched players refresh every day; the whole catalog once a week. A
+            card page lists every parallel and print run from the official Topps checklist, priced
             or not.
           </p>
 

@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { AppCta } from '@/components/app-cta';
+import { ActionCta } from '@/components/session-cta';
+import { appLink } from '@/lib/app-link';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { JsonLd } from '@/components/json-ld';
 import { CardVisual } from '@/components/card-visual';
@@ -152,6 +154,16 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
               </div>
             ) : null}
           </dl>
+          <p className="hero-actions">
+            <ActionCta
+              href={appLink(`/sets/${set.public_slug ?? set.slug}`, {
+                campaign: 'checklist',
+                action: 'follow',
+              })}
+              label="Follow this set"
+              attr="cta-checklist-follow"
+            />
+          </p>
           <p className="lead">
             {name} has {set.cards.length} base cards
             {rookies.length > 0 ? `, ${rookies.length} of them rookie cards` : ''}
@@ -159,8 +171,8 @@ export default async function ChecklistPage({ params }: { params: Promise<{ slug
             {top && top.base_cents !== null ? (
               <>
                 {' '}
-                {priced.length} cards have a current market value for the Base parallel, raw;
-                the highest is #{top.number} {top.player?.name} at <Price cents={top.base_cents} />.
+                {priced.length} cards have a current market value for the Base parallel, raw; the
+                highest is #{top.number} {top.player?.name} at <Price cents={top.base_cents} />.
               </>
             ) : null}{' '}
             Every parallel and print run is listed on each card page.

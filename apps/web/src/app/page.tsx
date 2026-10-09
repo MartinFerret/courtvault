@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { SignUpOrVault } from '@/components/session-cta';
 import type { Metadata } from 'next';
 import { BRAND_DIFFERENTIATOR, BRAND_TAGLINE, PRICING, formatUsd } from '@courtvault/shared';
 import { CardVisual } from '@/components/card-visual';
@@ -174,9 +175,7 @@ export default async function HomePage() {
             {BRAND_TAGLINE} {BRAND_DIFFERENTIATOR}
           </p>
           <div className="hero__actions">
-            <Link className="button" href="/waitlist" data-attr="cta-hero">
-              Join the waitlist
-            </Link>
+            <SignUpOrVault campaign="home-hero" />
             <Link className="button secondary" href={PATHS.movers} data-attr="cta-hero-movers">
               See last night&apos;s movers
             </Link>
@@ -310,9 +309,10 @@ export default async function HomePage() {
             ? 'Values by parallel and grade, refreshed every night, next to the box scores.'
             : 'The whole 2025-26 Topps catalog today; card values start with the regular season.'}
         </p>
-        <Link className="button" href="/waitlist" data-attr="cta-block">
-          Join the waitlist
-        </Link>
+        <SignUpOrVault campaign="home-final" />
+        <p className="muted small" style={{ marginTop: 12 }}>
+          iPhone or Android? <Link href="/waitlist">Join the app waitlist</Link>.
+        </p>
       </section>
     </>
   );

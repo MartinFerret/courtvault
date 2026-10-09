@@ -44,8 +44,8 @@ export default async function ValuesHubPage() {
       <p className="lead">
         What Topps basketball cards are worth right now, by set, parallel and grade: recent eBay
         auction sales when there are enough, otherwise current asking prices, each value labelled,
-        refreshed every night next to the box scores.
-        Open a checklist for every card of a set, a player page for every card of a player.
+        refreshed every night next to the box scores. Open a checklist for every card of a set, a
+        player page for every card of a player.
       </p>
       <FreshnessLine data={freshness} />
 
@@ -92,8 +92,8 @@ export default async function ValuesHubPage() {
           </>
         ) : (
           <EmptyState title="Values start with the regular season.">
-            The catalog is complete; values are collected nightly once the price source is
-            live. Checklists and player pages already list every card and parallel.
+            The catalog is complete; values are collected nightly once the price source is live.
+            Checklists and player pages already list every card and parallel.
           </EmptyState>
         )}
       </section>
@@ -129,7 +129,9 @@ export default async function ValuesHubPage() {
           </li>
           <li>
             <Link href={PATHS.method}>How we price cards</Link>
-            <span className="muted small">auction sales, asking prices, thresholds, update schedule</span>
+            <span className="muted small">
+              auction sales, asking prices, thresholds, update schedule
+            </span>
           </li>
         </ul>
       </section>
