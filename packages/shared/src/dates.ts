@@ -28,3 +28,16 @@ export function formatEasternDay(day: string): string {
     timeZone: 'UTC',
   }).format(new Date(Date.UTC(y, m - 1, d)));
 }
+
+/**
+ * Honest label for the night a page shows: "Last night" only when it is the previous Eastern
+ * day. Before the 5 AM Eastern update, or after a night without games, the latest night on
+ * file is older: "Latest game night".
+ */
+export function nightLabel(
+  day: string,
+  now: Date = new Date(),
+): { label: string; isLastNight: boolean } {
+  const isLastNight = day === previousEasternDay(now);
+  return { label: isLastNight ? 'Last night' : 'Latest game night', isLastNight };
+}

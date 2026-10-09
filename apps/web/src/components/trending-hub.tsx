@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { formatEasternDay } from '@courtvault/shared';
+import { formatEasternDay, nightLabel } from '@courtvault/shared';
 import type { Freshness } from '@/lib/freshness';
 import type { LastNight, MoversWindow } from '@/lib/last-night';
 import { PATHS, moversPath } from '@/lib/paths';
@@ -37,7 +37,7 @@ export function TrendingHub({
           <h1 className="ln__title board__title">Trending basketball cards</h1>
           <p className="board__headline">
             {day && topLine
-              ? `Last night, ${formatEasternDay(day)}: ${topLine.player_name} ${topLine.points ?? 0} points${
+              ? `${nightLabel(day).label}, ${formatEasternDay(day)}: ${topLine.player_name} ${topLine.points ?? 0} points${
                   latest && latest.gainers.length > 0
                     ? `, ${latest.gainers[0]!.player_name} #${latest.gainers[0]!.card_number} up ${latest.gainers[0]!.change_pct.toFixed(1)}% since tip-off.`
                     : '.'
@@ -56,7 +56,9 @@ export function TrendingHub({
           {latest ? (
             <div>
               <dd>{latest.games.length}</dd>
-              <dt>games last night</dt>
+              <dt>
+                {day && !nightLabel(day).isLastNight ? 'games that night' : 'games last night'}
+              </dt>
             </div>
           ) : null}
           {freshness?.priced_cards ? (

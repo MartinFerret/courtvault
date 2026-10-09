@@ -85,7 +85,7 @@ variation section; verify with a real card photo before trusting them:
 
 ## Import (2025-26-topps-chrome.csv)
 
-Last run 2026-10-08. Player names that were not an exact match of an
+Last run 2026-10-09. Player names that were not an exact match of an
 existing player. "merged" rows were attached to the existing player and recorded as aliases;
 "suffix" and "ambiguous" rows created a player to confirm; "new" names were not close to any
 existing player. Add a typo to player-aliases.csv once it is confirmed to be a known player.

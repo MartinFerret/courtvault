@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { formatCents, formatEasternDay, PRICE_LABEL } from '@courtvault/shared';
+import { formatCents, formatEasternDay, PRICE_LABEL, nightLabel } from '@courtvault/shared';
 import { AppCta } from './app-cta';
 import { JsonLd } from './json-ld';
 import { FreshnessLine } from './freshness';
@@ -68,10 +68,13 @@ export function LastNightView({
       <header className="board">
         <div className="board__top">
           <p className="ln__eyebrow board__eyebrow">
-            <Link href={PATHS.movers}>Last night</Link>, {formatEasternDay(day)}
+            <Link href={PATHS.movers}>
+              {data.requested_day ? 'Game night' : nightLabel(day).label}
+            </Link>
+            , {formatEasternDay(day)}
             {data.is_preseason ? <span className="tag">Preseason</span> : null}
             {data.is_off_day && !data.requested_day ? (
-              <span className="board__note"> (no games last night, latest game night shown)</span>
+              <span className="board__note"> (no games last night)</span>
             ) : null}
           </p>
           <h1 className="ln__title board__title">

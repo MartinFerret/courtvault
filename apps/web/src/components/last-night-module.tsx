@@ -5,6 +5,7 @@ import {
   formatEasternDay,
   formatParallel,
   GRADE_LABELS,
+  nightLabel,
 } from '@courtvault/shared';
 import type { Freshness } from '@/lib/freshness';
 import { formatEasternTime } from '@/lib/freshness';
@@ -48,7 +49,7 @@ export function LastNightModule({
       </h2>
       <div className="lnm__night">
         <p className="lnm__kicker">
-          Last night, {formatEasternDay(night.day)}
+          {nightLabel(night.day).label}, {formatEasternDay(night.day)}
           {night.is_preseason ? <span className="tag">Preseason</span> : null}
         </p>
         <p className="lnm__who">
