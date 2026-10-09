@@ -17,3 +17,15 @@ in the original email, that social media is covered.
 
 Renders use the installed Google Chrome (`remotion.config.ts`): the downloaded headless shell
 crashes on this Mac.
+
+## ChatVideo (fake conversation, 21 s)
+
+`src/chat/ChatVideo.tsx`: Jake texts Marcus about his rookie card and sends a HoopTicker
+screenshot (drawn, generic foil frame, no Topps image). Stat line, change and price are props
+(`points`, `rebounds`, `assists`, `pct`, `priceCents`); the defaults are illustrative, so set
+the real figures of the night before posting:
+
+    npx remotion render ChatVideo out/chat.mp4 --props='{"points":32,"rebounds":9,"assists":6,"pct":42.6,"priceCents":18400}'
+
+Sound effects are synthesized by `node tools/sfx.mjs` (no samples). Emoji images are Noto
+Emoji, Apache 2.0 (`public/emoji/NOTICE.txt`).

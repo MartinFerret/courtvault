@@ -1,6 +1,7 @@
 import type React from 'react';
 import {Composition, Folder} from 'remotion';
 import {PovVideo} from './PovVideo';
+import {ChatVideo} from './chat/ChatVideo';
 import {CtaScene} from './scenes/CtaScene';
 import {HookScene} from './scenes/HookScene';
 import {RookieScene} from './scenes/RookieScene';
@@ -12,6 +13,7 @@ import {TabsScene} from './scenes/TabsScene';
 export const RemotionRoot: React.FC = () => (
   <>
     <Composition id="PovVideo" component={PovVideo} width={1080} height={1920} fps={30} durationInFrames={460} defaultProps={{topps: false}} />
+    <Composition id="ChatVideo" component={ChatVideo} width={1080} height={1920} fps={30} durationInFrames={630} defaultProps={{points: 32, rebounds: 9, assists: 6, pct: 42.6, priceCents: 18400}} />
     <Folder name="Carousel">
       <Composition
         id="Slide1Hook"

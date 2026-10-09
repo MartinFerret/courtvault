@@ -1,0 +1,3 @@
+eyes.png (U+1F440) and skull.png (U+1F480) come from Noto Emoji by Google
+(https://github.com/googlefonts/noto-emoji, 2D/png/512), image resources licensed under the
+Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0). Unmodified.
