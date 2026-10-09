@@ -54,7 +54,10 @@ As decided above. Website: header and CTA blocks read the flag in the browser.
 - UTMs and the referral code: first touch stored in `ht_attr` on `.hoopticker.com` by the
   website (and by the app when traffic lands there), copied once into
   `profiles.acquisition` at sign-up and set as PostHog person properties.
-- The funnel itself is created in PostHog (insight "Website to Premium").
+- The funnel is created in PostHog: [Website to Premium funnel](https://eu.posthog.com/project/297725/insights/pcp9k76o)
+  (steps: website `$pageview` on hoopticker.com, `signup_completed`, `first_card_added`,
+  `first_lineup_saved`, `premium_started`; 30-day window). The edge functions need the
+  `POSTHOG_KEY` secret (same public key as the website) for `premium_started`.
 
 ## 5. Shares, league invites, referral landing
 
