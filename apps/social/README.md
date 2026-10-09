@@ -23,3 +23,12 @@ from `@fontsource-variable/outfit`. No Topps images, no league or team logos. Sa
 nothing in the bottom 25% and 120 px clear on the right on both formats.
 
 Preview: `pnpm --filter @courtvault/social studio`, then load a `.props.json` in the props panel.
+
+## Duet image (static PNG)
+
+    pnpm image:duet <card-slug>
+
+Same data and rules as the clip (`scripts/card-data.mjs`), plus the date of the prices. Writes
+`exports/social/duet-image-<slug>-1080x960.png` (bottom half of a top/bottom Duet; the lower
+part stays free for TikTok's caption) and `-1080x1920.png` (side-by-side Duet, shown at half
+width: everything inside the central 80%, extra large text). 60 px minimum margin everywhere.

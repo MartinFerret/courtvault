@@ -235,7 +235,7 @@ min_sample, min_price_cents)` builds the whole page as JSON from games, stat lin
 Root: `pnpm dev`, `pnpm build`, `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm db:start`,
 `pnpm db:reset` (migrations + seed + `FREE_CARD_LIMIT_OVERRIDE`), `pnpm db:types`,
 `pnpm db:usage`, `pnpm import:checklist <file>`, `pnpm job:<stats|prices|alerts|morning|compact>`
-(`-- --force --day=YYYY-MM-DD`), `pnpm test:db` (pgTAP), `pnpm test:functions` (Deno), `pnpm video:duet <card-slug>` (TikTok
+(`-- --force --day=YYYY-MM-DD`), `pnpm test:db` (pgTAP), `pnpm test:functions` (Deno), `pnpm video:duet <card-slug>` and `pnpm image:duet <card-slug>` (TikTok
 Duet clip from real prices, `apps/social`, renders to git-ignored `exports/social/`).
 
 Local URLs: app http://localhost:4200, website http://localhost:3000, Studio

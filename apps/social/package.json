@@ -8,7 +8,8 @@
     "studio": "remotion studio src/index.ts",
     "duet": "node scripts/duet.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "image:duet": "node scripts/duet-image.mjs"
   },
   "dependencies": {
     "@courtvault/shared": "workspace:*",

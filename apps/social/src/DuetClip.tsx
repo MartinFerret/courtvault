@@ -54,7 +54,7 @@ const BOX = {
   },
 } as const;
 
-const LogoMark: React.FC<{ size: number }> = ({ size }) => (
+export const LogoMark: React.FC<{ size: number }> = ({ size }) => (
   // Same drawing as apps/web/src/components/logo.tsx, on the ink chip used by the app header.
   <div
     style={{
@@ -85,7 +85,11 @@ const LogoMark: React.FC<{ size: number }> = ({ size }) => (
 );
 
 /** The website's generic foil frame (apps/web/src/components/foil-card.tsx), scaled up. */
-const FoilFrame: React.FC<{ data: DuetData; zoom: number; f: number }> = ({ data, zoom, f }) => {
+export const FoilFrame: React.FC<{ data: DuetData; zoom: number; f: number }> = ({
+  data,
+  zoom,
+  f,
+}) => {
   const c = data.card;
   const tier = webFoilTier(c.parallel, c.serialRun);
   const s = interpolate(f, [T.card, T.card + 22], [0.86, 1], { ...clamp, easing: easeOut });

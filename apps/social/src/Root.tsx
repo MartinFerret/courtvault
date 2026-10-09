@@ -1,4 +1,5 @@
-import { Composition } from 'remotion';
+import { Composition, Still } from 'remotion';
+import { DuetImage } from './DuetImage';
 import { DUET_FRAMES, DuetClip, type DuetProps } from './DuetClip';
 
 // Props come from scripts/duet.mjs (real data read at render time). Without them the clip
@@ -24,6 +25,20 @@ export const Root: React.FC = () => (
       fps={30}
       durationInFrames={DUET_FRAMES}
       defaultProps={{ ...empty, layout: 'full' }}
+    />
+    <Still
+      id="DuetImageHalf"
+      component={DuetImage}
+      width={1080}
+      height={960}
+      defaultProps={{ data: null, layout: 'half' as const }}
+    />
+    <Still
+      id="DuetImageFull"
+      component={DuetImage}
+      width={1080}
+      height={1920}
+      defaultProps={{ data: null, layout: 'full' as const }}
     />
   </>
 );

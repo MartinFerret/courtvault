@@ -24,6 +24,7 @@ export type DuetData = {
     price_kind: string | null;
     sale_at: string | null;
     sample_size: number | null;
+    captured_at?: string | null;
   }[];
   history: { captured_at: string; price_cents: number }[];
   fetchedAt: string;
@@ -100,4 +101,20 @@ export function webFoilTier(
   if (serialRun !== null) return 'numbered';
   if (parallelName.toLowerCase() === 'base') return 'base';
   return 'refractor';
+}
+
+/** Date of the most recent price shown ("Oct 9, 2026", US Eastern), or null when unknown. */
+export function dataAsOf(data: DuetData): string | null {
+  const latest = data.prices
+    .map((p) => p.captured_at ?? '')
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+  if (!latest) return null;
+  return new Date(latest).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'America/New_York',
+  });
 }

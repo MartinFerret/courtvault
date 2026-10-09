@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   chartSlot,
   dailySeries,
+  dataAsOf,
   priceLines,
   SPARKLINE_MIN_DAYS,
   webFoilTier,
@@ -108,4 +109,31 @@ it('uses the website frame tiers', () => {
   expect(webFoilTier('Refractor', null)).toBe('refractor');
   expect(webFoilTier('Gold', 50)).toBe('numbered');
   expect(webFoilTier('Superfractor', 1)).toBe('one');
+});
+
+it('dates the data from the latest price, in Eastern time', () => {
+  expect(
+    dataAsOf({
+      ...base,
+      prices: [
+        {
+          grade: 'RAW',
+          price_cents: 1,
+          price_kind: null,
+          sale_at: null,
+          sample_size: 1,
+          captured_at: '2026-10-09T03:30:00Z',
+        },
+        {
+          grade: 'PSA10',
+          price_cents: 2,
+          price_kind: null,
+          sale_at: null,
+          sample_size: 1,
+          captured_at: '2026-10-08T12:00:00Z',
+        },
+      ],
+    }),
+  ).toBe('Oct 8, 2026');
+  expect(dataAsOf(base)).toBeNull();
 });

@@ -1,6 +1,6 @@
-// Renders the TikTok Duet "card value" clip from real data, locally.
-// Usage (repo root): pnpm video:duet <card-slug>
-// Renders exports/social/duet-<slug>-1080x960.mp4 and -1080x1920.mp4 (see card-data.mjs).
+// Renders the static Duet image (PNG) from real data, locally.
+// Usage (repo root): pnpm image:duet <card-slug>
+// Writes exports/social/duet-image-<slug>-1080x960.png and -1080x1920.png.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -8,39 +8,36 @@ import { app, fetchCard, repo } from './card-data.mjs';
 
 const slug = process.argv[2];
 if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
-  console.error('Usage: pnpm video:duet <card-slug>   (the card page slug on hoopticker.com)');
+  console.error('Usage: pnpm image:duet <card-slug>   (the card page slug on hoopticker.com)');
   process.exit(1);
 }
 const data = await fetchCard(slug);
-const publicSlug = data.card.publicSlug;
-
+const s = data.card.publicSlug;
 const out = join(repo, 'exports/social');
 mkdirSync(out, { recursive: true });
-const propsFile = join(out, `duet-${publicSlug}.props.json`);
+const propsFile = join(out, `duet-image-${s}.props.json`);
 writeFileSync(propsFile, JSON.stringify({ data }, null, 2));
 console.log(`${data.card.season} ${data.card.set} #${data.card.number} ${data.card.player}`);
 for (const p of data.prices)
-  console.log(`  ${p.grade}: ${p.price_cents} cents (${p.price_kind}, n=${p.sample_size})`);
-console.log(`  history: ${data.history.length} points in 30 days`);
-
+  console.log(
+    `  ${p.grade}: ${p.price_cents} cents (${p.price_kind}, n=${p.sample_size}, ${p.captured_at})`,
+  );
 const files = [];
 for (const [id, size] of [
-  ['DuetHalf', '1080x960'],
-  ['DuetFull', '1080x1920'],
+  ['DuetImageHalf', '1080x960'],
+  ['DuetImageFull', '1080x1920'],
 ]) {
-  const file = join(out, `duet-${publicSlug}-${size}.mp4`);
+  const file = join(out, `duet-image-${s}-${size}.png`);
   execFileSync(
     'npx',
     [
       'remotion',
-      'render',
+      'still',
       'src/index.ts',
       id,
       file,
       `--props=${propsFile}`,
-      '--codec=h264',
-      '--crf=18',
-      '--muted',
+      '--image-format=png',
       '--log=error',
     ],
     { cwd: app, stdio: 'inherit' },
