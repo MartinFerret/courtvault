@@ -1,31 +1,55 @@
 <ion-header class="cv-header">
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/last-night" aria-label="Back"></ion-back-button></ion-buttons>
+    <ion-buttons slot="start"
+      ><ion-back-button defaultHref="/tabs/last-night" aria-label="Back"></ion-back-button
+    ></ion-buttons>
     <ion-title>Player</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   @if (player(); as p) {
-    <div class="cv-page-head">
-      <div>
-        <p class="cv-page-head__eyebrow">{{ p.team ?? 'Team to be announced' }}</p>
-        <h1>{{ p.name }}</h1>
-      </div>
-      <div class="cv-page-head__actions">
-        <ion-button class="cv-tile-btn" [class.cv-tile-btn--accent]="follows.playerIds().has(p.id)" (click)="toggleFollow()" [attr.aria-pressed]="follows.playerIds().has(p.id)" aria-label="Follow player">
-          <ion-icon slot="icon-only" [name]="follows.playerIds().has(p.id) ? 'heart' : 'heart-outline'"></ion-icon>
-        </ion-button>
-      </div>
+  <div class="cv-page-head">
+    <div>
+      <p class="cv-page-head__eyebrow">{{ p.team ?? 'Team to be announced' }}</p>
+      <h1>{{ p.name }}</h1>
     </div>
-    <h2 style="margin-bottom: 12px">Cards</h2>
-    <ion-list>
-      @for (c of p.cards; track c.id) {
-        <ion-item [routerLink]="['/cards', c.slug]" [detail]="true">
-          <ion-label>
-            <h2>#{{ c.number }} {{ c.card_sets?.season }} {{ c.card_sets?.name }} @if (c.is_rookie) { <span class="cv-badge">RC</span> }</h2>
-          </ion-label>
-        </ion-item>
-      }
-    </ion-list>
+    <div class="cv-page-head__actions">
+      <ion-button
+        class="cv-tile-btn"
+        [class.cv-tile-btn--accent]="follows.playerIds().has(p.id)"
+        (click)="toggleFollow()"
+        [attr.aria-pressed]="follows.playerIds().has(p.id)"
+        aria-label="Follow player"
+      >
+        <ion-icon
+          slot="icon-only"
+          [name]="follows.playerIds().has(p.id) ? 'heart' : 'heart-outline'"
+        ></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  @if (lineupHint()) {
+  <p class="cv-caption" role="status" style="margin: 0 0 12px">
+    To put {{ p.name }} in your lineup, add one of his cards: open a card below, then Add to Vault.
+    It counts from the next day.
+  </p>
+  }
+  <h2 style="margin-bottom: 12px">Cards</h2>
+  <ion-list>
+    @for (c of p.cards; track c.id) {
+    <ion-item
+      [routerLink]="['/cards', c.slug]"
+      [queryParams]="lineupHint() ? { action: 'add' } : {}"
+      [detail]="true"
+    >
+      <ion-label>
+        <h2>
+          #{{ c.number }} {{ c.card_sets?.season }} {{ c.card_sets?.name }} @if (c.is_rookie) {
+          <span class="cv-badge">RC</span> }
+        </h2>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
   }
 </ion-content>

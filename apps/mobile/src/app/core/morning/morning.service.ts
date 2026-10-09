@@ -15,7 +15,10 @@ export class MorningService {
   async load(day?: string): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.client.rpc('morning_report', day ? { p_day: day } : {});
+      const { data, error } = await this.supabase.client.rpc(
+        'morning_report',
+        day ? { p_day: day } : {},
+      );
       if (error) throw error;
       this.rows.set(data ?? []);
       this.day.set(data?.[0]?.game_day ?? day ?? null);

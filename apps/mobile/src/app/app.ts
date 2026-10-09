@@ -10,6 +10,7 @@ import { DeepLinkService } from './core/deeplinks/deep-link.service';
 import { LayoutService, DESKTOP_QUERY } from './core/layout/layout.service';
 import { ShortcutsService } from './core/layout/shortcuts.service';
 import { registerIcons } from './shared/icons';
+import { AcquisitionService } from './core/analytics/acquisition.service';
 
 /**
  * Root shell. On desktop widths the split pane shows the sidebar next to the content; on
@@ -41,6 +42,7 @@ export class App {
   readonly layout = inject(LayoutService);
   private readonly deepLinks = inject(DeepLinkService);
   private readonly shortcuts = inject(ShortcutsService);
+  private readonly acquisition = inject(AcquisitionService);
   readonly desktopQuery = DESKTOP_QUERY;
   private readonly router = inject(Router);
   /** True on /onboarding and its steps (pick players, first scan). */
@@ -56,5 +58,6 @@ export class App {
     registerIcons();
     this.deepLinks.init();
     this.shortcuts.init();
+    this.acquisition.init();
   }
 }

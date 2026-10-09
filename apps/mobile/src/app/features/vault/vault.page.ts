@@ -35,6 +35,8 @@ import {
 
 type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
 
+import { ShareService, shareErrorMessage } from '../../core/share/share.service';
+
 @Component({
   selector: 'cv-vault',
   imports: [
@@ -67,6 +69,17 @@ type Filter = 'all' | 'rookies' | 'numbered' | 'graded';
 })
 export class VaultPage {
   readonly collection = inject(CollectionService);
+  private readonly sharing = inject(ShareService);
+  readonly shareNote = signal<string | null>(null);
+
+  async shareBest(): Promise<void> {
+    try {
+      const how = await this.sharing.share('vault', 'My best cards');
+      this.shareNote.set(how === 'copied' ? 'Link copied: your three most valuable cards.' : null);
+    } catch (err) {
+      this.shareNote.set(shareErrorMessage(err));
+    }
+  }
   readonly plan = inject(PlanService);
   readonly layout = inject(LayoutService);
   private readonly paywall = inject(PaywallService);

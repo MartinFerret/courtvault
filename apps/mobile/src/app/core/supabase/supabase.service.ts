@@ -30,7 +30,9 @@ export class SupabaseService {
 
   /** Calls an edge function with the user's session. Throws on non-2xx. */
   async invoke<T>(name: string, body: unknown): Promise<T> {
-    const { data, error } = await this.client.functions.invoke<T>(name, { body: body as Record<string, unknown> });
+    const { data, error } = await this.client.functions.invoke<T>(name, {
+      body: body as Record<string, unknown>,
+    });
     if (error) {
       // supabase-js hides the response body; read it for LIMIT_REACHED codes.
       const context = (error as { context?: Response }).context;

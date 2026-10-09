@@ -28,7 +28,10 @@ export class DeepLinkService {
       const parsed = new URL(url);
       if (parsed.protocol === 'hoopticker:') {
         path = `/${parsed.host}${parsed.pathname}`;
-      } else if (parsed.origin === environment.webUrl || parsed.hostname.endsWith('hoopticker.com')) {
+      } else if (
+        parsed.origin === environment.webUrl ||
+        parsed.hostname.endsWith('hoopticker.com')
+      ) {
         path = parsed.pathname;
       } else {
         return null;
@@ -37,10 +40,18 @@ export class DeepLinkService {
       return null;
     }
     if (/^\/(cards|players|sets)\/[a-z0-9-]+$/.test(path)) return path;
-    if (/^\/checklists\/[a-z0-9-]+$/.test(path)) return `/sets/${path.slice('/checklists/'.length)}`;
-    if (path === '/rankings/rookies' || path === '/most-valuable-basketball-rookie-cards') return '/tabs/sets';
-    if (path === '/last-night' || path.startsWith('/trending-basketball-cards')) return '/tabs/last-night';
+    if (/^\/checklists\/[a-z0-9-]+$/.test(path))
+      return `/sets/${path.slice('/checklists/'.length)}`;
+    if (path === '/rankings/rookies' || path === '/most-valuable-basketball-rookie-cards')
+      return '/tabs/sets';
+    if (path === '/last-night' || path.startsWith('/trending-basketball-cards'))
+      return '/tabs/last-night';
     if (path.startsWith('/card/')) return `/card/${path.slice(6)}`;
+    // Website landings of the web app bridge.
+    const join = /^\/join\/([A-Za-z2-9]{8})$/.exec(path);
+    if (join) return `/leagues/join/${join[1]!.toUpperCase()}`;
+    if (/^\/r\/[A-Za-z2-9]{8}$/.test(path) || path === '/start') return '/onboarding';
+    if (path === '/fantasy-basketball-scoring') return '/game/rules';
     if (path.startsWith('/auth/callback')) return '/tabs/last-night';
     return null;
   }

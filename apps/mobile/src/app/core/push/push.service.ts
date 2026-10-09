@@ -41,7 +41,10 @@ export class PushService {
     await PushNotifications.addListener('registration', async ({ value }) => {
       this.enabled.set(true);
       if (this.supabase.userId) {
-        await this.supabase.client.from('profiles').update({ push_token: value }).eq('id', this.supabase.userId);
+        await this.supabase.client
+          .from('profiles')
+          .update({ push_token: value })
+          .eq('id', this.supabase.userId);
       }
     });
     await PushNotifications.addListener('pushNotificationActionPerformed', ({ notification }) => {
@@ -53,7 +56,10 @@ export class PushService {
 
   async disable(): Promise<void> {
     if (this.supabase.userId) {
-      await this.supabase.client.from('profiles').update({ push_token: null }).eq('id', this.supabase.userId);
+      await this.supabase.client
+        .from('profiles')
+        .update({ push_token: null })
+        .eq('id', this.supabase.userId);
     }
     this.enabled.set(false);
   }

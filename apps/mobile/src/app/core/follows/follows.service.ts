@@ -18,25 +18,35 @@ export class FollowsService {
   }
 
   async followPlayer(playerId: string): Promise<void> {
-    const { error } = await this.supabase.client.from('followed_players').insert({ player_id: playerId });
+    const { error } = await this.supabase.client
+      .from('followed_players')
+      .insert({ player_id: playerId });
     if (error) throw error;
     await this.refresh();
   }
 
   async unfollowPlayer(playerId: string): Promise<void> {
-    const { error } = await this.supabase.client.from('followed_players').delete().eq('player_id', playerId);
+    const { error } = await this.supabase.client
+      .from('followed_players')
+      .delete()
+      .eq('player_id', playerId);
     if (error) throw error;
     await this.refresh();
   }
 
   async followSet(setId: string): Promise<void> {
-    const { error } = await this.supabase.client.from('checklist_follows').insert({ set_id: setId });
+    const { error } = await this.supabase.client
+      .from('checklist_follows')
+      .insert({ set_id: setId });
     if (error) throw error;
     await this.refresh();
   }
 
   async unfollowSet(setId: string): Promise<void> {
-    const { error } = await this.supabase.client.from('checklist_follows').delete().eq('set_id', setId);
+    const { error } = await this.supabase.client
+      .from('checklist_follows')
+      .delete()
+      .eq('set_id', setId);
     if (error) throw error;
     await this.refresh();
   }

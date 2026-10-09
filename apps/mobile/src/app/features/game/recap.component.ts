@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, signal, untracked } from '@angular
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular';
 import { GameService, type PlayerScore, type Standings } from '../../core/game/game.service';
+import { ShareService, shareErrorMessage } from '../../core/share/share.service';
 
 /**
  * Post-game recap for the Last night screen: the lineup's final score (rolls up once),
@@ -17,6 +18,8 @@ export class RecapComponent {
   readonly standings = signal<Standings | null>(null);
   readonly shown = signal(0);
   readonly loaded = signal(false);
+  private readonly sharing = inject(ShareService);
+  readonly shareNote = signal<string | null>(null);
   private rolled = false;
 
   readonly day = computed(() => this.game.scores()?.days[0] ?? null);
@@ -84,6 +87,15 @@ export class RecapComponent {
       .map((w) => w[0]!.toUpperCase())
       .slice(0, 2)
       .join('');
+  }
+
+  async shareScore(): Promise<void> {
+    try {
+      const how = await this.sharing.share('lineup', 'My Vault Score');
+      this.shareNote.set(how === 'copied' ? 'Link copied.' : null);
+    } catch (err) {
+      this.shareNote.set(shareErrorMessage(err));
+    }
   }
 
   statLine(r: PlayerScore): string {

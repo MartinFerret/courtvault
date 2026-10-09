@@ -8,40 +8,57 @@
   @if (error(); as message) { <ion-note class="cv-error" role="alert">{{ message }}</ion-note> }
 
   <div class="cv-cols cv-cols--2">
-  <div>
-  @if (followed().length === 0) {
-    <div class="cv-card">
-      <h2>Follow a set</h2>
-      <p class="cv-muted" style="margin-top: 6px">Track how many cards of a checklist you own.</p>
+    <div>
+      @if (followed().length === 0) {
+      <div class="cv-card">
+        <h2>Follow a set</h2>
+        <p class="cv-muted" style="margin-top: 6px">Track how many cards of a checklist you own.</p>
+      </div>
+      }
+      <ion-list>
+        @for (s of followed(); track s.set_id) {
+        <ion-item [routerLink]="['/sets', s.set_slug]" [detail]="true">
+          <ion-label>
+            <h2>{{ s.season }} {{ s.set_name }}</h2>
+            <p>{{ s.owned_cards }} of {{ s.total_cards }} cards</p>
+            <ion-progress-bar
+              style="margin-top: 8px"
+              [value]="s.total_cards ? s.owned_cards / s.total_cards : 0"
+            ></ion-progress-bar>
+          </ion-label>
+          <ion-button
+            slot="end"
+            fill="clear"
+            size="small"
+            (click)="toggle(s, $event)"
+            aria-label="Unfollow"
+            ><ion-icon slot="icon-only" name="heart" style="color: var(--cv-color-loss)"></ion-icon
+          ></ion-button>
+        </ion-item>
+        }
+      </ion-list>
     </div>
-  }
-  <ion-list>
-    @for (s of followed(); track s.set_id) {
-      <ion-item [routerLink]="['/sets', s.set_slug]" [detail]="true">
-        <ion-label>
-          <h2>{{ s.season }} {{ s.set_name }}</h2>
-          <p>{{ s.owned_cards }} of {{ s.total_cards }} cards</p>
-          <ion-progress-bar style="margin-top: 8px" [value]="s.total_cards ? s.owned_cards / s.total_cards : 0"></ion-progress-bar>
-        </ion-label>
-        <ion-button slot="end" fill="clear" size="small" (click)="toggle(s, $event)" aria-label="Unfollow"><ion-icon slot="icon-only" name="heart" style="color: var(--cv-color-loss)"></ion-icon></ion-button>
-      </ion-item>
-    }
-  </ion-list>
-  </div>
 
-  <section class="cv-section" style="margin-top: 0">
-    <h2>All sets</h2>
-    <ion-list>
-      @for (s of others(); track s.set_id) {
+    <section class="cv-section" style="margin-top: 0">
+      <h2>All sets</h2>
+      <ion-list>
+        @for (s of others(); track s.set_id) {
         <ion-item [routerLink]="['/sets', s.set_slug]" [detail]="true">
           <ion-label>
             <h2>{{ s.season }} {{ s.set_name }}</h2>
             <p>{{ s.owned_cards }} of {{ s.total_cards }} cards</p>
           </ion-label>
-          <ion-button slot="end" fill="clear" size="small" (click)="toggle(s, $event)" aria-label="Follow"><ion-icon slot="icon-only" name="heart-outline"></ion-icon></ion-button>
+          <ion-button
+            slot="end"
+            fill="clear"
+            size="small"
+            (click)="toggle(s, $event)"
+            aria-label="Follow"
+            ><ion-icon slot="icon-only" name="heart-outline"></ion-icon
+          ></ion-button>
         </ion-item>
-      }
-    </ion-list>
-  </section>
+        }
+      </ion-list>
+    </section>
   </div>
 </ion-content>

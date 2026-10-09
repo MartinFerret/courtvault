@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonButton, IonIcon, IonToggle } from '@ionic/angular';
 import { GameService, gameErrorMessage, type Badge } from '../../core/game/game.service';
+import { ShareService } from '../../core/share/share.service';
 
 const BADGE_LABELS: Record<Badge['kind'], string> = {
   weekly_winner: 'Weekly winner',
@@ -45,6 +46,10 @@ const BADGE_LABELS: Record<Badge['kind'], string> = {
         justify="space-between"
         >Hide me from the global ranking</ion-toggle
       >
+      <ion-button fill="outline" style="margin-top: 16px" (click)="invite()">
+        <ion-icon slot="start" name="share-outline" aria-hidden="true"></ion-icon
+        >{{ inviteNote() ?? 'Invite friends' }}
+      </ion-button>
       @if (badges().length > 0) {
         <h3 style="margin-top: 20px; font: var(--cv-text-heading)">Badges</h3>
         <ul class="cv-badges">
@@ -64,6 +69,23 @@ const BADGE_LABELS: Record<Badge['kind'], string> = {
 })
 export class GameProfileComponent {
   private readonly game = inject(GameService);
+  private readonly sharing = inject(ShareService);
+  readonly inviteNote = signal<string | null>(null);
+
+  /** Personal link to hoopticker.com/r/<code>: friends see what HoopTicker is, then sign up. */
+  async invite(): Promise<void> {
+    try {
+      const url = await this.sharing.referralUrl();
+      const how = await this.sharing.send(
+        'HoopTicker',
+        url,
+        'Track your basketball cards and play Vault Score with me.',
+      );
+      this.inviteNote.set(how === 'copied' ? 'Invite link copied' : null);
+    } catch {
+      this.inviteNote.set('Could not create the link');
+    }
+  }
   username = '';
   readonly optOut = signal(false);
   readonly badges = signal<Badge[]>([]);

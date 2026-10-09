@@ -13,7 +13,6 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
-import { environment } from '../../../environments/environment';
 import {
   GameService,
   gameErrorMessage,
@@ -21,6 +20,7 @@ import {
   type LeaguePage as League,
   type Standings,
 } from '../../core/game/game.service';
+import { ShareService, shareErrorMessage } from '../../core/share/share.service';
 
 /** One private league: invite, standings by week or season, members' latest scores. */
 @Component({
@@ -57,13 +57,12 @@ export class LeaguePage {
     const s = this.standings();
     return !!s && s.period === 'week' && s.me?.rank === 1 && (s.me?.points ?? 0) > 0;
   });
+  private readonly sharing = inject(ShareService);
+  readonly shareNote = signal<string | null>(null);
+  /** The invite lands on hoopticker.com/join/<code>, which presents HoopTicker first. */
   readonly inviteLink = computed(() => {
     const code = this.league()?.invite_code;
-    const origin =
-      typeof location !== 'undefined' && location.origin.startsWith('http')
-        ? location.origin
-        : environment.webUrl;
-    return code ? `${origin}/leagues/join/${code}` : '';
+    return code ? this.sharing.leagueInviteUrl(code) : '';
   });
 
   constructor() {
@@ -101,15 +100,26 @@ export class LeaguePage {
     if (!l) return;
     const text = `Join my Vault Score league "${l.name}" with the code ${l.invite_code}.`;
     try {
-      if (navigator.share) {
-        await navigator.share({ title: l.name, text, url: this.inviteLink() });
-        return;
+      const how = await this.sharing.send(l.name, this.inviteLink(), text);
+      if (how === 'copied') {
+        this.copied.set(true);
+        setTimeout(() => this.copied.set(false), 2500);
       }
-      await navigator.clipboard.writeText(`${text} ${this.inviteLink()}`);
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 2500);
     } catch {
       /* the share sheet was dismissed */
+    }
+  }
+
+  async shareRank(): Promise<void> {
+    try {
+      const how = await this.sharing.share(
+        'league',
+        `My rank in ${this.league()?.name ?? 'my league'}`,
+        this.id,
+      );
+      this.shareNote.set(how === 'copied' ? 'Link copied.' : null);
+    } catch (err) {
+      this.shareNote.set(shareErrorMessage(err));
     }
   }
 

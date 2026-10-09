@@ -8,24 +8,37 @@
     <div>
       <h1>Pick the players you collect.</h1>
       <p class="cv-caption" style="margin-top: 8px">
-        "Last night" shows their stats every morning.
-        @if (limit(); as max) { Free plan: up to {{ max }} players. }
+        "Last night" shows their stats every morning. @if (limit(); as max) { Free plan: up to {{
+        max }} players. }
       </p>
     </div>
   </div>
-  <ion-searchbar placeholder="Search players" (ionInput)="query.set($any($event).detail.value ?? '')"></ion-searchbar>
+  <ion-searchbar
+    placeholder="Search players"
+    (ionInput)="query.set($any($event).detail.value ?? '')"
+  ></ion-searchbar>
   @if (error(); as message) {
-    <ion-note class="cv-error">{{ message }}</ion-note>
+  <ion-note class="cv-error">{{ message }}</ion-note>
   }
   <ion-list style="margin-top: 16px; padding-bottom: 8px">
     @for (p of filtered(); track p.id) {
-      <ion-item button (click)="toggle(p.id)" [detail]="false" [attr.aria-pressed]="follows.playerIds().has(p.id)">
-        <ion-label>
-          <h2>{{ p.name }}</h2>
-          <p>{{ p.team ?? 'Team to be announced' }}</p>
-        </ion-label>
-        <ion-icon slot="end" aria-hidden="true" [name]="follows.playerIds().has(p.id) ? 'heart' : 'heart-outline'" [style.color]="follows.playerIds().has(p.id) ? 'var(--cv-color-loss)' : 'var(--cv-text-muted)'"></ion-icon>
-      </ion-item>
+    <ion-item
+      button
+      (click)="toggle(p.id)"
+      [detail]="false"
+      [attr.aria-pressed]="follows.playerIds().has(p.id)"
+    >
+      <ion-label>
+        <h2>{{ p.name }}</h2>
+        <p>{{ p.team ?? 'Team to be announced' }}</p>
+      </ion-label>
+      <ion-icon
+        slot="end"
+        aria-hidden="true"
+        [name]="follows.playerIds().has(p.id) ? 'heart' : 'heart-outline'"
+        [style.color]="follows.playerIds().has(p.id) ? 'var(--cv-color-loss)' : 'var(--cv-text-muted)'"
+      ></ion-icon>
+    </ion-item>
     }
   </ion-list>
 </ion-content>

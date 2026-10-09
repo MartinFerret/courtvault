@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, signedOutGuard } from './core/auth/auth.guard';
+import { authCallbackGuard, authGuard, signedOutGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'tabs/last-night' },
@@ -20,7 +20,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/onboarding/first-scan.page').then((m) => m.FirstScanPage),
   },
-  { path: 'auth/callback', redirectTo: 'tabs/last-night' },
+  { path: 'auth/callback', canActivate: [authCallbackGuard], children: [] },
   {
     path: 'tabs',
     canActivate: [authGuard],

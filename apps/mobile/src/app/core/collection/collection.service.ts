@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import type { Database, Grade } from '@courtvault/shared';
 import { environment } from '../../../environments/environment';
 import { SupabaseService } from '../supabase/supabase.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 
 export type CollectionItem = Database['public']['Views']['collection_items_detailed']['Row'];
 export type CollectionSummary =
@@ -22,6 +23,7 @@ export interface AddItemInput {
 @Injectable({ providedIn: 'root' })
 export class CollectionService {
   private readonly supabase = inject(SupabaseService);
+  private readonly analytics = inject(AnalyticsService);
 
   readonly items = signal<CollectionItem[]>([]);
   readonly summary = signal<CollectionSummary | null>(null);
@@ -47,6 +49,7 @@ export class CollectionService {
   }
 
   async add(input: AddItemInput): Promise<CollectionItem> {
+    const wasEmpty = this.items().length === 0 && (this.summary()?.item_count ?? 0) === 0;
     const { data, error } = await this.supabase.client
       .from('collection_items')
       .insert({
@@ -68,6 +71,7 @@ export class CollectionService {
     }
 
     await this.refresh();
+    this.analytics.capture(wasEmpty ? 'first_card_added' : 'card_added', { grade: input.grade });
     const item = this.items().find((i) => i.id === data.id);
     if (!item) throw new Error('Item not found after insert');
     return item;

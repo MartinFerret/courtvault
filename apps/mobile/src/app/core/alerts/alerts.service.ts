@@ -11,7 +11,10 @@ export class AlertsService {
   readonly alerts = signal<PriceAlert[]>([]);
 
   async refresh(): Promise<void> {
-    const { data, error } = await this.supabase.client.from('price_alerts').select('*').order('created_at');
+    const { data, error } = await this.supabase.client
+      .from('price_alerts')
+      .select('*')
+      .order('created_at');
     if (error) throw error;
     this.alerts.set(data ?? []);
   }
@@ -31,6 +34,8 @@ export class AlertsService {
   }
 
   forParallel(parallelId: string, grade: Grade): PriceAlert | undefined {
-    return this.alerts().find((a) => a.parallel_id === parallelId && a.grade === grade && !a.triggered_at);
+    return this.alerts().find(
+      (a) => a.parallel_id === parallelId && a.grade === grade && !a.triggered_at,
+    );
   }
 }

@@ -20,6 +20,8 @@ type Mode = 'sign-up' | 'sign-in';
  * only the wording and the optional marketing checkbox change. No passwords, no mandatory
  * terms checkbox: continuing means accepting the terms (link under the buttons).
  */
+import { IntentService } from '../../core/analytics/intent.service';
+
 @Component({
   selector: 'cv-sign-in',
   imports: [
@@ -36,6 +38,7 @@ type Mode = 'sign-up' | 'sign-in';
   templateUrl: './sign-in.page.html',
 })
 export class SignInPage {
+  private readonly intents = inject(IntentService);
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   readonly disclaimer = AFFILIATION_DISCLAIMER;
@@ -80,7 +83,8 @@ export class SignInPage {
     this.busy.set(true);
     try {
       await this.auth.verifyEmailCode(this.email.trim(), this.code.trim());
-      await this.router.navigate(['/onboarding/players']);
+      // A visitor who came for an action (add a card, join a league...) goes straight there.
+      await this.router.navigateByUrl(this.intents.consume() ?? '/onboarding/players');
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Invalid code.');
     } finally {

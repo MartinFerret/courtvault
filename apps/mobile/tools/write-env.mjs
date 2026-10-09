@@ -24,6 +24,9 @@ export const generatedEnvironment = {
   googleWebClientId: ${JSON.stringify(get('GOOGLE_WEB_CLIENT_ID'))},
   appleSignInEnabled: ${JSON.stringify(get('APPLE_SIGN_IN_ENABLED') === 'true')},
   webUrl: ${JSON.stringify(get('WEB_URL', 'http://localhost:3000'))},
+  // PostHog (same project as the website). Empty key = no analytics (local dev).
+  posthogKey: ${JSON.stringify(get('POSTHOG_KEY'))},
+  posthogHost: ${JSON.stringify(get('POSTHOG_HOST', 'https://hoopticker.com/ingest'))},
 } as const;
 `;
 mkdirSync(resolve(root, 'src/environments'), { recursive: true });

@@ -13,7 +13,10 @@ import { IonButton, IonContent } from '@ionic/angular';
           <img class="cv-hero__player" src="art-dunk.svg" alt="" />
         </div>
         <h1>Scan your<br />first card.</h1>
-        <p class="cv-hero__lead">Point the camera at the back of a card. We read the number, season and player. You pick the parallel.</p>
+        <p class="cv-hero__lead">
+          Point the camera at the back of a card. We read the number, season and player. You pick
+          the parallel.
+        </p>
         <ion-button expand="block" size="large" (click)="go('/tabs/scan')">Scan a card</ion-button>
         <ion-button expand="block" fill="clear" (click)="go('/tabs/last-night')">Later</ion-button>
       </div>

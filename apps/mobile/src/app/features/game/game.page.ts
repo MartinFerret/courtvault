@@ -1,5 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonButton,
   IonContent,
@@ -46,6 +46,9 @@ type Slots = (RosterPlayer | null)[];
 })
 export class GamePage {
   readonly game = inject(GameService);
+  private readonly router = inject(Router);
+  /** From a player page ("Put him in my lineup"): the player to place. */
+  readonly add = input<string>();
   private readonly paywall = inject(PaywallService);
 
   readonly loading = signal(true);
@@ -146,10 +149,36 @@ export class GamePage {
         this.slots.set(state.draft.player_ids.map((id) => byId.get(id) ?? null));
         this.captainId.set(state.draft.captain_id);
       }
+      this.placeRequested(byId);
     } catch (err) {
       this.error.set(gameErrorMessage(err));
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  /** Places the player asked for by ?add=, or asks for a spot when the court is full. */
+  private placeRequested(byId: Map<string, RosterPlayer>): void {
+    const id = this.add();
+    if (!id) return;
+    void this.router.navigate([], {
+      queryParams: { add: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+    const player = byId.get(id);
+    if (!player) return;
+    if (this.onCourt().has(id)) {
+      this.message.set(`${player.name} is already in your lineup.`);
+      return;
+    }
+    const empty = this.slots().findIndex((s) => s === null);
+    if (empty >= 0) {
+      this.place(empty, id);
+      this.message.set(`${player.name} is on the court. Save your lineup to keep him.`);
+    } else {
+      this.picked.set(id);
+      this.message.set(`Your court is full: tap the spot ${player.name} takes, then save.`);
     }
   }
 

@@ -108,6 +108,9 @@
       }
     </ul>
 
+    @if (shareNote()) {
+    <p class="cv-caption" role="status" style="margin-top: 16px">{{ shareNote() }}</p>
+    }
     <div class="cv-arena-links" style="margin-top: 20px">
       <a class="cv-arena-link" routerLink="/game/standings" [queryParams]="{ league: l.id }"
         ><ion-icon name="podium-outline" aria-hidden="true"></ion-icon>Full standings</a

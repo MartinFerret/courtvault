@@ -2,16 +2,40 @@ import { Component, computed, inject, input, signal, effect } from '@angular/cor
 import { SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonNote,
-  IonTitle, IonToolbar,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonNote,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular';
-import { GRADES, PRICE_SOURCE_CREDIT, parseLimitReached, priceKindLabel, type Grade } from '@courtvault/shared';
+import {
+  GRADES,
+  PRICE_SOURCE_CREDIT,
+  parseLimitReached,
+  priceKindLabel,
+  type Grade,
+} from '@courtvault/shared';
 import { AlertsService } from '../../core/alerts/alerts.service';
 import { CatalogService, type CardDetail } from '../../core/catalog/catalog.service';
 import { CollectionService } from '../../core/collection/collection.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { PlanService } from '../../core/plan/plan.service';
-import { CentsPipe, DeltaPipe, GradePipe, ParallelPipe, FoilClassPipe, FoilHuePipe, FoilSatPipe } from '../../shared/pipes';
+import {
+  CentsPipe,
+  DeltaPipe,
+  GradePipe,
+  ParallelPipe,
+  FoilClassPipe,
+  FoilHuePipe,
+  FoilSatPipe,
+} from '../../shared/pipes';
 
 /**
  * Card page: price by grade for the selected parallel, history, gain/loss for an owned item,
@@ -21,8 +45,28 @@ import { CentsPipe, DeltaPipe, GradePipe, ParallelPipe, FoilClassPipe, FoilHuePi
 @Component({
   selector: 'cv-card',
   imports: [
-    FormsModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonButton, IonContent, IonItem, IonLabel,
-    IonNote, IonIcon, IonInput, SlicePipe, CentsPipe, DeltaPipe, ParallelPipe, GradePipe, FoilClassPipe, FoilHuePipe, FoilSatPipe],
+    FormsModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonBackButton,
+    IonButton,
+    IonContent,
+    IonItem,
+    IonLabel,
+    IonNote,
+    IonIcon,
+    IonInput,
+    SlicePipe,
+    CentsPipe,
+    DeltaPipe,
+    ParallelPipe,
+    GradePipe,
+    FoilClassPipe,
+    FoilHuePipe,
+    FoilSatPipe,
+  ],
   templateUrl: './card.page.html',
 })
 export class CardPage {
@@ -37,6 +81,8 @@ export class CardPage {
   readonly parallelId = input<string>();
   readonly grade = input<string>();
   readonly item = input<string>();
+  /** From the website: "Add to my Vault" (kept through sign-up). */
+  readonly action = input<string>();
 
   readonly sourceCredit = PRICE_SOURCE_CREDIT;
   readonly grades = GRADES;
@@ -56,11 +102,13 @@ export class CardPage {
   readonly error = signal<string | null>(null);
   alertUsd: number | null = null;
 
-  readonly parallel = computed(() => this.card()?.parallels.find((p) => p.id === this.selectedParallelId()) ?? null);
+  readonly parallel = computed(
+    () => this.card()?.parallels.find((p) => p.id === this.selectedParallelId()) ?? null,
+  );
   readonly price = computed(() => this.parallel()?.prices[this.selectedGrade()] ?? null);
   readonly ownedItem = computed(() => {
     const id = this.item();
-    return id ? this.collection.items().find((i) => i.id === id) ?? null : null;
+    return id ? (this.collection.items().find((i) => i.id === id) ?? null) : null;
   });
   readonly gain = computed(() => {
     const it = this.ownedItem();
@@ -72,8 +120,12 @@ export class CardPage {
     const pid = this.selectedParallelId();
     return pid ? this.alerts.forParallel(pid, this.selectedGrade()) : undefined;
   });
-  readonly historyMin = computed(() => Math.min(...this.history().map((h) => h.price_cents), Infinity));
-  readonly historyMax = computed(() => Math.max(...this.history().map((h) => h.price_cents), -Infinity));
+  readonly historyMin = computed(() =>
+    Math.min(...this.history().map((h) => h.price_cents), Infinity),
+  );
+  readonly historyMax = computed(() =>
+    Math.max(...this.history().map((h) => h.price_cents), -Infinity),
+  );
   readonly historyDelta = computed(() => {
     const h = this.history();
     return h.length > 1 ? h[h.length - 1]!.price_cents - h[0]!.price_cents : null;
@@ -99,18 +151,28 @@ export class CardPage {
   private async load(slug?: string, parallelId?: string, grade?: string): Promise<void> {
     this.error.set(null);
     try {
-      const card = slug ? await this.catalog.cardBySlug(slug) : parallelId ? await this.catalog.cardByParallelId(parallelId) : null;
+      const card = slug
+        ? await this.catalog.cardBySlug(slug)
+        : parallelId
+          ? await this.catalog.cardByParallelId(parallelId)
+          : null;
       this.card.set(card);
       if (!card) return;
-      this.selectedParallelId.set(parallelId && card.parallels.some((p) => p.id === parallelId) ? parallelId : card.parallels[0]?.id ?? null);
-      if (grade && (GRADES as readonly string[]).includes(grade)) this.selectedGrade.set(grade as Grade);
+      this.selectedParallelId.set(
+        parallelId && card.parallels.some((p) => p.id === parallelId)
+          ? parallelId
+          : (card.parallels[0]?.id ?? null),
+      );
+      if (grade && (GRADES as readonly string[]).includes(grade))
+        this.selectedGrade.set(grade as Grade);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Could not load the card.');
     }
   }
 
   onGrade(value: string | number | undefined): void {
-    if (typeof value === 'string' && (GRADES as readonly string[]).includes(value)) this.selectedGrade.set(value as Grade);
+    if (typeof value === 'string' && (GRADES as readonly string[]).includes(value))
+      this.selectedGrade.set(value as Grade);
   }
 
   async addToVault(): Promise<void> {
@@ -153,6 +215,10 @@ export class CardPage {
     const min = this.historyMin();
     const max = this.historyMax();
     const span = max - min || 1;
-    return h.map((p, i) => `${(i / (h.length - 1)) * 100},${30 - ((p.price_cents - min) / span) * 28 - 1}`).join(' ');
+    return h
+      .map(
+        (p, i) => `${(i / (h.length - 1)) * 100},${30 - ((p.price_cents - min) / span) * 28 - 1}`,
+      )
+      .join(' ');
   }
 }

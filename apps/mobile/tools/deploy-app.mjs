@@ -31,6 +31,9 @@ const env = {
   REVENUECAT_GOOGLE_KEY: process.env['REVENUECAT_GOOGLE_KEY'] ?? '',
   GOOGLE_WEB_CLIENT_ID: process.env['GOOGLE_WEB_CLIENT_ID'] ?? '',
   APPLE_SIGN_IN_ENABLED: process.env['APPLE_SIGN_IN_ENABLED'] ?? '',
+  // Same PostHog project as the website, through its first-party /ingest proxy.
+  POSTHOG_KEY: process.env['POSTHOG_KEY'] ?? webEnv['NEXT_PUBLIC_POSTHOG_KEY'] ?? '',
+  POSTHOG_HOST: process.env['POSTHOG_HOST'] ?? 'https://hoopticker.com/ingest',
 };
 const run = (cmd, cwd) => execSync(cmd, { cwd, env, stdio: 'inherit' });
 run('pnpm --filter @courtvault/mobile build', root);

@@ -1,5 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { SupabaseService } from '../supabase/supabase.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 
 /** An owned player on the bench, with eligibility for the next lock and recent form. */
 export interface RosterPlayer {
@@ -131,6 +132,7 @@ export interface ScoringWeight {
 @Injectable({ providedIn: 'root' })
 export class GameService {
   private readonly supabase = inject(SupabaseService);
+  private readonly analytics = inject(AnalyticsService);
 
   readonly lineup = signal<LineupState | null>(null);
   readonly scores = signal<ScoresState | null>(null);
@@ -164,7 +166,11 @@ export class GameService {
       pending_player_ids: string[];
       saves_left: number;
     }>('set_lineup', { p_player_ids: playerIds, p_captain_id: captainId });
+    const first = !this.lineup()?.draft;
     await this.loadLineup();
+    this.analytics.capture(first ? 'first_lineup_saved' : 'lineup_saved', {
+      pending: result.pending_player_ids.length,
+    });
     return result;
   }
 
