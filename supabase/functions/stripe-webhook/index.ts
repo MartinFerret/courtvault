@@ -4,6 +4,7 @@ import { requireEnv } from '../_shared/env.ts';
 import { serviceClient } from '../_shared/supabase.ts';
 import { verifyStripeSignature } from '../_shared/stripe.ts';
 import { actionFor, type StripeEvent } from './handler.ts';
+import { captureServerEvent } from '../_shared/analytics.ts';
 
 serve(async (req) => {
   if (req.method !== 'POST') return error('Method not allowed', 405);
@@ -72,6 +73,10 @@ serve(async (req) => {
           }),
         );
       }
+      await captureServerEvent('premium_started', action.userId, {
+        source: 'stripe',
+        plan: 'lifetime',
+      });
       return json({ ok: true, lifetime: action.userId });
     }
     case 'subscription': {
@@ -85,10 +90,11 @@ serve(async (req) => {
       }
       if (!userId) return json({ ok: true, ignored: 'unknown customer' });
       // A lifetime buyer never loses Premium because an older subscription lapses.
-      const { data: profile } = await supabase.from('profiles').select('premium_source').eq(
-        'id',
-        userId,
-      ).maybeSingle();
+      const { data: profile } = await supabase.from('profiles').select('premium_source, is_premium')
+        .eq(
+          'id',
+          userId,
+        ).maybeSingle();
       if (profile?.premium_source === 'lifetime') return json({ ok: true, ignored: 'lifetime' });
       const { error: e } = await supabase
         .from('profiles')
@@ -102,6 +108,12 @@ serve(async (req) => {
         .eq('id', userId);
       if (e) return error(e.message, 500);
       await supabase.from('billing_events').update({ user_id: userId }).eq('id', event.id);
+      if (action.isPremium && !profile?.is_premium) {
+        await captureServerEvent('premium_started', userId, {
+          source: 'stripe',
+          plan: 'subscription',
+        });
+      }
       console.log(
         JSON.stringify({
           webhook: 'stripe',

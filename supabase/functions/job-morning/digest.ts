@@ -51,6 +51,26 @@ export function delta(cents: number | null | undefined): string {
   return v === 0 ? '$0.00' : `${v > 0 ? '+' : '-'}$${(Math.abs(v) / 100).toFixed(2)}`;
 }
 
+/** Digest links carry the email UTMs, so the funnel credits the morning email. */
+export function emailLink(base: string, path: string, content: string): string {
+  const url = new URL(path, base.endsWith('/') ? base : `${base}/`);
+  url.searchParams.set('utm_source', 'email');
+  url.searchParams.set('utm_medium', 'digest');
+  url.searchParams.set('utm_campaign', 'morning');
+  url.searchParams.set('utm_content', content);
+  return url.toString();
+}
+
+/** The three destinations of the digest: your score, your Vault, the public movers page. */
+export function digestLinks(input: Pick<DigestInput, 'webAppUrl' | 'siteUrl' | 'day'>) {
+  return {
+    score: emailLink(input.webAppUrl, '/tabs/last-night', 'score'),
+    vault: emailLink(input.webAppUrl, '/tabs/vault', 'vault'),
+    lineup: emailLink(input.webAppUrl, '/tabs/game', 'lineup'),
+    movers: emailLink(input.siteUrl, `/trending-basketball-cards/${input.day}`, 'movers'),
+  };
+}
+
 function escape(s: string): string {
   return s.replace(
     /[&<>"']/g,
@@ -142,6 +162,7 @@ export function buildDigest(input: DigestInput): EmailMessage {
       lockedCount > 1 ? 's' : ''
     } hidden on the free plan.</p>`
     : '';
+  const links = digestLinks(input);
   const v = input.vaultScore;
   const vaultHtml = v
     ? `<div style="background:#121417;color:#f2f4f5;border-radius:18px;padding:18px 20px;margin-bottom:12px">
@@ -152,7 +173,7 @@ ${
         `<p style="margin:4px 0 0;font-size:13px;color:#d6dadf">${escape(l)}</p>`
       ).join('')
     }
-<p style="margin:12px 0 0"><a href="${input.webAppUrl}/tabs/game" style="color:#e3fb4a;font-weight:600">Set tonight's lineup</a></p>
+<p style="margin:12px 0 0"><a href="${links.score}" style="color:#e3fb4a;font-weight:600">See your score</a> &nbsp; <a href="${links.lineup}" style="color:#e3fb4a;font-weight:600">Set tonight's lineup</a></p>
 </div>`
     : '';
   const html =
@@ -168,7 +189,8 @@ ${vaultHtml}<div style="background:#e3fb4a;border-radius:18px;padding:18px 20px"
 </div>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px">${rowsHtml}</table>
 ${lockedNote}${weeklyNote}
-<p style="margin:24px 0 0"><a href="${input.webAppUrl}/tabs/last-night" style="display:inline-block;background:#121417;color:#f7f8f9;text-decoration:none;padding:12px 20px;border-radius:999px;font-weight:600">Open Last night</a></p>
+<p style="margin:24px 0 0"><a href="${links.vault}" style="display:inline-block;background:#121417;color:#f7f8f9;text-decoration:none;padding:12px 20px;border-radius:999px;font-weight:600">Open my Vault</a></p>
+<p style="margin:12px 0 0;font-size:14px"><a href="${links.movers}" style="color:#121417">Last night's biggest movers</a>, every card that moved after the games.</p>
 <p style="margin:24px 0 0;color:#6a7078;font-size:12px">Values come from eBay sales and listings through CardSight AI, each labelled with its state. Not affiliated with the NBA, NBPA or Topps.<br>
 <a href="${input.webAppUrl}/tabs/profile" style="color:#6a7078">Email preferences</a> · <a href="${input.unsubscribeUrl}" style="color:#6a7078">Unsubscribe</a><br>${
       escape(input.postalAddress)
@@ -176,7 +198,14 @@ ${lockedNote}${weeklyNote}
 </td></tr></table></td></tr></table></body></html>`;
   const text = [
     `Last night (${input.dayLabel})`,
-    ...(v ? [...vaultScoreLines(v), `Set tonight's lineup: ${input.webAppUrl}/tabs/game`, ''] : []),
+    ...(v
+      ? [
+        ...vaultScoreLines(v),
+        `See your score: ${links.score}`,
+        `Set tonight's lineup: ${links.lineup}`,
+        '',
+      ]
+      : []),
     `Your cards after the games: ${delta(total)} (${input.rows.length} of your players played)`,
     '',
     ...input.rows.map((r) => {
@@ -191,7 +220,8 @@ ${lockedNote}${weeklyNote}
       }`;
     }),
     '',
-    `Open Last night: ${input.webAppUrl}/tabs/last-night`,
+    `Open my Vault: ${links.vault}`,
+    `Last night's biggest movers: ${links.movers}`,
     `Unsubscribe: ${input.unsubscribeUrl}`,
     input.postalAddress,
   ].join('\n');

@@ -460,7 +460,7 @@ content_path = "./supabase/templates/magic_link.html"
 project_id = "lufpytmtwocqgooxedfx"
 
 [remotes.production.auth]
-site_url = "https://hoopticker.com"
+site_url = "https://app.hoopticker.com"
 additional_redirect_urls = [
   "https://hoopticker.com/**",
   "https://app.hoopticker.com/**",

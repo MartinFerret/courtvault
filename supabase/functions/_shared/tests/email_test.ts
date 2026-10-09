@@ -2,6 +2,7 @@ import { assertEquals, assertMatch } from '@std/assert';
 import { brevoPayload, LogEmailProvider, parseSender } from '../providers/email.ts';
 import {
   buildDigest,
+  digestLinks,
   digestSubject,
   movementText,
   vaultScoreLines,
@@ -129,4 +130,23 @@ Deno.test('preseason scores say they are not counted', () => {
   assertEquals(lines[2], 'Preseason night: not counted in the standings.');
   assertEquals(movementText(-2), 'down 2');
   assertEquals(movementText(null), null);
+});
+
+Deno.test('digest links go to the score and the Vault in the app and the movers on the website', () => {
+  const links = digestLinks({
+    webAppUrl: 'https://app.hoopticker.com',
+    siteUrl: 'https://hoopticker.com',
+    day: '2026-10-08',
+  });
+  assertEquals(new URL(links.score).pathname, '/tabs/last-night');
+  assertEquals(new URL(links.vault).pathname, '/tabs/vault');
+  assertEquals(
+    links.movers.startsWith('https://hoopticker.com/trending-basketball-cards/2026-10-08?'),
+    true,
+  );
+  assertEquals(new URL(links.vault).searchParams.get('utm_source'), 'email');
+  const m = buildDigest({ ...input, vaultScore });
+  assertMatch(m.html, /Open my Vault/);
+  assertMatch(m.html, /utm_content=movers/);
+  assertMatch(m.text, /See your score: https:\/\/app\.hoopticker\.com\/tabs\/last-night\?/);
 });
