@@ -1,6 +1,7 @@
 import { Component, computed, inject, input, signal, effect } from '@angular/core';
 import { SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   IonBackButton,
   IonButton,
@@ -46,6 +47,7 @@ import {
   selector: 'cv-card',
   imports: [
     FormsModule,
+    RouterLink,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -96,6 +98,8 @@ export class CardPage {
     return `${p.sample_size} ${unit}${p.sample_size === 1 ? '' : 's'}`;
   }
   readonly card = signal<CardDetail | null>(null);
+  /** False until the first lookup ends: tells "loading" from "not in the catalog". */
+  readonly loaded = signal(false);
   readonly selectedParallelId = signal<string | null>(null);
   readonly selectedGrade = signal<Grade>('RAW');
   readonly history = signal<{ captured_at: string; price_cents: number }[]>([]);
@@ -168,6 +172,8 @@ export class CardPage {
         this.selectedGrade.set(grade as Grade);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Could not load the card.');
+    } finally {
+      this.loaded.set(true);
     }
   }
 

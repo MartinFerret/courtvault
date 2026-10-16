@@ -140,9 +140,10 @@
         <ion-segment-button [value]="g"><ion-label>{{ g | grade }}</ion-label></ion-segment-button>
         }
       </ion-segment>
-      <ion-button expand="block" style="margin-top: 12px" (click)="addFromCard()"
-        >Add to "{{ activeSide() === 'give' ? 'You give' : 'You get' }}"</ion-button
-      >
+      <div class="cv-actions cv-actions--start" style="margin-top: 12px">
+        <ion-button class="cv-cta" (click)="addFromCard()">Add card</ion-button>
+        <ion-button fill="clear" (click)="card.set(null)">Cancel</ion-button>
+      </div>
     </div>
     } @else {
     <ion-list lines="none">

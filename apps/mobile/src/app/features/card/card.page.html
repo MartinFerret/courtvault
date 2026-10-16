@@ -75,6 +75,19 @@
           </button>
           }
         </div>
+        @if (!ownedItem()) { @if (action() === 'add') {
+        <p class="cv-caption" role="status" style="margin-top: 16px">
+          Pick your parallel and grade, then add the card to your Vault.
+        </p>
+        }
+        <ion-button
+          id="cv-add-to-vault"
+          class="cv-cta"
+          style="margin-top: 16px"
+          (click)="addToVault()"
+          >Add to Vault</ion-button
+        >
+        }
       </section>
     </div>
     <div>
@@ -116,10 +129,8 @@
           }
         </div>
       </section>
-      }
-
+      } @if (ownedItem(); as it) {
       <section class="cv-section">
-        @if (ownedItem(); as it) {
         <ion-item lines="none">
           <ion-label>
             <h2>In your Vault</h2>
@@ -171,16 +182,9 @@
         <ion-button size="small" fill="clear" (click)="saveManualValue(true)"
           >Remove my estimate</ion-button
         >
-        } } @else { @if (action() === 'add') {
-        <p class="cv-caption" role="status" style="margin-bottom: 10px">
-          Pick your parallel and grade above, then add the card to your Vault.
-        </p>
-        }
-        <ion-button id="cv-add-to-vault" expand="block" size="large" (click)="addToVault()"
-          >Add to Vault</ion-button
-        >
         }
       </section>
+      }
 
       <section class="cv-section">
         <h2>Price alert</h2>
@@ -215,7 +219,7 @@
       @if (price()?.buy_url; as url) {
       <section class="cv-section">
         <ion-button
-          expand="block"
+          class="cv-cta"
           fill="outline"
           [href]="url"
           target="_blank"
@@ -226,6 +230,11 @@
       </section>
       }
     </div>
+  </div>
+  } @else if (loaded() && !error()) {
+  <div class="cv-empty">
+    <p>This card is not in the catalog. It may come from a set we do not cover yet.</p>
+    <ion-button routerLink="/tabs/scan">Search for a card</ion-button>
   </div>
   }
 </ion-content>

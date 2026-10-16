@@ -92,7 +92,7 @@
       </ion-list>
 
       @if (lockedCount() > 0) {
-      <ion-button expand="block" size="large" style="margin-top: 20px" (click)="unlock()"
+      <ion-button class="cv-cta" style="margin-top: 20px" (click)="unlock()"
         >Unlock {{ lockedCount() }} more player{{ lockedCount() > 1 ? 's' : '' }}</ion-button
       >
       }

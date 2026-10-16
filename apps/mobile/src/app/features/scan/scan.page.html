@@ -199,7 +199,7 @@
     </ion-item>
     }
   </ion-list>
-  <ion-button expand="block" fill="outline" style="margin-top: 16px" (click)="resetForNext()"
+  <ion-button class="cv-cta" fill="outline" style="margin-top: 16px" (click)="resetForNext()"
     >None of these</ion-button
   >
   } @case ('pick-parallel') { @if (selected(); as c) {
@@ -264,9 +264,7 @@
       }
     </div>
   </section>
-  <ion-button expand="block" fill="clear" style="margin-top: 12px" (click)="resetForNext()"
-    >Cancel</ion-button
-  >
+  <ion-button fill="clear" style="margin-top: 12px" (click)="resetForNext()">Cancel</ion-button>
   } } @case ('no-match') {
   <div class="cv-card" style="margin-bottom: 16px">
     <h2>No card recognized</h2>
@@ -274,9 +272,9 @@
       >{{ ocrText() || 'Nothing readable. Try better light, closer, card back flat.' }}</ion-note
     >
   </div>
-  <div class="cv-stack">
-    <ion-button expand="block" size="large" (click)="start()">Try again</ion-button>
-    <ion-button expand="block" fill="outline" (click)="resetForNext()">Search manually</ion-button>
+  <div class="cv-actions cv-actions--start">
+    <ion-button class="cv-cta" (click)="start()">Try again</ion-button>
+    <ion-button class="cv-cta" fill="outline" (click)="resetForNext()">Search manually</ion-button>
   </div>
   } }
 </ion-content>

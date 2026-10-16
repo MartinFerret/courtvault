@@ -248,9 +248,9 @@ ion-back-button {
 ion-button {
   --border-radius: var(--cv-radius-pill);
   --box-shadow: none;
-  --padding-start: 22px;
-  --padding-end: 22px;
-  min-height: 52px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  min-height: 48px;
   margin: 0;
   font: 500 16px/1 var(--cv-font);
   letter-spacing: 0;
@@ -263,7 +263,7 @@ ion-button {
     --padding-end: 16px;
   }
   &[size='large'] {
-    min-height: 60px;
+    min-height: 56px;
     font-size: 17px;
   }
   &[fill='outline'] {
@@ -288,6 +288,23 @@ ion-button {
     --color: var(--cv-text-faint);
     --box-shadow: none;
   }
+}
+
+/* Primary action of a screen: full width on phones (thumb reach), its natural width from
+   tablet up, where a full-width pill only stretches the eye across empty space. */
+ion-button.cv-cta {
+  display: block;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  ion-button.cv-cta {
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+  }
+}
+.cv-actions.cv-actions--start {
+  justify-content: flex-start;
 }
 
 /* Chips: tonal pills, selected = lime. Used for filters and grade pickers. */
@@ -1461,7 +1478,12 @@ ion-menu.cv-menu {
     padding: 0 10px;
   }
   .cv-sidebar__add {
-    margin: 0;
+    margin: 0 0 0 4px;
+    align-self: flex-start;
+    min-height: 44px;
+    font-size: 15px;
+    --padding-start: 16px;
+    --padding-end: 18px;
   }
   .cv-sidebar__links {
     list-style: none;
@@ -1510,8 +1532,12 @@ ion-menu.cv-menu {
   }
   .cv-sidebar__plan,
   .cv-sidebar__help {
-    background: var(--cv-surface);
-    color: var(--cv-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: transparent;
+    color: var(--cv-text-muted);
     border: 0;
     border-radius: var(--cv-radius-tile);
     padding: 10px 12px;
@@ -1519,8 +1545,18 @@ ion-menu.cv-menu {
     text-align: left;
     cursor: pointer;
     margin: 0;
+    transition:
+      background var(--cv-motion-fast) var(--cv-ease),
+      color var(--cv-motion-fast);
+    &:hover {
+      background: var(--cv-surface);
+      color: var(--cv-text);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--cv-accent);
+      outline-offset: 2px;
+    }
     kbd {
-      float: right;
       font: 600 12px/1 var(--cv-font);
       background: var(--cv-surface-high);
       border-radius: 6px;
@@ -1529,6 +1565,14 @@ ion-menu.cv-menu {
   }
   .cv-sidebar__plan--premium {
     color: var(--cv-color-premium);
+    cursor: default;
+    &:hover {
+      background: transparent;
+    }
+  }
+  .cv-sidebar__plan strong {
+    font-weight: 600;
+    color: var(--cv-text);
   }
 }
 

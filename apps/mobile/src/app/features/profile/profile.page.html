@@ -103,11 +103,13 @@
 
       <section class="cv-section cv-stack">
         @if (message(); as text) { <ion-note>{{ text }}</ion-note> }
-        <ion-button expand="block" fill="outline" (click)="signOut()">Sign out</ion-button>
-        <ion-button expand="block" fill="clear" color="danger" (click)="deleteAccount()"
-          >Delete account</ion-button
-        >
-        <p class="cv-caption ion-text-center">{{ disclaimer }}</p>
+        <div class="cv-actions cv-actions--start">
+          <ion-button fill="outline" (click)="signOut()">Sign out</ion-button>
+          <ion-button fill="clear" color="danger" (click)="deleteAccount()"
+            >Delete account</ion-button
+          >
+        </div>
+        <p class="cv-caption">{{ disclaimer }}</p>
       </section>
     </div>
   </div>

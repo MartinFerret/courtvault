@@ -1,7 +1,7 @@
 <nav class="cv-sidebar" aria-label="Main">
   <a routerLink="/tabs/last-night" class="cv-sidebar__brand">{{ brand }}</a>
 
-  <ion-button expand="block" routerLink="/tabs/scan" class="cv-sidebar__add">
+  <ion-button routerLink="/tabs/scan" class="cv-sidebar__add">
     <ion-icon slot="start" name="add-outline" aria-hidden="true"></ion-icon>
     Add a card
   </ion-button>
@@ -22,7 +22,7 @@
       <p class="cv-sidebar__plan cv-sidebar__plan--premium">Premium</p>
     } @else {
       <button type="button" class="cv-sidebar__plan" (click)="openPaywall()">
-        Free plan · Go Premium
+        Free plan <strong>Go Premium</strong>
       </button>
     }
     <button type="button" class="cv-sidebar__help" (click)="shortcuts.showHelp()">
