@@ -9,6 +9,23 @@
         }}</ion-button>
       }
     </span>
+    @if (binders().length > 0) {
+      <select
+        class="cv-bulk__select"
+        aria-label="Move to binder"
+        (change)="onMove(selectValue($event))"
+      >
+        <option value="" selected disabled>Move to</option>
+        @for (b of binders(); track b.id) {
+          <option [value]="b.id">{{ b.name }}</option>
+        }
+        <option value="none">No binder</option>
+      </select>
+    }
+    <ion-button size="small" fill="outline" (click)="onSell()"
+      ><ion-icon slot="start" name="cash-outline" aria-hidden="true"></ion-icon>Mark
+      sold</ion-button
+    >
     <ion-button size="small" fill="outline" (click)="exportCsv.emit()"
       ><ion-icon slot="start" name="download-outline" aria-hidden="true"></ion-icon>Export
       CSV</ion-button
@@ -85,6 +102,9 @@
             {{ item.parallel_name ?? '' | parallel: item.serial_run }}
             @if (item.serial_number) {
               <span class="cv-muted">{{ item.serial_number }}/{{ item.serial_run }}</span>
+            }
+            @if (item.binder_name) {
+              <span class="cv-binder-tag">{{ item.binder_name }}</span>
             }
           </td>
           <td>{{ item.grade ?? 'RAW' | grade }}</td>

@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, signal, effect } from '@angular/core';
 import { SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonBackButton,
   IonButton,
@@ -28,6 +28,8 @@ import { CatalogService, type CardDetail } from '../../core/catalog/catalog.serv
 import { CollectionService } from '../../core/collection/collection.service';
 import { PaywallService } from '../../core/billing/paywall.service';
 import { PlanService } from '../../core/plan/plan.service';
+import { BindersService, binderErrorMessage } from '../../core/binders/binders.service';
+import { SellPanelComponent } from '../vault/sell-panel.component';
 import {
   CentsPipe,
   DeltaPipe,
@@ -60,6 +62,7 @@ import {
     IonNote,
     IonIcon,
     IonInput,
+    SellPanelComponent,
     SlicePipe,
     CentsPipe,
     DeltaPipe,
@@ -77,6 +80,9 @@ export class CardPage {
   readonly alerts = inject(AlertsService);
   readonly plan = inject(PlanService);
   private readonly paywall = inject(PaywallService);
+  readonly binders = inject(BindersService);
+  private readonly router = inject(Router);
+  readonly selling = signal(false);
 
   // Route inputs (withComponentInputBinding): one of slug / parallelId, plus query params.
   readonly slug = input<string>();
@@ -139,6 +145,7 @@ export class CardPage {
   constructor() {
     void this.plan.load();
     void this.alerts.refresh();
+    void this.binders.refresh();
     if (this.collection.items().length === 0) void this.collection.refresh();
     effect(() => {
       const slug = this.slug();
@@ -222,6 +229,23 @@ export class CardPage {
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Could not save your estimate.');
     }
+  }
+
+  async moveToBinder(itemId: string, value: unknown): Promise<void> {
+    if (typeof value !== 'string') return;
+    const binderId = value === 'none' ? null : value;
+    if (binderId === (this.ownedItem()?.binder_id ?? null)) return;
+    try {
+      await this.binders.move([itemId], binderId);
+    } catch (err) {
+      this.error.set(binderErrorMessage(err));
+    }
+  }
+
+  /** The card left the Vault: back to the Vault, where the Sold tab lists it. */
+  onSold(): void {
+    this.selling.set(false);
+    void this.router.navigate(['/tabs/vault']);
   }
 
   removeAlert(id: string): void {

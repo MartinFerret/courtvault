@@ -121,6 +121,9 @@ price source for a paid sold-price provider touches only `providers/prices.ts`.
 | Gains/losses                     | No                 | Yes                                              |
 | Collection export                | Basic (cards only) | Full with values, 24h/30d change, gains, summary |
 | Card photos (storage budget)     | 300                | 1,000                                            |
+| Binders                          | 1                  | Unlimited                                        |
+| Sales log (sold cards, undo)     | Yes                | Yes                                              |
+| Realized gain on sales           | No                 | Yes                                              |
 
 - Premium: $5.99/month or $49.99/year with a 7-day trial on the annual plan ("save 30%" is
   computed, never typed), plus the Founder's Lifetime at $149 one-time during the launch period
@@ -191,6 +194,11 @@ min_sample, min_price_cents)` builds the whole page as JSON from games, stat lin
   (`LAST_NIGHT_MIN_SAMPLE`, `LAST_NIGHT_MIN_PRICE_CENTS`). Off day: latest night with a note.
   Wording reports what moved, never why. Generic foil frames instead of imagery. One Open Graph
   image per night, generated with the page by ISR and cached. Archive days in the sitemap.
+- Vault extras (2026-10-16, from the Collectr comparison): manual value
+  (`collection_items.manual_value_cents`, used only while no market price exists), trade analyzer
+  (`trade_value()`, share kind `trade`), binders (`binders`, `binder_summaries()`, owner checked
+  by trigger) and sales (`record_sale()` moves a card to `sales`, `undo_sale()` puts it back,
+  `sales_detailed.profit_cents` and `sales_summary()` null on the free plan).
 - Collection export: `export-csv` with `mode=basic|full`; `collection_export()` computes the
   figures for the signed-in user. The basic export is also offered in the account deletion flow.
 - Showcase price coverage (`app_settings` keys `showcase` and `showcase_parallels`): every night

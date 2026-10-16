@@ -105,6 +105,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      binders: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       blocked_words: {
         Row: {
           match: string;
@@ -382,6 +403,7 @@ export type Database = {
       };
       collection_items: {
         Row: {
+          binder_id: string | null;
           created_at: string;
           grade: Database['public']['Enums']['grade'];
           id: string;
@@ -393,6 +415,7 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          binder_id?: string | null;
           created_at?: string;
           grade?: Database['public']['Enums']['grade'];
           id?: string;
@@ -404,6 +427,7 @@ export type Database = {
           user_id?: string;
         };
         Update: {
+          binder_id?: string | null;
           created_at?: string;
           grade?: Database['public']['Enums']['grade'];
           id?: string;
@@ -415,6 +439,13 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'collection_items_binder_id_fkey';
+            columns: ['binder_id'];
+            isOneToOne: false;
+            referencedRelation: 'binders';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'collection_items_parallel_id_fkey';
             columns: ['parallel_id'];
@@ -1272,6 +1303,66 @@ export type Database = {
         };
         Relationships: [];
       };
+      sales: {
+        Row: {
+          acquired_at: string;
+          binder_id: string | null;
+          created_at: string;
+          fees_cents: number;
+          grade: Database['public']['Enums']['grade'];
+          id: string;
+          parallel_id: string;
+          purchase_cents: number | null;
+          serial_number: number | null;
+          sold_cents: number;
+          sold_on: string;
+          user_id: string;
+        };
+        Insert: {
+          acquired_at: string;
+          binder_id?: string | null;
+          created_at?: string;
+          fees_cents?: number;
+          grade: Database['public']['Enums']['grade'];
+          id?: string;
+          parallel_id: string;
+          purchase_cents?: number | null;
+          serial_number?: number | null;
+          sold_cents: number;
+          sold_on: string;
+          user_id: string;
+        };
+        Update: {
+          acquired_at?: string;
+          binder_id?: string | null;
+          created_at?: string;
+          fees_cents?: number;
+          grade?: Database['public']['Enums']['grade'];
+          id?: string;
+          parallel_id?: string;
+          purchase_cents?: number | null;
+          serial_number?: number | null;
+          sold_cents?: number;
+          sold_on?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'sales_binder_id_fkey';
+            columns: ['binder_id'];
+            isOneToOne: false;
+            referencedRelation: 'binders';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'sales_parallel_id_fkey';
+            columns: ['parallel_id'];
+            isOneToOne: false;
+            referencedRelation: 'parallels';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       set_releases: {
         Row: {
           box_config: string | null;
@@ -1396,6 +1487,8 @@ export type Database = {
     Views: {
       collection_items_detailed: {
         Row: {
+          binder_id: string | null;
+          binder_name: string | null;
           buy_url: string | null;
           card_id: string | null;
           card_number: string | null;
@@ -1428,6 +1521,13 @@ export type Database = {
           value_source: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: 'collection_items_binder_id_fkey';
+            columns: ['binder_id'];
+            isOneToOne: false;
+            referencedRelation: 'binders';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'collection_items_parallel_id_fkey';
             columns: ['parallel_id'];
@@ -1494,10 +1594,53 @@ export type Database = {
         };
         Relationships: [];
       };
+      sales_detailed: {
+        Row: {
+          acquired_at: string | null;
+          card_number: string | null;
+          card_slug: string | null;
+          created_at: string | null;
+          fees_cents: number | null;
+          grade: Database['public']['Enums']['grade'] | null;
+          id: string | null;
+          is_rookie: boolean | null;
+          parallel_id: string | null;
+          parallel_name: string | null;
+          player_name: string | null;
+          profit_cents: number | null;
+          purchase_cents: number | null;
+          season: string | null;
+          serial_number: number | null;
+          serial_run: number | null;
+          set_name: string | null;
+          sold_cents: number | null;
+          sold_on: string | null;
+          user_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'sales_parallel_id_fkey';
+            columns: ['parallel_id'];
+            isOneToOne: false;
+            referencedRelation: 'parallels';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Functions: {
       after_scoring: { Args: { p_day: string }; Returns: Json };
       award_badges: { Args: { p_day: string }; Returns: number };
+      binder_summaries: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          created_at: string;
+          id: string;
+          item_count: number;
+          name: string;
+          total_cents: number;
+        }[];
+      };
       cardsight_targets: {
         Args: { p_mode?: string };
         Returns: {
@@ -1815,6 +1958,15 @@ export type Database = {
         };
         Returns: undefined;
       };
+      record_sale: {
+        Args: {
+          p_fees_cents?: number;
+          p_item_id: string;
+          p_sold_cents: number;
+          p_sold_on?: string;
+        };
+        Returns: Json;
+      };
       record_schedule: {
         Args: { p_day: string; p_first_tip_at: string; p_games: number };
         Returns: undefined;
@@ -1854,6 +2006,16 @@ export type Database = {
           set_name: string;
           set_slug: string;
           team: string;
+        }[];
+      };
+      sales_summary: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          fees_cents: number;
+          is_premium: boolean;
+          profit_cents: number;
+          sale_count: number;
+          sold_cents: number;
         }[];
       };
       score_game_day: { Args: { p_day: string }; Returns: number };
@@ -1932,6 +2094,7 @@ export type Database = {
         }[];
       };
       trade_value: { Args: { p_items: Json }; Returns: Json };
+      undo_sale: { Args: { p_sale_id: string }; Returns: string };
       unsubscribe_by_token: { Args: { p_scope?: string; p_token: string }; Returns: boolean };
       usage_report: {
         Args: Record<PropertyKey, never>;

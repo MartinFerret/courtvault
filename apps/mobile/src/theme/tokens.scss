@@ -708,6 +708,31 @@ ion-alert {
     color: var(--cv-text);
   }
 }
+/* Ionic colours alert buttons with the primary colour (the lime accent): unreadable on white.
+   Same fix as the action sheets below; the mode class outranks Ionic's own rule. */
+ion-alert.ios,
+ion-alert.md {
+  .alert-button {
+    color: var(--cv-text);
+    font-weight: 500;
+  }
+  .alert-button[class*='alert-button-role-confirm'] {
+    font-weight: 600;
+  }
+  .alert-button[class*='alert-button-role-destructive'] {
+    color: var(--cv-color-loss);
+    font-weight: 600;
+  }
+  .alert-input {
+    min-height: 44px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: var(--cv-radius-input);
+    background: var(--cv-surface);
+    color: var(--cv-text);
+    font: var(--cv-text-body);
+  }
+}
 
 /* Action sheets (Profile > Export my collection). Ionic colours the buttons with the primary
    colour, which here is the lime accent: unreadable on the white sheet. The buttons take the
@@ -3143,4 +3168,184 @@ ion-alert.cv-shortcuts .alert-message {
   --border-width: 0;
   --border-radius: var(--cv-radius-pill);
   min-height: 44px;
+}
+
+/* Vault: Cards / Sold switch, binder chips, sell panel, sales log (2026-10-16). */
+/* Cards / Sold: page-level tabs, so they read above the filter chips, not next to them. */
+ion-segment.cv-chips.cv-view-switch {
+  margin-top: var(--cv-space-6);
+  gap: 24px;
+  border-bottom: 1px solid var(--cv-line);
+  border-radius: 0;
+  ion-segment-button {
+    --background: transparent;
+    --background-checked: transparent;
+    --background-hover: transparent;
+    --color: var(--cv-text-muted);
+    --color-checked: var(--cv-text);
+    --padding-start: 0;
+    --padding-end: 0;
+    --border-radius: 0;
+    min-height: 44px;
+    font: 600 17px/1 var(--cv-font);
+    box-shadow: inset 0 -3px 0 transparent;
+    &.segment-button-checked {
+      box-shadow: inset 0 -3px 0 var(--cv-accent-strong);
+    }
+  }
+}
+.cv-binders {
+  margin-top: var(--cv-space-6);
+  .cv-binders__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 4px 0;
+  }
+}
+/* Native chip button for binder filters: same pill as the segment chips, with a count. */
+.cv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--cv-radius-pill);
+  background: var(--cv-surface);
+  color: var(--cv-text);
+  font: 500 14px/1 var(--cv-font);
+  cursor: pointer;
+  transition: background var(--cv-motion-fast) var(--cv-ease);
+  ion-icon {
+    font-size: 16px;
+  }
+  &:hover {
+    background: var(--cv-surface-2);
+  }
+  &.is-selected {
+    background: var(--cv-accent);
+    color: var(--cv-on-accent);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--cv-text);
+    outline-offset: 2px;
+  }
+  .cv-chip__count {
+    color: var(--cv-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  &.is-selected .cv-chip__count {
+    color: var(--cv-on-accent);
+    opacity: 0.7;
+  }
+  &.cv-chip--ghost {
+    background: transparent;
+    color: var(--cv-text-muted);
+    &:hover {
+      background: var(--cv-surface);
+      color: var(--cv-text);
+    }
+  }
+}
+.cv-binder-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 8px;
+  border-radius: var(--cv-radius-pill);
+  background: var(--cv-surface-high);
+  color: var(--cv-text-muted);
+  font: 500 12px/1 var(--cv-font);
+}
+/* Binder picker: a native select styled as a tonal pill (bulk bar, owned card). */
+.cv-bulk__select {
+  flex: 0 0 auto;
+  min-height: 36px;
+  min-width: 0;
+  max-width: 200px;
+  padding: 0 32px 0 14px;
+  border: 0;
+  border-radius: var(--cv-radius-pill);
+  background: var(--cv-surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23121417' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
+  color: var(--cv-text);
+  font: 500 13px/1 var(--cv-font);
+  appearance: none;
+  cursor: pointer;
+  &:focus-visible {
+    outline: 2px solid var(--cv-text);
+    outline-offset: 2px;
+  }
+}
+.cv-sell {
+  margin-top: var(--cv-space-6);
+  padding: var(--cv-space-5);
+  .cv-sell__rows {
+    list-style: none;
+    margin: var(--cv-space-4) 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-3);
+  }
+  .cv-sell__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--cv-space-3);
+    padding-bottom: var(--cv-space-3);
+    border-bottom: 1px solid var(--cv-line);
+  }
+  .cv-sell__card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font: var(--cv-text-small);
+    min-width: 0;
+  }
+  .cv-sell__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font: var(--cv-text-small);
+    color: var(--cv-text-muted);
+    input {
+      min-height: 44px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: var(--cv-radius-input);
+      background: var(--cv-surface-high);
+      color: var(--cv-text);
+      font: var(--cv-text-body);
+      &:focus-visible {
+        outline: 2px solid var(--cv-accent-strong);
+        outline-offset: 1px;
+      }
+    }
+  }
+  .cv-sell__date {
+    max-width: 220px;
+  }
+}
+@media (min-width: 768px) {
+  .cv-sell .cv-sell__row {
+    grid-template-columns: minmax(0, 1fr) 160px 140px;
+    align-items: end;
+  }
+}
+.cv-sale__end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.cv-owned-actions {
+  margin: 8px 16px 0;
+}
+.cv-owned-binder {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }

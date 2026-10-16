@@ -60,6 +60,7 @@ export const PLAN_LIMIT_KEYS = [
   'price_history_days',
   'photos',
   'private_leagues',
+  'binders',
 ] as const;
 export type PlanLimitKey = (typeof PLAN_LIMIT_KEYS)[number];
 

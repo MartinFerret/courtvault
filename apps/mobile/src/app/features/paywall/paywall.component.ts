@@ -26,6 +26,8 @@ const REASONS: Record<string, string> = {
   history: 'Full price history is a Premium feature.',
   gains: 'Gains and losses are a Premium feature.',
   digest: 'The daily morning email is a Premium feature.',
+  binders: 'The free plan includes one binder. Premium unlocks as many as you want.',
+  sales: 'Your realized gain on sold cards is a Premium feature.',
   private_leagues:
     'The free plan includes one private league. Premium unlocks as many as you want.',
   game_history:
@@ -61,7 +63,8 @@ export class PaywallComponent {
     'Unlimited players in "Last night"',
     'Unlimited price alerts and checklists',
     'Full price history',
-    'Gains and losses',
+    'Gains and losses, on your Vault and your sales',
+    'Unlimited binders',
     'Full export with values for insurance and taxes',
   ];
 

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { IonButton, IonIcon } from '@ionic/angular';
 import { GRADES, PRICE_LABEL, type Grade } from '@courtvault/shared';
 import type { CollectionItem } from '../../core/collection/collection.service';
+import type { BinderSummary } from '../../core/binders/binders.service';
 import { ShortcutsService } from '../../core/layout/shortcuts.service';
 import {
   CentsPipe,
@@ -50,6 +51,10 @@ export class VaultTableComponent {
 
   readonly items = input.required<CollectionItem[]>();
   readonly isPremium = input(false);
+  readonly binders = input<BinderSummary[]>([]);
+  /** binderId null = take the cards out of their binder. */
+  readonly moveTo = output<{ ids: string[]; binderId: string | null }>();
+  readonly sell = output<string[]>();
   readonly changeGrade = output<{ ids: string[]; grade: Grade }>();
   readonly remove = output<string[]>();
   readonly exportCsv = output<void>();
@@ -138,6 +143,21 @@ export class VaultTableComponent {
 
   onChangeGrade(grade: Grade): void {
     this.changeGrade.emit({ ids: this.selectedIds(), grade });
+    this.clearSelection();
+  }
+
+  selectValue(event: Event): string {
+    return (event.target as HTMLSelectElement).value;
+  }
+
+  onMove(value: string): void {
+    if (!value) return;
+    this.moveTo.emit({ ids: this.selectedIds(), binderId: value === 'none' ? null : value });
+    this.clearSelection();
+  }
+
+  onSell(): void {
+    this.sell.emit(this.selectedIds());
     this.clearSelection();
   }
 

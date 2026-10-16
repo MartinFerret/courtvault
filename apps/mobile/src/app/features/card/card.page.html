@@ -149,7 +149,34 @@
           >
           } }
         </ion-item>
-        @if (it.current_cents === null) {
+        <div class="cv-actions cv-actions--start cv-owned-actions">
+          @if (binders.binders().length > 0) {
+          <label class="cv-owned-binder">
+            <span class="cv-caption">Binder</span>
+            <select
+              class="cv-bulk__select"
+              [value]="it.binder_id ?? 'none'"
+              (change)="moveToBinder(it.id!, $any($event.target).value)"
+            >
+              @for (b of binders.binders(); track b.id) {
+              <option [value]="b.id" [selected]="b.id === it.binder_id">{{ b.name }}</option>
+              }
+              <option value="none" [selected]="!it.binder_id">No binder</option>
+            </select>
+          </label>
+          }
+          <ion-button size="small" fill="outline" (click)="selling.set(true)"
+            ><ion-icon slot="start" name="cash-outline" aria-hidden="true"></ion-icon>Mark as
+            sold</ion-button
+          >
+        </div>
+        @if (selling()) {
+        <cv-sell-panel
+          [items]="[it]"
+          (done)="onSold()"
+          (closed)="selling.set(false)"
+        ></cv-sell-panel>
+        } @if (it.current_cents === null) {
         <p class="cv-caption" style="margin: 4px 16px 8px">
           @if (it.manual_value_cents !== null) { Counted at your estimate of {{
           it.manual_value_cents | cents }} until a market price exists. } @else { No market price

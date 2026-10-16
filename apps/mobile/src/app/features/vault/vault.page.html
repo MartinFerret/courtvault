@@ -85,6 +85,137 @@
   >
   } }
 
+  <ion-segment
+    class="cv-chips cv-view-switch"
+    [value]="view()"
+    (ionChange)="onView($any($event).detail.value)"
+    aria-label="Vault view"
+  >
+    <ion-segment-button value="cards"><ion-label>Cards</ion-label></ion-segment-button>
+    <ion-segment-button value="sold"
+      ><ion-label
+        >Sold@if (sales.summary()?.sale_count; as n) {
+        <span class="cv-muted"> {{ n }}</span>
+        }</ion-label
+      ></ion-segment-button
+    >
+  </ion-segment>
+
+  @if (message(); as text) {
+  <ion-note class="cv-caption" role="status" style="display: block; margin-top: 12px"
+    >{{ text }}</ion-note
+  >
+  } @if (view() === 'sold') {
+  <section class="cv-section" aria-labelledby="sold-title">
+    <h2 id="sold-title" class="cv-visually-hidden">Sold cards</h2>
+    @if (sales.summary(); as ss) {
+    <div class="cv-stat-grid" style="margin-bottom: 16px">
+      <div class="cv-tile cv-stat">
+        <span class="cv-stat__label">Sold<br />total</span>
+        <span class="cv-stat__value">{{ ss.sold_cents | cents }}</span>
+        <span class="cv-stat__note"
+          >{{ ss.sale_count }} sale{{ ss.sale_count === 1 ? '' : 's' }}@if (ss.fees_cents > 0) {, {{
+          ss.fees_cents | cents }} in fees }</span
+        >
+      </div>
+      <div class="cv-tile cv-stat">
+        <span class="cv-stat__label">Realized<br />gain</span>
+        @if (ss.is_premium) {
+        <span
+          class="cv-stat__value"
+          [class.cv-gain]="ss.profit_cents > 0"
+          [class.cv-loss]="ss.profit_cents < 0"
+          >{{ ss.profit_cents | delta }}</span
+        >
+        <span class="cv-stat__note">Sale price minus fees and purchase price</span>
+        } @else {
+        <ion-button size="small" fill="outline" (click)="openPaywall('sales')"
+          ><ion-icon slot="start" name="lock-closed-outline" aria-hidden="true"></ion-icon>See it
+          with Premium</ion-button
+        >
+        }
+      </div>
+    </div>
+    } @if (sales.sales().length === 0) {
+    <div class="cv-empty">
+      <p>No sale yet. Select cards in your Vault and mark them as sold to track what you made.</p>
+    </div>
+    } @else {
+    <ion-list lines="none">
+      @for (sale of sales.sales(); track sale.id) {
+      <ion-item>
+        <ion-label>
+          <h3>#{{ sale.card_number }} {{ sale.player_name }}</h3>
+          <p>
+            {{ sale.season }} {{ sale.set_name }}, {{ sale.parallel_name ?? '' | parallel:
+            sale.serial_run }}, {{ gradeOf(sale.grade ?? 'RAW') | grade }}
+          </p>
+          <p>
+            Sold {{ sale.sold_on }}@if (sale.purchase_cents !== null) {, bought for {{
+            sale.purchase_cents | cents }} }
+          </p>
+        </ion-label>
+        <div slot="end" class="cv-sale__end">
+          <strong>{{ sale.sold_cents | cents }}</strong>
+          @if (sale.profit_cents !== null) {
+          <span [class.cv-gain]="sale.profit_cents > 0" [class.cv-loss]="sale.profit_cents < 0"
+            >{{ sale.profit_cents | delta }}</span
+          >
+          }
+          <ion-button size="small" fill="clear" (click)="undoSale(sale.id!)">Undo</ion-button>
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+    }
+  </section>
+  } @else {
+
+  <section class="cv-section cv-binders" aria-label="Binders">
+    <div class="cv-chips" role="group" aria-label="Show cards from">
+      <button
+        type="button"
+        class="cv-chip"
+        [class.is-selected]="binderFilter() === 'all'"
+        (click)="binderFilter.set('all')"
+      >
+        All cards
+      </button>
+      @for (b of binders.binders(); track b.id) {
+      <button
+        type="button"
+        class="cv-chip"
+        [class.is-selected]="binderFilter() === b.id"
+        (click)="binderFilter.set(b.id)"
+      >
+        <ion-icon name="folder-outline" aria-hidden="true"></ion-icon>{{ b.name }}
+        <span class="cv-chip__count">{{ b.item_count }}</span>
+      </button>
+      } @if (binders.binders().length > 0) {
+      <button
+        type="button"
+        class="cv-chip"
+        [class.is-selected]="binderFilter() === 'none'"
+        (click)="binderFilter.set('none')"
+      >
+        No binder <span class="cv-chip__count">{{ unfiledCount() }}</span>
+      </button>
+      }
+      <button type="button" class="cv-chip cv-chip--ghost" (click)="newBinder()">
+        <ion-icon name="add-outline" aria-hidden="true"></ion-icon>New binder
+      </button>
+    </div>
+    @if (activeBinder(); as b) {
+    <p class="cv-caption cv-binders__meta">
+      {{ b.item_count }} card{{ b.item_count === 1 ? '' : 's' }}, {{ b.total_cents | cents }}
+      <ion-button size="small" fill="clear" (click)="renameBinder(b.id, b.name)">Rename</ion-button>
+      <ion-button size="small" fill="clear" color="danger" (click)="deleteBinder(b.id, b.name)"
+        >Delete</ion-button
+      >
+    </p>
+    }
+  </section>
+
   <section class="cv-section cv-filters">
     <ion-searchbar
       placeholder="Filter your cards"
@@ -108,17 +239,29 @@
     <p>Your Vault is empty. Scan your first card to see its value.</p>
     <ion-button routerLink="/tabs/scan">Scan a card</ion-button>
   </div>
-  } @if (message(); as text) {
-  <ion-note class="cv-caption" role="status" style="display: block; margin-top: 12px"
-    >{{ text }}</ion-note
-  >
+  } @if (binderFilter() !== 'all' && visible().length === 0 && collection.items().length > 0) {
+  <div class="cv-empty">
+    <p>
+      No card here yet. Open a card and pick this binder, or select cards in All cards and use Move
+      to.
+    </p>
+  </div>
+  } @if (sellItems().length > 0) {
+  <cv-sell-panel
+    [items]="sellItems()"
+    (done)="onSold($event)"
+    (closed)="sellIds.set(null)"
+  ></cv-sell-panel>
   } @if (layout.isDesktop()) {
   <section class="cv-section" style="margin-top: 20px">
     <cv-vault-table
       [items]="visible()"
       [isPremium]="plan.isPremium()"
+      [binders]="binders.binders()"
       (changeGrade)="changeGrade($event)"
       (remove)="removeMany($event)"
+      (moveTo)="moveTo($event)"
+      (sell)="sellIds.set($event)"
       (exportCsv)="exportCsv()"
       (unlockGains)="openPaywall()"
     ></cv-vault-table>
@@ -152,6 +295,9 @@
         >
       </ion-item>
       <ion-item-options side="end">
+        <ion-item-option (click)="sellIds.set([item.id!])" aria-label="Mark as sold"
+          ><ion-icon slot="icon-only" name="cash-outline"></ion-icon
+        ></ion-item-option>
         <ion-item-option color="danger" (click)="remove(item.id!)" aria-label="Remove from Vault"
           ><ion-icon slot="icon-only" name="trash-outline"></ion-icon
         ></ion-item-option>
@@ -159,5 +305,5 @@
     </ion-item-sliding>
     }
   </ion-list>
-  }
+  } }
 </ion-content>
