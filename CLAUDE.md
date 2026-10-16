@@ -180,7 +180,8 @@ apps/mobile (user session) ──► tables, RPC, storage, ───────
   the weights of `fantasy_scoring`; only `fantasy_seasons` regular-season days count.
 - Scheduled jobs run in UTC at both Eastern offsets; functions gate on the local hour and are
   idempotent per Eastern day via `job_runs` (`_shared/jobs.ts`).
-- Website: ISR (1h) + on-demand revalidation (`/api/revalidate`, tags `prices`, `catalog`,
+- Website: ISR (1 day; no middleware, PostHog proxied by `netlify.toml`, to spare Netlify function
+  invocations) + on-demand revalidation (`/api/revalidate`, tags `prices`, `catalog`,
   `last-night`, pinged by job-prices), never a redeploy for data. Deploy previews disabled.
   Only stable Next.js features.
 - Public "Last night" page (`/last-night`, `/last-night/[date]`): `public_last_night(day,

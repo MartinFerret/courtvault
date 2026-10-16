@@ -1,6 +1,6 @@
 import { absoluteUrl } from '@/lib/site';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 
 /** Sitemap index split by page type (R49). Each child lists only indexable pages with real lastmod. */
 export function GET(): Response {

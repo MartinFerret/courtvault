@@ -6,7 +6,7 @@ import { ListFilter } from '@/components/list-filter';
 import { listPlayers } from '@/lib/data';
 import { PATHS, playerPath } from '@/lib/paths';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 
 export const metadata: Metadata = {
   title: 'NBA Player Cards: values by set and parallel',

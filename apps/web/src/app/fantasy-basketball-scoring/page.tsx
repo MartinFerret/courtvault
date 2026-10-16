@@ -8,7 +8,7 @@ import { fantasyWeights } from '@/lib/data';
 import { PATHS } from '@/lib/paths';
 import { DISCLAIMER, SITE_NAME, absoluteUrl } from '@/lib/site';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 
 export const metadata: Metadata = {
   // R27: keyword first, promise, brand suffix from the layout template (58 characters).

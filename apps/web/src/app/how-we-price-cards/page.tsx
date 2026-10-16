@@ -11,7 +11,7 @@ import { lastNightThresholds } from '@/lib/last-night';
 import { PATHS } from '@/lib/paths';
 import { SITE_NAME, absoluteUrl } from '@/lib/site';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 
 export const metadata: Metadata = {
   // R32: institutional page, brand title, no commercial keyword.

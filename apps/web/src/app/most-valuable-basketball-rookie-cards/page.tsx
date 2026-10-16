@@ -9,7 +9,7 @@ import { PATHS, cardPath, checklistPath } from '@/lib/paths';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 import { checklistPublicSlug } from '@courtvault/shared';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 
 /** Indexable only once a rookie card has a price (audit 4.4): the ranking is empty before. */
 export async function generateMetadata(): Promise<Metadata> {

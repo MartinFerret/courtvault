@@ -17,6 +17,20 @@
 [context.branch-deploy]
   ignore = "exit 0"
 
+# PostHog first-party proxy, at the CDN: no function invocation per analytics event (the
+# Next.js rewrite in next.config.ts is only used off Netlify, in local dev). EU region.
+[[redirects]]
+  from = "/ingest/static/*"
+  to = "https://eu-assets.i.posthog.com/static/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/ingest/*"
+  to = "https://eu.i.posthog.com/:splat"
+  status = 200
+  force = true
+
 # The web app moved from vault.hoopticker.com to app.hoopticker.com on 2026-10-08. The old host
 # is a domain alias of this site only to answer this permanent redirect.
 [[redirects]]

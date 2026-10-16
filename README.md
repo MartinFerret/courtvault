@@ -230,7 +230,7 @@ only when the config lives there and the deploy runs from the root with `--filte
    Netlify (apex ALIAS/A to the Netlify load balancer, `www` CNAME to
    `hoopticker.netlify.app`), HTTPS is issued automatically. Netlify then redirects
    `hoopticker.netlify.app` and `www` to the primary domain (301). Until then, and for deploy
-   URLs, `apps/web/src/proxy.ts` answers every host other than `NEXT_PUBLIC_SITE_URL` with
+   URLs, a header rule in `apps/web/next.config.ts` answers every host other than `NEXT_PUBLIC_SITE_URL` with
    `X-Robots-Tag: noindex, nofollow`; canonical tags already point to the primary domain.
    Then Search Console: verify the domain (DNS TXT) and submit `https://hoopticker.com/sitemap.xml`.
 

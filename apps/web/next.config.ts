@@ -4,6 +4,12 @@ import type { NextConfig } from 'next';
 // requests survive ad blockers; robots.txt disallows /ingest/.
 const POSTHOG_HOST = process.env['NEXT_PUBLIC_POSTHOG_HOST'] ?? 'https://eu.i.posthog.com';
 const POSTHOG_ASSETS = POSTHOG_HOST.replace('.i.posthog.com', '-assets.i.posthog.com');
+// On Netlify, netlify.toml proxies /ingest at the CDN: a Next.js rewrite to an external host
+// runs inside the server function and cost one invocation per analytics event.
+const ON_NETLIFY = process.env['NETLIFY'] === 'true';
+// Hosts other than the canonical one (hoopticker.netlify.app, deploy permalinks) get a noindex
+// header. A header rule, not middleware: middleware ran an edge function on every page view.
+const CANONICAL_HOST = new URL(process.env['NEXT_PUBLIC_SITE_URL'] ?? 'http://localhost').hostname;
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@courtvault/shared'],
@@ -14,8 +20,12 @@ const nextConfig: NextConfig = {
       // Universal Links and App Links association files (404 until the store keys exist).
       { source: '/.well-known/apple-app-site-association', destination: '/api/app-links/apple' },
       { source: '/.well-known/assetlinks.json', destination: '/api/app-links/android' },
-      { source: '/ingest/static/:path*', destination: `${POSTHOG_ASSETS}/static/:path*` },
-      { source: '/ingest/:path*', destination: `${POSTHOG_HOST}/:path*` },
+      ...(ON_NETLIFY
+        ? []
+        : [
+            { source: '/ingest/static/:path*', destination: `${POSTHOG_ASSETS}/static/:path*` },
+            { source: '/ingest/:path*', destination: `${POSTHOG_HOST}/:path*` },
+          ]),
     ];
   },
   // Next 16 writes AGENTS.md / CLAUDE.md into the app folder on dev start; the repo has its own.
@@ -30,6 +40,15 @@ const nextConfig: NextConfig = {
           { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
         ],
       },
+      ...(CANONICAL_HOST === 'localhost'
+        ? []
+        : [
+            {
+              source: '/:path*',
+              missing: [{ type: 'host' as const, value: CANONICAL_HOST }],
+              headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+            },
+          ]),
       {
         source: '/:all*(svg|png|jpg|jpeg|webp|ico|woff2)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],

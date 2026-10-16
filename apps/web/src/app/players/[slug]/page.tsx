@@ -25,7 +25,7 @@ import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { getPlayerForm } from '@/lib/player-form';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

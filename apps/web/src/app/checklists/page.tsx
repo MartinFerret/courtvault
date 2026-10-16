@@ -5,7 +5,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { listSets, listUpcomingReleases } from '@/lib/data';
 import { checklistPath, PATHS } from '@/lib/paths';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 
 export const metadata: Metadata = {
   title: 'Basketball Card Checklists: every Topps set',

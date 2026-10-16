@@ -29,7 +29,7 @@ import {
   seoTitle,
 } from '@/lib/site';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
 
 export const metadata: Metadata = {
   // R24/R27: the commercial keyword lives here only. The root page shares the layout's segment,
