@@ -3343,3 +3343,7 @@ body:has([data-landing]) .site-footer nav {
 .share__c {
   margin-left: 8px;
 }
+.share__subtitle {
+  font-size: 1.1rem;
+  margin: 24px 0 0;
+}

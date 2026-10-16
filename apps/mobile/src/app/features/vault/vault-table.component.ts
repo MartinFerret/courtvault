@@ -19,7 +19,7 @@ export type SortKey =
   | 'set_name'
   | 'parallel_name'
   | 'grade'
-  | 'current_cents'
+  | 'value_cents'
   | 'change_24h_cents'
   | 'gain_cents';
 
@@ -57,7 +57,7 @@ export class VaultTableComponent {
 
   readonly priceLabel = PRICE_LABEL;
   readonly grades = GRADES;
-  readonly sortKey = signal<SortKey>('current_cents');
+  readonly sortKey = signal<SortKey>('value_cents');
   readonly sortDir = signal<'asc' | 'desc'>('desc');
   readonly selected = signal<Set<string>>(new Set());
 
@@ -66,7 +66,7 @@ export class VaultTableComponent {
     { key: 'set_name', label: 'Set' },
     { key: 'parallel_name', label: 'Parallel' },
     { key: 'grade', label: 'Grade' },
-    { key: 'current_cents', label: 'Value', numeric: true },
+    { key: 'value_cents', label: 'Value', numeric: true },
     { key: 'change_24h_cents', label: '24h', numeric: true },
     { key: 'gain_cents', label: 'Gain / loss', numeric: true },
   ];

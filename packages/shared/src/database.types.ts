@@ -385,6 +385,7 @@ export type Database = {
           created_at: string;
           grade: Database['public']['Enums']['grade'];
           id: string;
+          manual_value_cents: number | null;
           parallel_id: string;
           photo_path: string | null;
           purchase_cents: number | null;
@@ -395,6 +396,7 @@ export type Database = {
           created_at?: string;
           grade?: Database['public']['Enums']['grade'];
           id?: string;
+          manual_value_cents?: number | null;
           parallel_id: string;
           photo_path?: string | null;
           purchase_cents?: number | null;
@@ -405,6 +407,7 @@ export type Database = {
           created_at?: string;
           grade?: Database['public']['Enums']['grade'];
           id?: string;
+          manual_value_cents?: number | null;
           parallel_id?: string;
           photo_path?: string | null;
           purchase_cents?: number | null;
@@ -1404,6 +1407,7 @@ export type Database = {
           grade: Database['public']['Enums']['grade'] | null;
           id: string | null;
           is_rookie: boolean | null;
+          manual_value_cents: number | null;
           parallel_id: string | null;
           parallel_name: string | null;
           photo_path: string | null;
@@ -1420,6 +1424,8 @@ export type Database = {
           set_slug: string | null;
           team: string | null;
           user_id: string | null;
+          value_cents: number | null;
+          value_source: string | null;
         };
         Relationships: [
           {
@@ -1559,6 +1565,7 @@ export type Database = {
       };
       create_league: { Args: { p_name: string }; Returns: Json };
       create_share: { Args: { p_kind: string; p_league_id?: string }; Returns: string };
+      create_trade_share: { Args: { p_items: Json }; Returns: string };
       current_season_id: { Args: Record<PropertyKey, never>; Returns: string };
       eastern_day: { Args: { p_at?: string }; Returns: string };
       eligible_player_ids: { Args: { p_day: string; p_user_id: string }; Returns: string[] };
@@ -1864,6 +1871,7 @@ export type Database = {
       };
       set_acquisition: { Args: { p_attr: Json }; Returns: boolean };
       set_lineup: { Args: { p_captain_id: string; p_player_ids: string[] }; Returns: Json };
+      set_manual_value: { Args: { p_cents: number; p_item_id: string }; Returns: undefined };
       set_progress: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1923,6 +1931,7 @@ export type Database = {
           score: number;
         }[];
       };
+      trade_value: { Args: { p_items: Json }; Returns: Json };
       unsubscribe_by_token: { Args: { p_scope?: string; p_token: string }; Returns: boolean };
       usage_report: {
         Args: Record<PropertyKey, never>;

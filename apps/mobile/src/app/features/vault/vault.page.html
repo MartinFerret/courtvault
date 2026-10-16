@@ -14,6 +14,9 @@
         ><ion-icon slot="icon-only" name="share-outline"></ion-icon
       ></ion-button>
       }
+      <ion-button class="cv-tile-btn" routerLink="/trade" aria-label="Trade analyzer"
+        ><ion-icon slot="icon-only" name="swap-horizontal-outline"></ion-icon
+      ></ion-button>
       <ion-button class="cv-tile-btn" routerLink="/tabs/sets" aria-label="Sets and checklists"
         ><ion-icon slot="icon-only" name="card-outline"></ion-icon
       ></ion-button>
@@ -143,7 +146,10 @@
             }} } · {{ gradeOf(item.grade ?? 'RAW') | grade }}
           </p>
         </ion-label>
-        <ion-note slot="end">{{ item.current_cents | cents }}</ion-note>
+        <ion-note slot="end"
+          >{{ item.value_cents | cents }}@if (item.value_source === 'manual') {
+          <span class="cv-muted"> est.</span> }</ion-note
+        >
       </ion-item>
       <ion-item-options side="end">
         <ion-item-option color="danger" (click)="remove(item.id!)" aria-label="Remove from Vault"

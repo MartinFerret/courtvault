@@ -88,7 +88,12 @@
             }
           </td>
           <td>{{ item.grade ?? 'RAW' | grade }}</td>
-          <td class="num cv-table__value">{{ item.current_cents | cents }}</td>
+          <td class="num cv-table__value">
+            {{ item.value_cents | cents }}
+            @if (item.value_source === 'manual') {
+              <span class="cv-muted" title="Your estimate: no market price yet">est.</span>
+            }
+          </td>
           <td
             class="num"
             [class.cv-gain]="(item.change_24h_cents ?? 0) > 0"
@@ -121,5 +126,6 @@
   </table>
 </div>
 <p class="cv-caption" style="margin-top: 10px">
-  {{ priceLabel }}. Click a column to sort, check rows for bulk actions, j / k / Enter to move.
+  {{ priceLabel }}. "est." marks your own estimate on a card without a market price. Click a column
+  to sort, check rows for bulk actions, j / k / Enter to move.
 </p>

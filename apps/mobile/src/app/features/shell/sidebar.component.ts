@@ -26,6 +26,7 @@ export class SidebarComponent {
     { path: '/tabs/game', label: 'Vault Score', icon: 'basketball-outline' },
     { path: '/leagues', label: 'Leagues', icon: 'people-outline' },
     { path: '/tabs/sets', label: 'Sets', icon: 'card-outline' },
+    { path: '/trade', label: 'Trade analyzer', icon: 'swap-horizontal-outline' },
     { path: '/tabs/scan', label: 'Search and add', icon: 'search-outline' },
     { path: '/tabs/profile', label: 'Profile', icon: 'person-circle-outline' },
   ];

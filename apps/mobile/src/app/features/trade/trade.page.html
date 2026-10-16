@@ -1,0 +1,177 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"
+      ><ion-back-button defaultHref="/tabs/vault"></ion-back-button
+    ></ion-buttons>
+    <ion-title>Trade analyzer</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="cv-page-head">
+    <div>
+      <p class="cv-page-head__eyebrow">Market value of both sides</p>
+      <h1>Is this trade fair?</h1>
+    </div>
+  </div>
+
+  @if (result(); as r) {
+  <section
+    class="cv-card"
+    [class.cv-card--accent]="r.verdict === 'fair' || r.verdict === 'you_win'"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="cv-stat cv-stat--hero" style="min-height: 0; gap: 8px">
+      <span class="cv-stat__label">{{ verdict() }}</span>
+      <span class="cv-stat__value">{{ r.diff_cents | delta }}</span>
+      <span class="cv-stat__note"
+        >You give {{ r.give.total_cents | cents }}, you get {{ r.get.total_cents | cents }}. @if
+        (r.give.unpriced + r.get.unpriced > 0) { {{ r.give.unpriced + r.get.unpriced }} card{{
+        r.give.unpriced + r.get.unpriced > 1 ? 's have' : ' has' }} no market price yet and count{{
+        r.give.unpriced + r.get.unpriced > 1 ? '' : 's' }} as $0. }</span
+      >
+    </div>
+    <ion-button size="small" style="margin-top: 12px" (click)="share()"
+      ><ion-icon slot="start" name="share-outline" aria-hidden="true"></ion-icon>Share this
+      trade</ion-button
+    >
+  </section>
+  } @else if (analyzing()) {
+  <ion-spinner aria-label="Valuing the trade"></ion-spinner>
+  } @else {
+  <p class="cv-caption">
+    Add at least one card on each side. Values are market prices only, labelled with their source.
+  </p>
+  } @if (note(); as text) {
+  <p class="cv-caption" role="status" style="margin-top: 10px">{{ text }}</p>
+  }
+
+  <div class="cv-trade">
+    @for (side of ['give', 'get']; track side) {
+    <section
+      class="cv-section cv-tile"
+      [attr.aria-label]="side === 'give' ? 'You give' : 'You get'"
+    >
+      <h2>
+        {{ side === 'give' ? 'You give' : 'You get' }} @if (result(); as r) {
+        <span class="cv-muted"
+          >{{ (side === 'give' ? r.give.total_cents : r.get.total_cents) | cents }}</span
+        >
+        }
+      </h2>
+      <ion-list lines="none">
+        @for (p of side === 'give' ? give() : get(); track p.key; let i = $index) {
+        <ion-item>
+          <ion-label>
+            <h3>{{ p.label }}</h3>
+            <p>{{ p.detail }} · {{ p.grade | grade }}</p>
+            @if (result(); as r) { @if ((side === 'give' ? r.give.items : r.get.items)[i]; as it) {
+            <p>
+              {{ it.parallel | parallel: it.serial_run }} · {{ kindLabel(it.price_kind, it.sale_at)
+              }}
+            </p>
+            } }
+          </ion-label>
+          @if (result(); as r) { @if ((side === 'give' ? r.give.items : r.get.items)[i]; as it) {
+          <ion-note slot="end"
+            >{{ it.value_cents === null ? '—' : (it.value_cents | cents) }}</ion-note
+          >
+          } }
+          <ion-button
+            slot="end"
+            fill="clear"
+            size="small"
+            (click)="remove(p.key)"
+            [attr.aria-label]="'Remove ' + p.label"
+            ><ion-icon slot="icon-only" name="close-outline"></ion-icon
+          ></ion-button>
+        </ion-item>
+        } @empty {
+        <p class="cv-caption" style="margin: 4px 0">No card yet.</p>
+        }
+      </ion-list>
+    </section>
+    }
+  </div>
+
+  <section class="cv-section" aria-labelledby="add-title">
+    <h2 id="add-title">Add a card</h2>
+    <ion-segment
+      class="cv-chips"
+      [value]="activeSide()"
+      (ionChange)="setSide($any($event).detail.value)"
+    >
+      <ion-segment-button value="give"><ion-label>To give</ion-label></ion-segment-button>
+      <ion-segment-button value="get"><ion-label>To get</ion-label></ion-segment-button>
+    </ion-segment>
+    <ion-searchbar
+      placeholder="Player, set or card number"
+      debounce="250"
+      (ionInput)="search($any($event).detail.value ?? '')"
+    ></ion-searchbar>
+
+    @if (sideFull()) {
+    <p class="cv-caption">Up to {{ max }} cards per side.</p>
+    } @else if (card(); as c) {
+    <div class="cv-tile" style="padding: 16px">
+      <h3>#{{ c.number }} {{ c.player.name }}</h3>
+      <p class="cv-caption">{{ c.set.season }} {{ c.set.name }}</p>
+      <ion-item class="cv-field" lines="none">
+        <ion-select
+          label="Parallel"
+          labelPlacement="stacked"
+          interface="popover"
+          [value]="cardParallelId()"
+          (ionChange)="onParallel($any($event).detail.value)"
+        >
+          @for (p of c.parallels; track p.id) {
+          <ion-select-option [value]="p.id"
+            >{{ p.name | parallel: p.serial_run }}</ion-select-option
+          >
+          }
+        </ion-select>
+      </ion-item>
+      <ion-segment
+        class="cv-chips"
+        [value]="cardGrade()"
+        (ionChange)="onGrade($any($event).detail.value)"
+      >
+        @for (g of grades; track g) {
+        <ion-segment-button [value]="g"><ion-label>{{ g | grade }}</ion-label></ion-segment-button>
+        }
+      </ion-segment>
+      <ion-button expand="block" style="margin-top: 12px" (click)="addFromCard()"
+        >Add to "{{ activeSide() === 'give' ? 'You give' : 'You get' }}"</ion-button
+      >
+    </div>
+    } @else {
+    <ion-list lines="none">
+      @if (vaultMatches().length > 0) {
+      <p class="cv-caption" style="margin: 8px 0 4px">From your Vault</p>
+      @for (item of vaultMatches(); track item.id) {
+      <ion-item button (click)="addFromVault(item)">
+        <ion-label>
+          <h3>#{{ item.card_number }} {{ item.player_name }}</h3>
+          <p>
+            {{ item.season }} {{ item.set_name }} · {{ item.parallel_name ?? '' | parallel:
+            item.serial_run }} · {{ item.grade ?? 'RAW' | grade }}
+          </p>
+        </ion-label>
+        <ion-note slot="end">{{ item.current_cents | cents }}</ion-note>
+      </ion-item>
+      } } @if (searching()) {
+      <ion-spinner aria-label="Searching"></ion-spinner>
+      } @if (results().length > 0) {
+      <p class="cv-caption" style="margin: 8px 0 4px">Catalog</p>
+      @for (r of results(); track r.id) {
+      <ion-item button (click)="openCard(r)">
+        <ion-label>
+          <h3>{{ r.title }}</h3>
+          <p>{{ r.subtitle }}</p>
+        </ion-label>
+      </ion-item>
+      } }
+    </ion-list>
+    }
+  </section>
+</ion-content>

@@ -88,6 +88,20 @@ export class CollectionService {
     await this.refresh();
   }
 
+  /**
+   * Owner estimate for a card without a market price (null clears it). The database uses it
+   * only while no market price exists; the market price always wins.
+   */
+  async setManualValue(id: string, cents: number | null): Promise<void> {
+    const { error } = await this.supabase.client.rpc('set_manual_value', {
+      p_item_id: id,
+      p_cents: cents as number,
+    });
+    if (error) throw error;
+    await this.refresh();
+    this.analytics.capture(cents === null ? 'manual_value_cleared' : 'manual_value_set');
+  }
+
   /** Bulk delete (desktop table). Photos are removed first, like `remove()`. */
   async removeMany(ids: string[]): Promise<void> {
     if (ids.length === 0) return;

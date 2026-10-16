@@ -102,6 +102,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/leagues/league.page').then((m) => m.LeaguePage),
   },
   {
+    path: 'trade',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/trade/trade.page').then((m) => m.TradePage),
+  },
+  {
     path: 'import',
     canActivate: [authGuard],
     loadComponent: () => import('./features/import/import.page').then((m) => m.ImportPage),

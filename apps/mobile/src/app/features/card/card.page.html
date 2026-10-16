@@ -138,7 +138,40 @@
           >
           } }
         </ion-item>
-        } @else { @if (action() === 'add') {
+        @if (it.current_cents === null) {
+        <p class="cv-caption" style="margin: 4px 16px 8px">
+          @if (it.manual_value_cents !== null) { Counted at your estimate of {{
+          it.manual_value_cents | cents }} until a market price exists. } @else { No market price
+          yet for this card. Add your own estimate so it counts in your Vault total. }
+        </p>
+        <ion-item class="cv-field" lines="none">
+          <ion-input
+            label="Your estimate (USD)"
+            labelPlacement="stacked"
+            type="number"
+            inputmode="decimal"
+            min="0"
+            [(ngModel)]="manualUsd"
+            placeholder="40.00"
+          ></ion-input>
+          <ion-button slot="end" size="small" (click)="saveManualValue()" [disabled]="!manualUsd"
+            >Save</ion-button
+          >
+          @if (it.manual_value_cents !== null) {
+          <ion-button slot="end" size="small" fill="clear" (click)="saveManualValue(true)"
+            >Clear</ion-button
+          >
+          }
+        </ion-item>
+        } @else if (it.manual_value_cents !== null) {
+        <p class="cv-caption" style="margin: 4px 16px 8px">
+          Market price available: your estimate of {{ it.manual_value_cents | cents }} is no longer
+          used.
+        </p>
+        <ion-button size="small" fill="clear" (click)="saveManualValue(true)"
+          >Remove my estimate</ion-button
+        >
+        } } @else { @if (action() === 'add') {
         <p class="cv-caption" role="status" style="margin-bottom: 10px">
           Pick your parallel and grade above, then add the card to your Vault.
         </p>

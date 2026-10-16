@@ -101,6 +101,7 @@ export class CardPage {
   readonly history = signal<{ captured_at: string; price_cents: number }[]>([]);
   readonly error = signal<string | null>(null);
   alertUsd: number | null = null;
+  manualUsd: number | null = null;
 
   readonly parallel = computed(
     () => this.card()?.parallels.find((p) => p.id === this.selectedParallelId()) ?? null,
@@ -197,6 +198,23 @@ export class CardPage {
       const limit = parseLimitReached(err);
       if (limit) void this.paywall.open(limit.key);
       else this.error.set(err instanceof Error ? err.message : 'Could not create the alert.');
+    }
+  }
+
+  /** Owner estimate, used while this card has no market price. Empty input clears it. */
+  async saveManualValue(clear = false): Promise<void> {
+    const it = this.ownedItem();
+    if (!it?.id) return;
+    const usd = clear ? null : this.manualUsd;
+    if (usd !== null && (!Number.isFinite(usd) || usd < 0)) {
+      this.error.set('Enter a positive amount in USD.');
+      return;
+    }
+    try {
+      await this.collection.setManualValue(it.id, usd === null ? null : Math.round(usd * 100));
+      this.manualUsd = null;
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'Could not save your estimate.');
     }
   }
 

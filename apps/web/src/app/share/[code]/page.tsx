@@ -4,14 +4,23 @@ import { notFound } from 'next/navigation';
 import { formatEasternDay, formatParallel } from '@courtvault/shared';
 import { PassThroughCta } from '@/components/landing';
 import { Price } from '@/components/price';
-import { getShare, type PublicShare } from '@/lib/data';
+import { getShare, type PublicShare, type TradeSide } from '@/lib/data';
 import { PATHS, cardPath, playerPath } from '@/lib/paths';
 
 // User-made share pages: public by link, never indexed (R55), cached a little.
 export const revalidate = 300;
 
+const VERDICT: Record<string, string> = {
+  fair: 'a fair trade',
+  you_win: 'more value received than given',
+  you_lose: 'more value given than received',
+  unknown: 'not enough prices to judge',
+};
+
 function headline(s: PublicShare): string {
   const p = s.payload;
+  if (s.kind === 'trade')
+    return `Is this trade fair? ${p.username}'s trade: ${VERDICT[p.verdict ?? 'unknown']}`;
   if (s.kind === 'lineup') return `${p.username}'s lineup scored ${p.total} pts`;
   if (s.kind === 'league') return `${p.username} is #${p.week_rank ?? '?'} in ${p.league}`;
   return `${p.username}'s best cards`;
@@ -76,6 +85,30 @@ export default async function SharePage({ params }: { params: Promise<{ code: st
         </p>
       ) : null}
 
+      {share.kind === 'trade' && p.give && p.get ? (
+        <>
+          <p className="landing__lead">
+            Gives <Price cents={p.give.total_cents} />, gets <Price cents={p.get.total_cents} /> at
+            market value
+            {p.diff_cents ? (
+              <>
+                {' '}
+                ({p.diff_cents > 0 ? '+' : '-'}
+                <Price cents={Math.abs(p.diff_cents)} /> for {p.username})
+              </>
+            ) : null}
+            .
+          </p>
+          <TradeList title={`${p.username} gives`} side={p.give} />
+          <TradeList title={`${p.username} gets`} side={p.get} />
+          <p className="muted small">
+            Market values on the day the trade was shared, each labelled with its source:{' '}
+            <Link href={PATHS.method}>how we price cards</Link>. A card without a market price
+            counts as $0.
+          </p>
+        </>
+      ) : null}
+
       {share.kind === 'vault' && p.cards ? (
         <>
           <p className="landing__lead">
@@ -114,7 +147,13 @@ export default async function SharePage({ params }: { params: Promise<{ code: st
       <div style={{ marginTop: 28 }}>
         <PassThroughCta
           campaign={`share-${share.kind}`}
-          label={share.kind === 'vault' ? 'Track your cards' : 'Build your lineup'}
+          label={
+            share.kind === 'trade'
+              ? 'Check your own trade'
+              : share.kind === 'vault'
+                ? 'Track your cards'
+                : 'Build your lineup'
+          }
         />
       </div>
       <p className="landing__note">
@@ -123,5 +162,38 @@ export default async function SharePage({ params }: { params: Promise<{ code: st
         </a>
       </p>
     </section>
+  );
+}
+
+function TradeList({ title, side }: { title: string; side: TradeSide }) {
+  return (
+    <>
+      <h2 className="share__subtitle">
+        {title}: <Price cents={side.total_cents} />
+      </h2>
+      <ol className="share__list">
+        {side.items.map((c, i) => (
+          <li key={`${c.card_slug}-${c.parallel}-${c.grade}-${i}`}>
+            <span>
+              {c.card_slug ? (
+                <Link href={cardPath(c.card_slug)}>
+                  {c.season} {c.set} {c.player} #{c.number}
+                </Link>
+              ) : (
+                `${c.season} ${c.set} ${c.player} #${c.number}`
+              )}
+              <span className="muted">
+                {' '}
+                {formatParallel(c.parallel, c.serial_run)},{' '}
+                {c.grade === 'RAW' ? 'raw' : c.grade.replace('PSA', 'PSA ')}
+              </span>
+            </span>
+            <strong>
+              {c.value_cents !== null ? <Price cents={c.value_cents} /> : 'No value yet'}
+            </strong>
+          </li>
+        ))}
+      </ol>
+    </>
   );
 }

@@ -569,7 +569,7 @@ export async function getShare(code: string): Promise<PublicShare | null> {
 
 export interface PublicShare {
   code: string;
-  kind: 'lineup' | 'league' | 'vault';
+  kind: 'lineup' | 'league' | 'vault' | 'trade';
   created_at: string;
   payload: {
     username: string;
@@ -606,7 +606,31 @@ export interface PublicShare {
       value_cents: number | null;
       price_kind: string | null;
     }[];
+    // trade (trade_value() in the database)
+    give?: TradeSide;
+    get?: TradeSide;
+    diff_cents?: number;
+    verdict?: 'fair' | 'you_win' | 'you_lose' | 'unknown';
   };
+}
+
+export interface TradeSide {
+  total_cents: number;
+  unpriced: number;
+  items: {
+    player: string;
+    set: string;
+    season: string;
+    number: string;
+    parallel: string;
+    serial_run: number | null;
+    grade: string;
+    rookie: boolean;
+    card_slug: string | null;
+    value_cents: number | null;
+    price_kind: string | null;
+    sale_at: string | null;
+  }[];
 }
 
 /** League invite landing: name and size only. */

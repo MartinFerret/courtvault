@@ -32,6 +32,21 @@ export default async function Image({ params }: { params: Promise<{ code: string
       big = `#${p.week_rank ?? '?'}`;
       unit = 'this week';
       lines.push(`${p.members} players, ${p.week_points ?? 0} pts this week`);
+    } else if (share.kind === 'trade' && p.give && p.get) {
+      kicker = `Is this trade fair? ${p.username}'s trade`;
+      big =
+        p.verdict === 'fair'
+          ? 'Fair'
+          : p.verdict === 'unknown'
+            ? '?'
+            : `${(p.diff_cents ?? 0) > 0 ? '+' : '-'}${formatCents(Math.abs(p.diff_cents ?? 0))}`;
+      unit = p.verdict === 'fair' ? 'trade' : p.verdict === 'unknown' ? 'not enough prices' : '';
+      lines.push(
+        `Gives ${formatCents(p.give.total_cents)}, gets ${formatCents(p.get.total_cents)}`,
+      );
+      const top = [...p.give.items, ...p.get.items].slice(0, 2);
+      for (const c of top)
+        lines.push(`${c.player} #${c.number} ${formatParallel(c.parallel, c.serial_run)}`);
     } else {
       kicker = `${p.username}'s best cards`;
       big = String(p.card_count ?? 0);
