@@ -4,6 +4,7 @@ import { SignUpOrVault } from '@/components/session-cta';
 import type { Metadata } from 'next';
 import { BRAND_DIFFERENTIATOR, BRAND_TAGLINE, PRICING, formatUsd } from '@courtvault/shared';
 import { CardVisual } from '@/components/card-visual';
+import { HeroTape } from '@/components/hero-tape';
 import { ImageCredit } from '@/components/image-credit';
 import { JsonLd } from '@/components/json-ld';
 import { LastNightModule } from '@/components/last-night-module';
@@ -216,6 +217,7 @@ export default async function HomePage() {
             />
           </Link>
         ) : null}
+        <HeroTape night={night} />
       </section>
 
       {night && night.day && pick ? (
@@ -289,12 +291,10 @@ export default async function HomePage() {
                   season={s.season}
                   cardCount={s.card_count}
                 />
-                {setImage(s.slug) ? (
-                  <span className="featured-set__label">
-                    {s.season} {s.name}
-                    <span className="muted small">{s.card_count} cards</span>
-                  </span>
-                ) : null}
+                <span className="featured-set__label">
+                  {s.season} {s.name}
+                  <span className="muted small">{s.card_count} cards</span>
+                </span>
               </Link>
             </li>
           ))}

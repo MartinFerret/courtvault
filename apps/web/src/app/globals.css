@@ -710,75 +710,190 @@ form.stack input {
   }
 }
 
-/* Hero: one rounded panel filling the first viewport, the player photo on the right in
-   grayscale fading into the grey, the pitch on the left, two real cards over the photo. */
+/* Hero: a light panel read like a ticker. The photo in grayscale with a soft lime tint on the
+   right, the pitch on the left, the official card in front, last night's tape along the bottom. */
 .hero {
+  --hero-ink: var(--cv-text);
+  --hero-on-ink: var(--cv-text);
+  --hero-on-ink-muted: var(--cv-text-muted);
   position: relative;
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-rows: 1fr auto;
   align-items: center;
-  min-height: min(calc(100vh - 96px), 760px);
+  column-gap: 32px;
+  min-height: min(calc(100svh - 136px), 700px);
   margin: 12px 0 8px;
-  padding: 40px 40px 48px;
+  padding: 48px 48px 0;
   background: var(--cv-surface);
+  color: var(--hero-on-ink);
   border-radius: var(--cv-radius-lg);
   isolation: isolate;
 }
 .hero__photo {
   position: absolute;
-  inset: 0 0 0 30%;
+  inset: 0 0 0 34%;
   z-index: 0;
+  background: var(--cv-surface);
 }
 .hero__img {
   object-fit: cover;
   object-position: 55% 0%;
-  filter: grayscale(1) contrast(1.05);
+  filter: grayscale(1) contrast(1.05) brightness(1.08);
+  opacity: 0.9;
+}
+.hero__photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--cv-accent);
+  mix-blend-mode: multiply;
+  opacity: 0.32;
 }
 .hero__photo::after {
   content: '';
   position: absolute;
   inset: -2px;
+  z-index: 2;
   /* Plain rgba stops of --cv-surface (#e2e5e8): the photo dissolves into the panel, no hard edge. */
   background:
     linear-gradient(
       to right,
       rgba(226, 229, 232, 1) 0%,
-      rgba(226, 229, 232, 0.94) 26%,
-      rgba(226, 229, 232, 0.55) 48%,
-      rgba(226, 229, 232, 0) 72%
+      rgba(226, 229, 232, 0.9) 24%,
+      rgba(226, 229, 232, 0.4) 55%,
+      rgba(226, 229, 232, 0.1) 100%
     ),
-    linear-gradient(to top, rgba(226, 229, 232, 1) 0%, rgba(226, 229, 232, 0) 40%);
+    linear-gradient(to top, rgba(226, 229, 232, 0.9) 0%, rgba(226, 229, 232, 0) 40%);
 }
 .hero__copy {
   position: relative;
-  z-index: 2;
-  max-width: 560px;
+  z-index: 3;
+  max-width: 600px;
+  padding-bottom: 40px;
 }
 .hero h1 {
-  font-size: clamp(2.6rem, 5.4vw, 4.4rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  margin: 0 0 18px;
-  max-width: 12ch;
+  font-size: clamp(2.8rem, 5.6vw, 4.8rem);
+  font-weight: 650;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  margin: 0 0 22px;
+  max-width: 14ch;
+  color: var(--hero-on-ink);
+  text-wrap: balance;
 }
 .hero__lead {
-  font-size: 1.2rem;
-  color: var(--cv-text-muted);
-  max-width: 42ch;
-  margin: 0 0 24px;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--hero-on-ink-muted);
+  max-width: 38ch;
+  margin: 0 0 28px;
 }
 .hero__actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 .hero__meta {
-  color: var(--cv-text-muted);
+  color: var(--hero-on-ink-muted);
   font-size: 0.9rem;
-  max-width: 44ch;
+  max-width: 46ch;
   margin: 0;
+}
+.hero__meta,
+.hero__lead {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Last night's tape: the one moving thing on the page. */
+.tape {
+  position: relative;
+  z-index: 3;
+  grid-column: 1 / -1;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  margin: 0 -48px;
+  background: var(--cv-accent);
+  color: var(--hero-ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.tape__label {
+  flex: none;
+  margin: 0;
+  padding: 14px 18px 14px 48px;
+  font-weight: 650;
+}
+.tape__track {
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 32px,
+    #000 calc(100% - 32px),
+    transparent
+  );
+}
+.tape__belt {
+  display: flex;
+  width: max-content;
+  animation: tape-roll 60s linear infinite;
+}
+.tape:hover .tape__belt,
+.tape:focus-within .tape__belt {
+  animation-play-state: paused;
+}
+.tape__run {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tape__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px 14px 0;
+  white-space: nowrap;
+}
+.tape__item::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  margin-left: 28px;
+  border-radius: 50%;
+  background: rgba(18, 20, 23, 0.35);
+}
+.tape__arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+}
+.tape__arrow--up {
+  border-bottom: 8px solid var(--hero-ink);
+}
+.tape__arrow--down {
+  border-top: 8px solid var(--hero-ink);
+}
+@keyframes tape-roll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tape__belt {
+    animation: none;
+  }
+  .tape__track {
+    overflow-x: auto;
+  }
 }
 .hero__tiles {
   position: relative;
@@ -837,21 +952,35 @@ form.stack input {
 }
 @media (max-width: 860px) {
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
     min-height: 0;
-    padding: 24px 20px 24px;
-    gap: 16px;
+    padding: 0 20px;
+    gap: 20px;
   }
   .hero__photo {
     position: relative;
     inset: auto;
-    height: 300px;
-    margin: -24px -20px 0;
+    height: 280px;
+    margin: 0 -20px;
     border-radius: var(--cv-radius-lg) var(--cv-radius-lg) 0 0;
     overflow: hidden;
   }
   .hero__photo::after {
-    background: linear-gradient(to top, rgba(226, 229, 232, 1) 0%, rgba(226, 229, 232, 0) 55%);
+    background: linear-gradient(to top, rgba(226, 229, 232, 1) 0%, rgba(226, 229, 232, 0) 60%);
+  }
+  .hero__img {
+    object-position: 50% 15%;
+  }
+  .hero__copy {
+    margin-top: -96px;
+    padding-bottom: 8px;
+  }
+  .tape {
+    margin: 0 -20px;
+  }
+  .tape__label {
+    padding-left: 20px;
   }
   .hero__tiles {
     width: 100%;
@@ -1102,16 +1231,16 @@ form.stack input {
   min-width: 0;
 }
 .lnm__night {
-  background: var(--cv-text);
-  color: var(--cv-surface-high);
+  background: var(--cv-surface-high);
+  color: var(--cv-text);
 }
 .lnm__night a {
   color: inherit;
-  text-decoration-color: rgba(247, 248, 249, 0.35);
+  text-decoration-color: var(--cv-surface-2);
 }
 .lnm__morning {
-  background: var(--cv-primary);
-  color: var(--cv-primary-contrast);
+  background: var(--cv-surface);
+  color: var(--cv-text);
 }
 .lnm__kicker {
   margin: 0;
@@ -1419,6 +1548,7 @@ form.stack input {
 /* Band footer: facts on the left, the method link on the right. */
 .lnm__foot {
   grid-column: 1 / -1;
+  min-width: 0;
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -2186,12 +2316,13 @@ form.stack input {
 /* Hero card visual on the homepage (replaces the price tiles). */
 .hero__card {
   position: relative;
-  z-index: 2;
-  align-self: end;
-  justify-self: end;
+  z-index: 3;
+  align-self: center;
+  justify-self: center;
   width: min(100%, 250px);
+  padding-bottom: 40px;
   text-decoration: none;
-  transform: rotate(-3deg);
+  transform: rotate(-4deg);
 }
 @media (max-width: 860px) {
   .hero__card {
@@ -2271,6 +2402,34 @@ form.stack input {
   display: block;
   text-decoration: none;
 }
+/* Every set gets the same frame: the official image sits inside it, sets without one show
+   their card count on the same light surface. */
+.featured-set .set-visual {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: auto;
+  border-radius: var(--cv-radius-lg);
+  background: var(--cv-surface);
+  box-shadow: none;
+}
+.featured-set .set-visual--image {
+  object-fit: contain;
+  padding: 20px;
+}
+.featured-set .set-visual--tile {
+  color: var(--cv-text);
+  padding: 24px;
+  justify-content: center;
+  align-items: center;
+}
+.featured-set .set-visual__count {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+}
+/* The label under the frame names the set: the tile keeps only its count. */
+.featured-set .set-visual__name,
+.featured-set .set-visual__season {
+  display: none;
+}
 .featured-set__label {
   display: flex;
   flex-direction: column;
@@ -2286,10 +2445,10 @@ form.stack input {
 /* Final call to action. */
 .final-cta {
   margin: 48px 0 0;
-  padding: 40px 32px;
+  padding: 48px 32px;
   border-radius: var(--cv-radius-lg);
-  background: var(--cv-primary);
-  color: var(--cv-primary-contrast);
+  background: var(--cv-surface);
+  color: var(--cv-text);
   text-align: center;
 }
 .final-cta h2 {
@@ -2298,10 +2457,6 @@ form.stack input {
 .final-cta p {
   max-width: 48ch;
   margin: 0 auto 20px;
-}
-.final-cta .button {
-  background: var(--cv-text);
-  color: var(--cv-surface-high);
 }
 
 /* Player, card and checklist heroes. */
@@ -2825,11 +2980,17 @@ form.stack input {
   gap: 8px;
   align-items: flex-end;
 }
+@media (max-width: 860px) {
+  .hero__card--image {
+    width: 230px;
+    align-items: center;
+  }
+}
 .hero__card-img {
   width: 100%;
   height: auto;
   border-radius: 14px;
-  box-shadow: 0 24px 48px rgba(18, 20, 23, 0.28);
+  box-shadow: 0 24px 48px rgba(18, 20, 23, 0.24);
 }
 .hero__card-caption {
   font-size: 0.8rem;
