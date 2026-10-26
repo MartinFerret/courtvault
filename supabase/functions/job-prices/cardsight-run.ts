@@ -150,6 +150,9 @@ async function emailAdmin(subject: string, text: string): Promise<number> {
   return result.sent;
 }
 
+/** Prices written per record_prices() call. */
+const WRITE_BATCH = 500;
+
 export async function runCardSightPricing(
   { supabase, day, log }: JobContext,
 ): Promise<Record<string, unknown>> {
@@ -262,15 +265,23 @@ export async function runCardSightPricing(
     includeRecords: settings.storeRawListings,
   });
 
+  // The calls are spent: keep the usage even if the run is stopped while writing.
+  await writeState(supabase, {
+    ...state,
+    last_usage: Math.max(usageBefore + calls, state.last_usage ?? 0),
+  });
+
   let changed = 0;
   let missing = 0;
   const kinds: Record<string, number> = { auction_median: 0, last_auction: 0, ask_median: 0 };
-  const write = async (t: Target) => {
+  const rowsToWrite: Record<string, unknown>[] = [];
+  const listings: Record<string, unknown>[] = [];
+  for (const t of plan.targets) {
     const figure = results.get(t.key);
     if (!figure) {
       missing++;
       bump(t.reason, 'skipped');
-      return;
+      continue;
     }
     const buyUrl = ebaySearchUrl(
       buildSearchQuery({
@@ -284,25 +295,22 @@ export async function runCardSightPricing(
       }),
       campaign,
     );
-    const { data: wrote, error: recordError } = await supabase.rpc('record_price', {
-      p_parallel_id: t.parallel_id,
-      p_grade: t.grade,
-      p_source: figure.source,
-      p_price_cents: figure.priceCents,
-      p_sample_size: figure.sampleSize,
-      p_buy_url: buyUrl,
-      p_captured_at: capturedAt,
-      p_price_kind: figure.kind,
-      p_sale_at: figure.saleAt,
+    rowsToWrite.push({
+      parallel_id: t.parallel_id,
+      grade: t.grade,
+      source: figure.source,
+      price_cents: figure.priceCents,
+      sample_size: figure.sampleSize,
+      buy_url: buyUrl,
+      captured_at: capturedAt,
+      price_kind: figure.kind,
+      sale_at: figure.saleAt,
     });
-    if (recordError) throw recordError;
     kinds[figure.kind] = (kinds[figure.kind] ?? 0) + 1;
     bump(t.reason, 'priced');
-    if (wrote) changed++;
-
     if (settings.storeRawListings && figure.records?.length) {
-      await supabase.from('price_listings').insert(
-        figure.records
+      listings.push(
+        ...figure.records
           .filter((r) => r.listing_type === 'auction' || r.listing_type === 'fixed')
           .map((r) => ({
             parallel_id: t.parallel_id,
@@ -314,10 +322,18 @@ export async function runCardSightPricing(
           })),
       );
     }
-  };
-  // Ten writes in flight: a few thousand RPCs fit in the function's wall clock.
-  for (let i = 0; i < plan.targets.length; i += 10) {
-    await Promise.all(plan.targets.slice(i, i + 10).map(write));
+  }
+  // One RPC per batch (record_prices applies record_price to each row): a full pass of
+  // several thousand prices used to take one round trip each and ran past the 150 s limit.
+  for (let i = 0; i < rowsToWrite.length; i += WRITE_BATCH) {
+    const { data: wrote, error: recordError } = await supabase.rpc('record_prices', {
+      p_rows: rowsToWrite.slice(i, i + WRITE_BATCH),
+    });
+    if (recordError) throw recordError;
+    changed += Number(wrote ?? 0);
+  }
+  for (let i = 0; i < listings.length; i += WRITE_BATCH) {
+    await supabase.from('price_listings').insert(listings.slice(i, i + WRITE_BATCH));
   }
 
   for (const [reason, c] of coverage) {
