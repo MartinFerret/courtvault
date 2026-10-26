@@ -16,7 +16,7 @@ export const HOME_PROMISE = 'Scan & Track';
 /** H1 of the homepage (R35, R37): the keyword alone, sentence case. */
 export const HOME_H1 = 'Basketball card values app';
 export const SITE_DESCRIPTION =
-  'Scan a card, see its value by parallel and grade, track your collection, and get every morning what last night’s games did to it. Free on iOS and Android.';
+  'Scan a card, see its value by parallel and grade, track your collection, and get every morning what last night’s games did to it. Free in your browser.';
 export const DISCLAIMER = AFFILIATION_DISCLAIMER;
 
 export function siteUrl(): string {

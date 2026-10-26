@@ -24,7 +24,7 @@ ${entries
   return new Response(body, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
 }
 
-/** One urlset per type. Utility pages (legal, waitlist, search) stay out (R49, R55). */
+/** One urlset per type. Utility pages (legal, search) stay out (R49, R55). */
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ type: string }> },

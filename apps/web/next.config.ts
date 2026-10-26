@@ -9,12 +9,27 @@ const POSTHOG_ASSETS = POSTHOG_HOST.replace('.i.posthog.com', '-assets.i.posthog
 const ON_NETLIFY = process.env['NETLIFY'] === 'true';
 // Hosts other than the canonical one (hoopticker.netlify.app, deploy permalinks) get a noindex
 // header. A header rule, not middleware: middleware ran an edge function on every page view.
+// The website sends visitors to the web app; there is no native app.
+const APP_URL = (process.env['NEXT_PUBLIC_APP_URL'] ?? 'https://app.hoopticker.com').replace(
+  /\/$/,
+  '',
+);
 const CANONICAL_HOST = new URL(process.env['NEXT_PUBLIC_SITE_URL'] ?? 'http://localhost').hostname;
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@courtvault/shared'],
   // PostHog SDK requests end without a trailing slash; the default redirect would break them.
   skipTrailingSlashRedirect: true,
+  async redirects() {
+    return [
+      // Former app waitlist: old links and bookmarks land on the web app's sign-up.
+      {
+        source: '/waitlist',
+        destination: `${APP_URL}/onboarding?utm_source=hoopticker.com&utm_medium=website&utm_campaign=waitlist`,
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       // Universal Links and App Links association files (404 until the store keys exist).

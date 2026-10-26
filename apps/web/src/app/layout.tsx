@@ -5,7 +5,7 @@ import './globals.css';
 import { Analytics } from '@/components/analytics';
 import { Attribution } from '@/components/attribution';
 import { SiteFooter, SiteHeader } from '@/components/site-chrome';
-import { APPLE_APP_ID, SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
+import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -19,8 +19,6 @@ export const metadata: Metadata = {
   openGraph: { type: 'website', siteName: SITE_NAME },
   twitter: { card: 'summary' },
   robots: { index: true, follow: true },
-  // iOS smart app banner. Empty until the app is on the App Store.
-  ...(APPLE_APP_ID ? { itunes: { appId: APPLE_APP_ID } } : {}),
 };
 
 export const viewport: Viewport = {

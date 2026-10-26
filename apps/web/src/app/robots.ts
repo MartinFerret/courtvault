@@ -16,7 +16,7 @@ const AI_CRAWLERS = [
 ];
 
 export default function robots(): MetadataRoute.Robots {
-  const disallow = ['/api/', '/search', '/waitlist', '/ingest/', '/r/', '/u/', '/embed/'];
+  const disallow = ['/api/', '/search', '/ingest/', '/r/', '/u/', '/embed/'];
   return {
     rules: [
       { userAgent: '*', allow: '/', disallow },

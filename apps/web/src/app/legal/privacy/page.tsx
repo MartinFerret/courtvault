@@ -29,20 +29,21 @@ export default function PrivacyPage() {
       </p>
       <h2>What we collect</h2>
       <p>
-        Your email address (sign-in and waitlist), the cards you add to your collection, the players
-        you follow, your price alerts, a push notification token if you opt in, and the photos you
-        choose to take of your cards. Photos are private, stored as small thumbnails, and never
-        shown publicly.
+        Your email address (sign-in), the cards you add to your collection, the players you follow,
+        your price alerts, a push notification token if you opt in, and the photos you choose to
+        take of your cards. Photos are private, stored as small thumbnails, and never shown
+        publicly.
       </p>
       <h2>Payments</h2>
       <p>
-        Subscriptions are processed by Apple or Google and managed through RevenueCat. We receive
-        your subscription status, never your payment details.
+        Subscriptions are processed by Stripe. We receive your subscription status, never your
+        payment details.
       </p>
       <h2>Your rights</h2>
       <p>
         You can export your collection (Premium) and delete your account and all associated data
-        from the app at any time. Contact us at the address above for any request about your data.
+        from the web app at any time. Contact us at the address above for any request about your
+        data.
       </p>
     </article>
   );

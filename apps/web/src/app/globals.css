@@ -2485,30 +2485,6 @@ form.stack input {
   }
 }
 
-/* Waitlist page. */
-.wl {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 32px;
-  align-items: start;
-}
-.wl__list {
-  padding-left: 20px;
-  color: var(--cv-text-muted);
-}
-.wl__list li + li {
-  margin-top: 8px;
-}
-.wl__form {
-  padding: 24px;
-  border-radius: var(--cv-radius-lg);
-  background: var(--cv-surface);
-}
-@media (max-width: 860px) {
-  .wl {
-    grid-template-columns: 1fr;
-  }
-}
 .image-credit {
   margin: 8px 0 0;
 }

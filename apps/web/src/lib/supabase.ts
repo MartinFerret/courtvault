@@ -4,7 +4,7 @@ import type { Database } from '@courtvault/shared';
 
 /**
  * Server-side Supabase client with the anon key. The website only reads public data
- * (catalog, current prices, rankings) and inserts waitlist rows. Never used in the browser.
+ * (catalog, current prices, rankings). Never used in the browser.
  */
 export function supabase() {
   const url = process.env['NEXT_PUBLIC_SUPABASE_URL'];

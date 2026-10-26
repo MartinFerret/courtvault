@@ -6,7 +6,7 @@ import { DISCLAIMER, SITE_NAME } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Terms of service',
   description:
-    'Terms of service for the card catalog and collection tracker: where values come from, acceptable use of the data, subscriptions through the app stores.',
+    'Terms of service for the card catalog and collection tracker: where values come from, acceptable use of the data, subscriptions in the web app.',
   alternates: { canonical: '/legal/terms' },
 };
 
@@ -53,9 +53,8 @@ export default function TermsPage() {
       </p>
       <h2>Accounts and subscriptions</h2>
       <p>
-        Premium subscriptions are purchased through the Apple App Store or Google Play and are
-        governed by their terms. You can cancel at any time from your store account. You can delete
-        your account from the app.
+        Premium subscriptions are purchased in the web app and paid through Stripe. You can cancel
+        at any time from your Profile in the web app. You can delete your account from the web app.
       </p>
       <h2 id="vault-score">Vault Score and Leagues</h2>
       <p>

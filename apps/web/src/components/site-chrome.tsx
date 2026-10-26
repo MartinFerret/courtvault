@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { PATHS } from '@/lib/paths';
+import { appLink } from '@/lib/app-link';
 import { SiteNav } from './nav-links';
 import { LogoMark } from './logo';
 import { HeaderCta } from './session-cta';
@@ -72,13 +73,11 @@ export function SiteFooter() {
           <p className="site-footer__title">Company</p>
           <Link href={PATHS.method}>How we price cards</Link>
           <Link href={PATHS.scoring}>Fantasy scoring rules</Link>
-          <Link href="/waitlist">iPhone and Android waitlist</Link>
+          <a href={appLink('/', { campaign: 'footer' })}>Open the web app</a>
         </nav>
         <div>
           <p className="site-footer__title">Community</p>
-          <p className="muted small">
-            Discord, X, Instagram, TikTok and YouTube open with the app.
-          </p>
+          <p className="muted small">Discord, X, Instagram, TikTok and YouTube are coming soon.</p>
         </div>
       </div>
       <div className="container">

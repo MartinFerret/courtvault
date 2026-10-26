@@ -40,9 +40,3 @@ export function track(
   if (!posthog.__loaded) return;
   posthog.capture(event, properties);
 }
-
-/** Waitlist sign-up: the one identity we hold on the website. */
-export function identifyWaitlist(email: string) {
-  if (!posthog.__loaded) return;
-  posthog.identify(email, { email, waitlist_joined_at: new Date().toISOString() });
-}

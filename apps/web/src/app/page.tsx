@@ -134,7 +134,7 @@ export default async function HomePage() {
               '@type': 'SoftwareApplication',
               name: SITE_NAME,
               applicationCategory: 'LifestyleApplication',
-              operatingSystem: 'iOS, Android, Web',
+              operatingSystem: 'Web',
               description: SITE_DESCRIPTION,
               url: absoluteUrl('/'),
               offers: [
@@ -310,9 +310,6 @@ export default async function HomePage() {
             : 'The whole 2025-26 Topps catalog today; card values start with the regular season.'}
         </p>
         <SignUpOrVault campaign="home-final" />
-        <p className="muted small" style={{ marginTop: 12 }}>
-          iPhone or Android? <Link href="/waitlist">Join the app waitlist</Link>.
-        </p>
       </section>
     </>
   );
