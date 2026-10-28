@@ -7,7 +7,7 @@ import { getLastNight, getMoversWindow } from '@/lib/last-night';
 import { PATHS } from '@/lib/paths';
 import { seoTitle } from '@/lib/site';
 
-export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
+export const revalidate = 172800; // Fallback only: job-prices revalidates by tag every morning.
 
 // Keyword "trending basketball cards" (docs/keyword-map.csv). The dated pages carry each night;
 // this page carries the week and the archive, so the two never duplicate (audit 4.5).

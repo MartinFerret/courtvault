@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
@@ -6,7 +6,7 @@ import { ListFilter } from '@/components/list-filter';
 import { listPlayers } from '@/lib/data';
 import { PATHS, playerPath } from '@/lib/paths';
 
-export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
+export const revalidate = 172800; // Fallback only: job-prices revalidates by tag every morning.
 
 export const metadata: Metadata = {
   title: 'NBA Player Cards: values by set and parallel',

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import { formatEasternDay } from '@courtvault/shared';
 import { moversPath } from '@/lib/paths';
 

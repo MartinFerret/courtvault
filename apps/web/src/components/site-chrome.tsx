@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import { PATHS } from '@/lib/paths';
 import { appLink } from '@/lib/app-link';
 import { SiteNav } from './nav-links';

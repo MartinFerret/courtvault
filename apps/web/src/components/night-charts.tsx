@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import { formatCents, formatCentsDelta, formatParallel, GRADE_LABELS } from '@courtvault/shared';
 import type { Game, LastNight, Mover, Performance } from '@/lib/last-night';
 import { cardPath, playerPath } from '@/lib/paths';

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { AppCta } from '@/components/app-cta';
@@ -18,7 +18,7 @@ import { cardImage } from '@/lib/images';
 import { PATHS, cardPath, checklistPath, playerPath } from '@/lib/paths';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 
-export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
+export const revalidate = 172800; // Fallback only: job-prices revalidates by tag every morning.
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

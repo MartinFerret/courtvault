@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { cardPublicSlugMap, playerPublicSlugMap, searchCatalog } from '@/lib/data';

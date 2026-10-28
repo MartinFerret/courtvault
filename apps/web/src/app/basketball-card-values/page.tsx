@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import type { Metadata } from 'next';
 import { PRICE_LABEL } from '@courtvault/shared';
 import { AppCta } from '@/components/app-cta';
@@ -11,7 +11,7 @@ import { getFreshness } from '@/lib/freshness';
 import { PATHS, cardPath, checklistPath } from '@/lib/paths';
 import { robotsFor, seoTitle } from '@/lib/site';
 
-export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
+export const revalidate = 172800; // Fallback only: job-prices revalidates by tag every morning.
 
 // Keyword "basketball card values" (docs/keyword-map.csv, audit item 8). The homepage keeps the
 // app query; this hub is the price-guide entry point and is indexable once prices exist.

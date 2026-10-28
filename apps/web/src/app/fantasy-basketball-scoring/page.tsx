@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import type { Metadata } from 'next';
 import { formatEasternDay } from '@courtvault/shared';
 import { Breadcrumbs } from '@/components/breadcrumbs';
@@ -8,7 +8,7 @@ import { fantasyWeights } from '@/lib/data';
 import { PATHS } from '@/lib/paths';
 import { DISCLAIMER, SITE_NAME, absoluteUrl } from '@/lib/site';
 
-export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
+export const revalidate = 172800; // Fallback only: job-prices revalidates by tag every morning.
 
 export const metadata: Metadata = {
   // R27: keyword first, promise, brand suffix from the layout template (58 characters).

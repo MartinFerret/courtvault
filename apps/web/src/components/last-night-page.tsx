@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import { formatCents, formatEasternDay, PRICE_LABEL, nightLabel } from '@courtvault/shared';
 import { AppCta } from './app-cta';
 import { JsonLd } from './json-ld';

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import { formatEasternDay, nightLabel } from '@courtvault/shared';
 import type { Freshness } from '@/lib/freshness';
 import type { LastNight, MoversWindow } from '@/lib/last-night';

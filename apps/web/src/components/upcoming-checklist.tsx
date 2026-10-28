@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import { AppCta } from './app-cta';
 import { Breadcrumbs } from './breadcrumbs';
 import type { SetRelease } from '@/lib/data';

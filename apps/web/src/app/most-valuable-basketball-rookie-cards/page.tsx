@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/components/link';
 import type { Metadata } from 'next';
 import { AppCta } from '@/components/app-cta';
 import { Breadcrumbs } from '@/components/breadcrumbs';
@@ -9,7 +9,7 @@ import { PATHS, cardPath, checklistPath } from '@/lib/paths';
 import { absoluteUrl, robotsFor, seoTitle } from '@/lib/site';
 import { checklistPublicSlug } from '@courtvault/shared';
 
-export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
+export const revalidate = 172800; // Fallback only: job-prices revalidates by tag every morning.
 
 /** Indexable only once a rookie card has a price (audit 4.4): the ranking is empty before. */
 export async function generateMetadata(): Promise<Metadata> {

@@ -4,7 +4,7 @@ import { PATHS, cardPath, checklistPath, moversPath, playerPath } from '@/lib/pa
 import { absoluteUrl } from '@/lib/site';
 import { METHOD_UPDATED, SCORING_UPDATED } from '@/lib/content-dates';
 
-export const revalidate = 86400; // Data changes once a day; job-prices revalidates by tag.
+export const revalidate = 172800; // Fallback only: job-prices revalidates by tag every morning.
 
 interface Entry {
   loc: string;
